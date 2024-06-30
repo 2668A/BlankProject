@@ -1,0 +1,6 @@
+4 important files: 
+- autons.cpp (use to specify which auton to run)
+- subsystems.cpp (define motors and sensors, excluding drivetrain)
+- main.cpp (drivetrain tuning and opcontrol code)
+- autons.cpp (auton code)
+dont mess with anything else or the ezgods and prosgods will come for you
