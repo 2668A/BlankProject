@@ -4,20 +4,21 @@
       "name": "windows-gcc-x64",
       "includePath": [
         "${workspaceFolder}/**",
-        "c:\\_User_Data\\_GA_Education\\Dracobots.org\\__2024-2025_VRC_Training\\Programming\\Lesson_2\\Simple PID Intro with comments\\Simple PID Intro\\include"
+        "c:\\_User_Data\\_GA_Education\\Dracobots.org\\__2024-2025_VRC_Training\\Programming\\Lesson_2\\Simple PID Intro with comments\\Simple PID Intro\\include",
+        "c:\\Users\\peiyi\\newrobotics\\vrcproject\\BlankProject\\PID\\Simple_PID_Intro_with_comments\\include"
       ],
       "defines": [
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "compilerPath": "c:\\Users\\KLY Investment LLC\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
+      "compilerPath": "c:\\Users\\peiyi\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
       "cStandard": "gnu11",
       "cppStandard": "gnu++20",
       "intelliSenseMode": "gcc-arm",
       "browse": {
         "path": [
-          "c:\\_User_Data\\_GA_Education\\Dracobots.org\\__2024-2025_VRC_Training\\Programming\\Lesson_2\\Simple PID Intro with comments\\Simple PID Intro"
+          "c:\\Users\\peiyi\\newrobotics\\vrcproject\\BlankProject\\PID\\Simple_PID_Intro_with_comments"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
