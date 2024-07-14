@@ -423,7 +423,7 @@
     "upload_options": {
       "description": "Simple PID auton around the field",
       "after": "screen",
-      "icon": "alien"
+      "icon": "pros"
     },
     "use_early_access": false
   }
