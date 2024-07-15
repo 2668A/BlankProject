@@ -9,7 +9,7 @@
  * I suggest against going above 100, as it will
  * burn out your motors very quickly.
  */
-const int DRIVE_SPEED = 110;
+const int DRIVE_SPEED = 90;
 const int TURN_SPEED = 90;
 const int SWING_SPEED = 90;
 

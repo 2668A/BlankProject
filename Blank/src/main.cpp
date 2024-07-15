@@ -6,7 +6,7 @@
 // Chassis constructor, edit accordingly
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-1, -2, 3},  // Left Chassis Ports, (use negative numbers for reversed motors!)
+    {-1, -2, 8},  // Left Chassis Ports, (use negative numbers for reversed motors!)
     {4, 5, -6},  // Right Chassis Ports (use negative numbers for reversed motors!)
 
     7,          // IMU (inertial) port
@@ -122,8 +122,8 @@ void opcontrol()
 
   while (true) 
   {
-    // chassis.opcontrol_tank();  // Tank control
-     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_tank();  //  Tank control
+     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade USE THIS
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
