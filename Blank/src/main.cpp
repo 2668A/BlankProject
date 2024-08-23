@@ -117,10 +117,12 @@ void opcontrol()
 {
   // This is preference to what you like to drive on
   // MOTOR_BRAKE_HOLD (recommended), MOTOR_BRAKE_BRAKE, MOTOR_BRAKE_COAST
-  pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_BRAKE;
+  pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_COAST;
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
+  Arm1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  Arm2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
   while (true) 
   {
@@ -130,23 +132,34 @@ void opcontrol()
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Intake.move_velocity(127);
-      Conveyor.move_velocity(-127);
+      Conveyor.move_velocity(200);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Intake.move_velocity(-127);
-      Conveyor.move_velocity(127);   
+      Conveyor.move_velocity(-200);   
     }
     else{
-      Intake.move_velocity(0);
       Conveyor.move_velocity(0);
     }
-
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-      Clamp.set_value(1);
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+      Arm1.move_velocity(-200);
+      Arm2.move_velocity(200);
     }
-    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-      Clamp.set_value(0);
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      Arm1.move_velocity(200);
+      Arm2.move_velocity(-200);
+    }
+    else{
+      Arm1.move_velocity(-200);
+      Arm2.move_velocity(200);
+    }
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+      if (clampstate==1){
+        clampstate=0;
+      }
+      else{
+        clampstate=1;
+      }
+      Clamp.set_value(clampstate);
     }
     // . . .
     // Put more user control code here!
