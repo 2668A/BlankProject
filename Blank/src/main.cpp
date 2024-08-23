@@ -121,8 +121,10 @@ void opcontrol()
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
-  Arm1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  Arm2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  Arm1.move_velocity(0);
+  Arm2.move_velocity(0);
+  Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
 
   while (true) 
   {
@@ -141,16 +143,16 @@ void opcontrol()
       Conveyor.move_velocity(0);
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      Arm1.move_velocity(-200);
-      Arm2.move_velocity(200);
-    }
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      Arm1.move_velocity(200);
       Arm2.move_velocity(-200);
+      Arm1.move_velocity(200);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      Arm2.move_velocity(200);
+      Arm1.move_velocity(-200);
     }
     else{
-      Arm1.move_velocity(-200);
-      Arm2.move_velocity(200);
+      Arm1.move_velocity(0);
+      Arm2.move_velocity(0);
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
       if (clampstate==1){
