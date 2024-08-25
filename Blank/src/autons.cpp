@@ -34,4 +34,15 @@ void default_constants() {
   chassis.slew_drive_constants_set(7_in, 80);
 }
 
+
+// WRITE ACTUAL FUNCTIONS HERE
+
 // Add your autonomous functions here
+void draw_square(){
+  for(int i=0;i<4;i++){
+    chassis.pid_drive_set(120,100);
+    chassis.pid_wait();
+    chassis.pid_turn_set(90,70);
+    chassis.pid_wait();
+  }
+}

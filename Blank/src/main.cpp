@@ -42,11 +42,9 @@ void initialize()
   default_constants();
 
   // Autonomous Selector
-  ez::as::auton_selector.autons_add(
-    {
-      // Add autons selections here
-    }
-  );
+  ez::as::auton_selector.autons_add({
+    Auton("Draw Right-Handed Square", draw_square)
+});
 
   // Initialize chassis and auton selector
   chassis.initialize();
@@ -76,6 +74,16 @@ void disabled()
 void competition_initialize() 
 {
   // Add your code here
+  bool clampstate=0;
+  Clamp.set_value(false);
+  Arm1.move_velocity(0);
+  Arm2.move_velocity(0);
+  Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm1.tare_position();
+  Arm2.tare_position();
+  Arm1.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES);
 }
 
 /**
@@ -125,6 +133,12 @@ void opcontrol()
   Arm2.move_velocity(0);
   Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
   Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm1.tare_position();
+  Arm2.tare_position();
+  Arm1.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES); 
+
+  int armstate = 0;
 
   while (true) 
   {
@@ -133,27 +147,66 @@ void opcontrol()
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
+
+
+
+    // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Conveyor.move_velocity(200);
+      Intake.move_velocity(200);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Conveyor.move_velocity(-200);   
+      Intake.move_velocity(-200);   
     }
     else{
-      Conveyor.move_velocity(0);
+      Intake.move_velocity(0);
     }
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+
+
+    // Arm Manual Control
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && Arm1.get_position()<=475){
       Arm2.move_velocity(-200);
       Arm1.move_velocity(200);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      Arm2.move_velocity(200);
-      Arm1.move_velocity(-200);
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) && Arm1.get_position()>=0){
+      Arm2.move_velocity(100);
+      Arm1.move_velocity(-100);
     }
     else{
       Arm1.move_velocity(0);
       Arm2.move_velocity(0);
     }
+
+
+    // Arm Auto Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+      if (armstate==1){
+        armstate=-1;
+      }
+      else{
+        armstate=1;
+      }
+    }
+    if (armstate==1){
+      if (Arm1.get_position()>=475){
+        Arm1.move_velocity(0);
+        armstate=0;
+      }
+      else{
+        Arm1.move_velocity(200);
+      }
+    }
+    if (armstate==-1){
+      if (Arm1.get_position()<=0){
+        Arm1.move_velocity(0);
+        armstate=0;
+      }
+      else{
+        Arm1.move_velocity(-100);
+      }
+    }
+
+
+    // Clamp Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
       if (clampstate==1){
         clampstate=0;

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "BlankProject",
+    "project_name": "BobotProject",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -421,7 +421,7 @@
       }
     },
     "upload_options": {
-      "description": "Code for a functioning drivetrain",
+      "description": "Competition Code",
       "after": "screen",
       "icon": "pros"
     },
