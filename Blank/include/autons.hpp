@@ -11,3 +11,7 @@ void default_constants();
 
 // Add autonomous function declarations here
 void draw_square();
+void red_left();
+void red_right();
+void blue_right();
+void blue_left();

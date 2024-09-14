@@ -26,7 +26,7 @@ void initialize()
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
-  // Configure your chassis controls\
+  // Configure your chassis controls
 
   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_curve_buttons_toggle(true);
@@ -43,7 +43,11 @@ void initialize()
 
   // Autonomous Selector
   ez::as::auton_selector.autons_add({
-    Auton("Draw Right-Handed Square", draw_square)
+    Auton("Draw Right-Handed Square\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", draw_square),
+    Auton("RED Left Side\n\nSetup on 3rd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_left),
+    Auton("RED Right Side\n\nSetup on 2nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_right),
+    Auton("BLUE Right Side\n\nSetup on 3nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_right),
+    Auton("RED Right Side\n\nSetup on 2nd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_left)
 });
 
   // Initialize chassis and auton selector
@@ -76,6 +80,7 @@ void competition_initialize()
   // Add your code here
   bool clampstate=0;
   Clamp.set_value(false);
+  Lifter.set_value(1);
   Arm1.move_velocity(0);
   Arm2.move_velocity(0);
   Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
@@ -129,6 +134,8 @@ void opcontrol()
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
+  bool lifterstate;
+  Lifter.set_value(false);
   Arm1.move_velocity(0);
   Arm2.move_velocity(0);
   Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
@@ -139,15 +146,17 @@ void opcontrol()
   Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES); 
 
   int armstate = 0;
-
+  int armtarget = 1;
+  // 1 = neutral stake
+  // 0 = alliance stake
+  master.rumble("..");
   while (true) 
   {
     // chassis.opcontrol_tank();  //  Tank control
-     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade USE THIS
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade USE THIS
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
-
 
 
     // Intake Control
@@ -163,7 +172,8 @@ void opcontrol()
 
 
     // Arm Manual Control
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && Arm1.get_position()<=475){
+    /*
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && Arm1.get_position()<=610){
       Arm2.move_velocity(-200);
       Arm1.move_velocity(200);
     }
@@ -175,6 +185,7 @@ void opcontrol()
       Arm1.move_velocity(0);
       Arm2.move_velocity(0);
     }
+    */
 
 
     // Arm Auto Control
@@ -182,26 +193,40 @@ void opcontrol()
       if (armstate==1){
         armstate=-1;
       }
-      else{
+      else if(armstate=-1){
         armstate=1;
       }
     }
     if (armstate==1){
-      if (Arm1.get_position()>=475){
-        Arm1.move_velocity(0);
-        armstate=0;
+      if (armtarget==0){
+        if (Arm1.get_position()>=470){
+          Arm1.move_velocity(0);
+          Arm2.move_velocity(0);
+        }
+        else{
+          Arm1.move_velocity(200);
+          Arm2.move_velocity(-200);
+        }
       }
       else{
-        Arm1.move_velocity(200);
+        if (Arm1.get_position()>=670){
+          Arm1.move_velocity(0);
+          Arm2.move_velocity(0);
+        }
+        else{
+          Arm1.move_velocity(200);
+          Arm2.move_velocity(-200);
+        }
       }
     }
     if (armstate==-1){
       if (Arm1.get_position()<=0){
         Arm1.move_velocity(0);
-        armstate=0;
+        Arm2.move_velocity(0);
       }
       else{
         Arm1.move_velocity(-100);
+        Arm2.move_velocity(100);
       }
     }
 
@@ -216,9 +241,33 @@ void opcontrol()
       }
       Clamp.set_value(clampstate);
     }
-    // . . .
-    // Put more user control code here!
-    // . . .
+    
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+      if (armtarget==1){
+        armtarget=0;
+      }
+      else{
+        armtarget=1;
+      }
+    }
+
+
+    // Lifter Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      if (lifterstate==1){
+        lifterstate=0;
+      }
+      else{
+        lifterstate=1;
+      }
+      Lifter.set_value(lifterstate);
+    }
+
+    //TESTING ONLY
+    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)){
+      autonomous();
+    }
+
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     pros::delay(ez::util::DELAY_TIME);

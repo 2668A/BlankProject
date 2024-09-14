@@ -18,7 +18,7 @@ const int SWING_SPEED = 90;
 // Adjust accordingly, read documentation for more information
 //
 void default_constants() {
-  chassis.pid_heading_constants_set(11, 0, 20);
+  chassis.pid_heading_constants_set(5, 0, 20);
   chassis.pid_drive_constants_set(20, 0, 100);
   chassis.pid_turn_constants_set(3, 0.05, 20, 15);
   chassis.pid_swing_constants_set(6, 0, 65);
@@ -34,15 +34,129 @@ void default_constants() {
   chassis.slew_drive_constants_set(7_in, 80);
 }
 
-
+  
 // WRITE ACTUAL FUNCTIONS HERE
 
 // Add your autonomous functions here
+
+void deploy(){
+  Intake.move_velocity(100);
+  Lifter.set_value(0);
+  pros::delay(100);
+  Intake.move_velocity(0);
+}
+
 void draw_square(){
   for(int i=0;i<4;i++){
-    chassis.pid_drive_set(120,100);
+    chassis.pid_drive_set(24,100);
     chassis.pid_wait();
-    chassis.pid_turn_set(90,70);
+    chassis.pid_turn_relative_set(90,70);
     chassis.pid_wait();
   }
+}
+
+void red_left(){
+  deploy();
+  chassis.pid_drive_set(-22,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-50,70);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-14,70);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  Intake.move_velocity(200);
+  Lifter.set_value(1);
+  chassis.pid_drive_set(26,100);
+  chassis.pid_wait();
+  Lifter.set_value(0);
+  pros::delay(750);
+  chassis.pid_drive_set(-5,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-90,70);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-40,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-100,70);
+  chassis.pid_wait();
+  chassis.pid_drive_set(27,100);
+  chassis.pid_wait();
+  pros::delay(250);
+  chassis.pid_drive_set(-10,100);
+  chassis.pid_wait();
+}
+
+void red_right(){
+  deploy();
+  chassis.pid_drive_set(-22,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-50,70);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-14,70);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  chassis.pid_turn_set(-90,70);
+  chassis.pid_wait();
+  Intake.move_velocity(200);
+  chassis.pid_drive_set(20,100);
+  chassis.pid_wait();
+  pros::delay(500);
+  chassis.pid_drive_set(-8,70);
+  chassis.pid_wait();
+  pros::delay(500);
+  Intake.move_velocity(0);
+}
+
+void blue_right(){
+  deploy();
+  chassis.pid_drive_set(-22,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(50,70);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-14,70);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  Intake.move_velocity(200);
+  Lifter.set_value(1);
+  chassis.pid_drive_set(26,100);
+  chassis.pid_wait();
+  Lifter.set_value(0);
+  pros::delay(750);
+  chassis.pid_drive_set(-5,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(90,70);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-40,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(100,70);
+  chassis.pid_wait();
+  chassis.pid_drive_set(27,100);
+  chassis.pid_wait();
+  pros::delay(250);
+  chassis.pid_drive_set(-10,100);
+  chassis.pid_wait();
+}
+
+void blue_left(){
+  deploy();
+  chassis.pid_drive_set(-22,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(50,70);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-14,70);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  chassis.pid_turn_set(90,70);
+  chassis.pid_wait();
+  Intake.move_velocity(200);
+  chassis.pid_drive_set(20,100);
+  chassis.pid_wait();
+  pros::delay(500);
+  chassis.pid_drive_set(-8,70);
+  chassis.pid_wait();
+  pros::delay(500);
+  Intake.move_velocity(0);
 }
