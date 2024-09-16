@@ -149,7 +149,6 @@ void opcontrol()
   int armtarget = 1;
   // 1 = neutral stake
   // 0 = alliance stake
-  master.rumble("..");
   while (true) 
   {
     // chassis.opcontrol_tank();  //  Tank control

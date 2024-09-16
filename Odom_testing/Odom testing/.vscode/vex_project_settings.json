@@ -1,12 +1,12 @@
 {
 	"extension": {
-		"version": "0.5.0",
+		"version": "0.6.0",
 		"json": 2
 	},
 	"project": {
 		"name": "Firebird3",
 		"description": "",
-		"creationDate": "2/29/2024, 9:31:33 PM",
+		"creationDate": "Sat, 14 Sep 2024 20:46:39 GMT",
 		"platform": "V5",
 		"language": "cpp",
 		"slot": 1,
