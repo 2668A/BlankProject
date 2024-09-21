@@ -126,6 +126,21 @@ void autonomous()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void neutralscore(){
+  while((FrontDistance.get()/25.4)>10){
+    chassis.pid_drive_set(1,70);
+    chassis.pid_wait_quick();
+  }
+}
+
+void alliancescore(){
+  while((FrontDistance.get()/25.4)>15){
+    chassis.pid_drive_set(1,70);
+    chassis.pid_wait_quick();
+  }
+}
+
 void opcontrol()
 {
   // This is preference to what you like to drive on
