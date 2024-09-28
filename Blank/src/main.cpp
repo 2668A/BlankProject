@@ -41,6 +41,8 @@ void initialize()
   // Set the constants using the function defined in autons.cpp
   default_constants();
 
+  
+
   // Autonomous Selector
   ez::as::auton_selector.autons_add(
     {
@@ -118,6 +120,25 @@ void autonomous()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void neutralscore(){
+  chassis.drive_angle_set(0);
+  while(FrontDistance.get()>230){
+    chassis.pid_drive_set(3,70);
+    chassis.pid_wait_quick();
+    pros::delay(300);
+  }
+}
+
+void alliancescore(){
+  chassis.drive_angle_set(0);
+  while(FrontDistance.get()>230){
+    chassis.pid_drive_set(3,70);
+    chassis.pid_wait_quick();
+    pros::delay(300);   
+  }
+}
+
 void opcontrol()
 {
   // This is preference to what you like to drive on
@@ -160,24 +181,6 @@ void opcontrol()
     else{
       Intake.move_velocity(0);
     }
-
-
-    // Arm Manual Control
-    /*
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && Arm1.get_position()<=610){
-      Arm2.move_velocity(-200);
-      Arm1.move_velocity(200);
-    }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) && Arm1.get_position()>=0){
-      Arm2.move_velocity(100);
-      Arm1.move_velocity(-100);
-    }
-    else{
-      Arm1.move_velocity(0);
-      Arm2.move_velocity(0);
-    }
-    */
-
 
     // Arm Auto Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
@@ -233,7 +236,9 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+
+    // Arm Maunual Mode Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
       if (armtarget==1){
         armtarget=0;
       }
@@ -242,9 +247,18 @@ void opcontrol()
       }
     }
 
+    // Arm Align Automatic Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      if (armtarget==1){
+        neutralscore();
+      }
+      else{
+        alliancescore();
+      }
+    }
 
     // Lifter Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       if (lifterstate==1){
         lifterstate=0;
       }
@@ -254,10 +268,13 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
+
+
     //TESTING ONLY
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)){
       autonomous();
     }
+
 
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
