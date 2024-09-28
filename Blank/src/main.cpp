@@ -29,7 +29,7 @@ void initialize()
   // Configure your chassis controls
 
   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_curve_buttons_toggle(false);
+  chassis.opcontrol_curve_buttons_toggle(true);
 
   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_drive_activebrake_set(2);
