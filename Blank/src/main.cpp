@@ -29,7 +29,7 @@ void initialize()
   // Configure your chassis controls
 
   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_curve_buttons_toggle(true);
+  chassis.opcontrol_curve_buttons_toggle(false);
 
   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_drive_activebrake_set(2);
@@ -40,6 +40,8 @@ void initialize()
 
   // Set the constants using the function defined in autons.cpp
   default_constants();
+
+  
 
   // Autonomous Selector
   ez::as::auton_selector.autons_add({
@@ -128,16 +130,20 @@ void autonomous()
  */
 
 void neutralscore(){
-  while((FrontDistance.get()/25.4)>10){
-    chassis.pid_drive_set(1,70);
+  chassis.drive_angle_set(0);
+  while(FrontDistance.get()>230){
+    chassis.pid_drive_set(3,70);
     chassis.pid_wait_quick();
+    pros::delay(300);
   }
 }
 
 void alliancescore(){
-  while((FrontDistance.get()/25.4)>15){
-    chassis.pid_drive_set(1,70);
+  chassis.drive_angle_set(0);
+  while(FrontDistance.get()>230){
+    chassis.pid_drive_set(3,70);
     chassis.pid_wait_quick();
+    pros::delay(300);   
   }
 }
 
@@ -183,24 +189,6 @@ void opcontrol()
     else{
       Intake.move_velocity(0);
     }
-
-
-    // Arm Manual Control
-    /*
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && Arm1.get_position()<=610){
-      Arm2.move_velocity(-200);
-      Arm1.move_velocity(200);
-    }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) && Arm1.get_position()>=0){
-      Arm2.move_velocity(100);
-      Arm1.move_velocity(-100);
-    }
-    else{
-      Arm1.move_velocity(0);
-      Arm2.move_velocity(0);
-    }
-    */
-
 
     // Arm Auto Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
@@ -256,7 +244,9 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+
+    // Arm Maunual Mode Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
       if (armtarget==1){
         armtarget=0;
       }
@@ -265,9 +255,18 @@ void opcontrol()
       }
     }
 
+    // Arm Align Automatic Control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      if (armtarget==1){
+        neutralscore();
+      }
+      else{
+        alliancescore();
+      }
+    }
 
     // Lifter Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       if (lifterstate==1){
         lifterstate=0;
       }
@@ -277,10 +276,13 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
+
+
     //TESTING ONLY
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)){
       autonomous();
     }
+
 
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

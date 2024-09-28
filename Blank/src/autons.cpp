@@ -56,7 +56,6 @@ void draw_square(){
 }
 
 void red_left(){
-  deploy();
   chassis.pid_drive_set(-22,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-50,70);
@@ -87,7 +86,6 @@ void red_left(){
 }
 
 void red_right(){
-  deploy();
   chassis.pid_drive_set(-22,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-50,70);
@@ -109,7 +107,6 @@ void red_right(){
 }
 
 void blue_right(){
-  deploy();
   chassis.pid_drive_set(-22,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(50,70);
@@ -140,7 +137,6 @@ void blue_right(){
 }
 
 void blue_left(){
-  deploy();
   chassis.pid_drive_set(-22,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(50,70);
