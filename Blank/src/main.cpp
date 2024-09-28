@@ -42,13 +42,15 @@ void initialize()
   default_constants();
 
   // Autonomous Selector
-  ez::as::auton_selector.autons_add({
+  ez::as::auton_selector.autons_add(
+    {
     Auton("Draw Right-Handed Square\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", draw_square),
     Auton("RED Left Side\n\nSetup on 3rd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_left),
     Auton("RED Right Side\n\nSetup on 2nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_right),
     Auton("BLUE Right Side\n\nSetup on 3nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_right),
     Auton("RED Right Side\n\nSetup on 2nd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_left)
-});
+    }
+  );
 
   // Initialize chassis and auton selector
   chassis.initialize();
@@ -78,17 +80,7 @@ void disabled()
 void competition_initialize() 
 {
   // Add your code here
-  bool clampstate=0;
-  Clamp.set_value(false);
-  Lifter.set_value(1);
-  Arm1.move_velocity(0);
-  Arm2.move_velocity(0);
-  Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm1.tare_position();
-  Arm2.tare_position();
-  Arm1.set_encoder_units(MOTOR_ENCODER_DEGREES);
-  Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  
 }
 
 /**

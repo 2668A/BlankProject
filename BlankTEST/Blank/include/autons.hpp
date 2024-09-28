@@ -6,13 +6,6 @@ extern Drive chassis;
 void default_constants();
 
 
-// ADD FUNCTIONS HERE FOR SELECTOR
-
-
 // Add autonomous function declarations here
+void do_nothing();
 void draw_square();
-void red_left();
-void red_right();
-void blue_right();
-void blue_left();
-void deploy();

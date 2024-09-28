@@ -40,10 +40,17 @@ void default_constants() {
 // Add your autonomous functions here
 
 void deploy(){
-  Intake.move_velocity(100);
-  Lifter.set_value(0);
-  pros::delay(100);
-  Intake.move_velocity(0);
+  bool clampstate=0;
+  Clamp.set_value(false);
+  Lifter.set_value(1);
+  Arm1.move_velocity(0);
+  Arm2.move_velocity(0);
+  Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm1.tare_position();
+  Arm2.tare_position();
+  Arm1.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES);
 }
 
 void draw_square(){
@@ -52,7 +59,7 @@ void draw_square(){
     chassis.pid_wait();
     chassis.pid_turn_relative_set(90,70);
     chassis.pid_wait();
-  }
+  } 
 }
 
 void red_left(){
