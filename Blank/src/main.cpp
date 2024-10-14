@@ -47,10 +47,11 @@ void initialize()
   ez::as::auton_selector.autons_add(
     {
     Auton("Draw Right-Handed Square\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", draw_square),
-    Auton("RED Left Side\n\nSetup on 3rd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_left),
-    Auton("RED Right Side\n\nSetup on 2nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner left edge", red_right),
-    Auton("BLUE Right Side\n\nSetup on 3nd from right\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_right),
-    Auton("RED Right Side\n\nSetup on 2nd from left\n\nBack lined up with inner forward edge\n\nWall riders lined up with inner right edge", blue_left)
+    Auton("RED Left Side\nSetup on 3rd from left\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_left),
+    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
+    Auton("BLUE Right Side\nSetup on 3nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_right),
+    Auton("BLUE Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left),
+    Auton("SKILLS auto\nsetup on 2nd from right\nFront lined up with wall\nMogo bar lined up with inner left edge",skillsauto)
     }
   );
 
@@ -130,20 +131,16 @@ void neutralscore(){
   }
 }
 
-void alliancescore(){
-  chassis.drive_angle_set(0);
-  while(FrontDistance.get()>230){
-    chassis.pid_drive_set(3,70);
-    chassis.pid_wait_quick();
-    pros::delay(300);   
-  }
-}
-
 void opcontrol()
 {
   // This is preference to what you like to drive on
   // MOTOR_BRAKE_HOLD (recommended), MOTOR_BRAKE_BRAKE, MOTOR_BRAKE_COAST
   pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_COAST;
+  // chassis.opcontrol_tank();  //  Tank control
+     // Standard split arcade USE THIS
+  // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
+  // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
+  // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
@@ -160,17 +157,12 @@ void opcontrol()
 
   int armstate = 0;
   int armtarget = 1;
+
   // 1 = neutral stake
   // 0 = alliance stake
   while (true) 
   {
-    // chassis.opcontrol_tank();  //  Tank control
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade USE THIS
-    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
-    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
-
-
+    chassis.opcontrol_arcade_standard(ez::SPLIT);
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake.move_velocity(200);
@@ -193,7 +185,7 @@ void opcontrol()
     }
     if (armstate==1){
       if (armtarget==0){
-        if (Arm1.get_position()>=470){
+        if (Arm1.get_position()>=500){
           Arm1.move_velocity(0);
           Arm2.move_velocity(0);
         }
@@ -249,12 +241,7 @@ void opcontrol()
 
     // Arm Align Automatic Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      if (armtarget==1){
-        neutralscore();
-      }
-      else{
-        alliancescore();
-      }
+      neutralscore();
     }
 
     // Lifter Control
@@ -271,7 +258,7 @@ void opcontrol()
 
 
     //TESTING ONLY
-    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)){
+    if (master.get_digital(DIGITAL_A) && master.get_digital(DIGITAL_LEFT)){
       autonomous();
     }
 

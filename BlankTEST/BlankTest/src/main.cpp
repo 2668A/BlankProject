@@ -20,6 +20,14 @@ ez::Drive chassis(
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
+void draw_square();
+void red_left();
+void red_right();
+void blue_right();
+void blue_left();
+void deploy();
+
 void initialize()
 {
   ez::ez_template_print();
@@ -39,15 +47,16 @@ void initialize()
   chassis.opcontrol_curve_default_set(0, 0);
 
   // Set the constants using the function defined in autons.cpp 
-  default_constants();
+  default_constants();  
 
   // Autonomous Selector
-  ez::as::auton_selector.autons_add(
-    {
-      Auton("do nothing",do_nothing),
-      Auton("draw square",draw_square)
-    }
-  );
+  ez::as::auton_selector.autons_add({
+    Auton("Draw Right-Handed Square", draw_square),
+    Auton("RED Left Side\nSetup on 3rd from left\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_left),
+    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
+    Auton("BLUE Right Side\nSetup on 3nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_right),
+    Auton("Blue Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left)
+  });
 
   // Initialize chassis and auton selector
   chassis.initialize();
