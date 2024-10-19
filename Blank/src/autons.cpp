@@ -68,12 +68,12 @@ void red_left(){
   chassis.pid_turn_relative_set(-50,70);
   chassis.pid_wait();
   Clamp.set_value(0);
-  chassis.pid_drive_set(-14,70);
+  chassis.pid_drive_set(-24,70);
   chassis.pid_wait();
   Clamp.set_value(1);
   Intake.move_velocity(200);
   Lifter.set_value(1);
-  chassis.pid_drive_set(26,100);
+  chassis.pid_drive_set(36,70);
   chassis.pid_wait();
   Lifter.set_value(0);
   pros::delay(750);
@@ -85,14 +85,16 @@ void red_left(){
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-100,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(27,100);
+  chassis.pid_drive_set(10,100);
   chassis.pid_wait();
   pros::delay(250);
+  chassis.pid_turn_set(135,70);
+  chassis.pid_wait();
   chassis.pid_drive_set(-10,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(-95,70);
+  chassis.pid_turn_set(-135,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(26,70);
+  chassis.pid_drive_set(40,70);
   chassis.pid_wait();
 }
 
@@ -108,20 +110,22 @@ void red_right(){
   chassis.pid_turn_set(-85,70);
   chassis.pid_wait();
   Intake.move_velocity(200);
-  chassis.pid_drive_set(25,100);
+  chassis.pid_drive_set(29,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_drive_set(-8,70);
+  chassis.pid_drive_set(-12,70);
   chassis.pid_wait();
   chassis.pid_turn_set(60,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(45,45);
+  Lifter.set_value(1);
+  chassis.pid_drive_set(43,45);
   chassis.pid_wait();
-  chassis.pid_drive_set(-20,70);
+  Lifter.set_value(0);
+  chassis.pid_drive_set(-40,70);
   chassis.pid_wait();
   chassis.pid_turn_set(135,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(40,70);
+  chassis.pid_drive_set(30,70);
   chassis.pid_wait();
 }
 
@@ -171,15 +175,17 @@ void blue_left(){
   chassis.pid_turn_set(85,70);
   chassis.pid_wait();
   Intake.move_velocity(200);
-  chassis.pid_drive_set(20,100);
+  chassis.pid_drive_set(29,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_drive_set(-8,70);
+  chassis.pid_drive_set(-12,70);
   chassis.pid_wait();
   chassis.pid_turn_set(-60,70);
   chassis.pid_wait();
+  Lifter.set_value(1);
   chassis.pid_drive_set(45,45);
   chassis.pid_wait();
+  Lifter.set_value(0);
   chassis.pid_drive_set(-20,70);
   chassis.pid_wait();
   chassis.pid_turn_set(-135,70);
@@ -236,18 +242,19 @@ void skillsauto(){
   chassis.pid_wait();
   pros::delay(500);
   //put goal in corner
-  chassis.pid_turn_set(-307,50);
+  chassis.pid_turn_set(-310,50);
   chassis.pid_wait();
-  chassis.pid_drive_set(-57,100);
+  chassis.pid_drive_set(-57,70);
   chassis.pid_wait();
+  pros::delay(500);
   Clamp.set_value(0);
   Intake.move_velocity(0);
   //grab another goal
-  chassis.pid_drive_set(16,70);
+  chassis.pid_drive_set(18,70);
   chassis.pid_wait();
   chassis.pid_turn_set(180,700);
   chassis.pid_wait();
-  chassis.pid_drive_set(-76,100);
+  chassis.pid_drive_set(-73,70);
   chassis.pid_wait();
   Clamp.set_value(1);
   //intake first ring (toward blue)
@@ -257,35 +264,38 @@ void skillsauto(){
   chassis.pid_drive_set(30,70);
   chassis.pid_wait();
   //intake second ring (toward 45 deg)
-  chassis.pid_turn_relative_set(-60,70);
+  chassis.pid_turn_relative_set(-65,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(35,70);
+  chassis.pid_drive_set(36,70);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-25,70);
   chassis.pid_wait();
   //intake third ring and first part of "L" (toward 270 deg)
-  chassis.pid_drive_set(-8,70);
+  chassis.pid_drive_set(-12,70);
   chassis.pid_wait();
-  chassis.pid_turn_relative_set(-120,70);
+  chassis.pid_turn_relative_set(-90,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(20,50);
+  chassis.pid_drive_set(32,50);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_drive_set(26,50);
+  chassis.pid_drive_set(16,40);
   chassis.pid_wait();
   //intake last ring
   chassis.pid_turn_relative_set(120,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(6,70);
+  chassis.pid_drive_set(16,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(-6,70);
+  pros::delay(500);
+  chassis.pid_drive_set(-14,70);
   chassis.pid_wait();
   //put goal in corner
   chassis.pid_turn_relative_set(105,70);
   chassis.pid_wait();
-  chassis.pid_drive_set(-12,70);
+  chassis.pid_drive_set(-18,70);
   chassis.pid_wait();
   Clamp.set_value(0);
   //go to next goal
-  chassis.pid_drive_set(24,70);
+  chassis.pid_drive_set(30,70);
   chassis.pid_wait();
   chassis.pid_turn_set(90,70);
   chassis.pid_wait();
@@ -293,4 +303,8 @@ void skillsauto(){
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-150,70);
   chassis.pid_wait();
+  chassis.pid_drive_set(-20,70);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  
 }
