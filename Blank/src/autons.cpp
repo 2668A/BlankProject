@@ -276,7 +276,7 @@ void skillsauto(){
   chassis.pid_turn_relative_set(-90,70);
   chassis.pid_wait();
   chassis.pid_drive_set(32,50);
-  chassis.pid_wait();
+  chassis.pid_wait(); 
   pros::delay(500);
   chassis.pid_drive_set(16,40);
   chassis.pid_wait();
