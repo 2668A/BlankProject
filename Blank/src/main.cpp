@@ -6,13 +6,18 @@
 // Chassis constructor, edit accordingly
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-1, -2, 8},  // Left Chassis Ports, (use negative numbers for reversed motors!)
-    {4, 5, -6},  // Right Chassis Ports (use negative numbers for reversed motors!)
+    {-11, 12, -13},  // Left Chassis Ports, (use negative numbers for reversed motors!)
+    {14, -15, 1},  // Right Chassis Ports (use negative numbers for reversed motors!)
 
-    7,          // IMU (inertial) port
+    10,          // IMU (inertial) port
     3.25,      // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     360         // Wheel RPM
 );
+
+
+
+
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -41,12 +46,17 @@ void initialize()
   // Set the constants using the function defined in autons.cpp
   default_constants();
 
+
+
+
+
+
   
 
   // Autonomous Selector
   ez::as::auton_selector.autons_add(
     {
-    Auton("Draw Right-Handed Square\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", draw_square),
+    Auton("Do Nothing\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", donothing),
     Auton("RED Left Side\nSetup on 3rd from left\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_left),
     Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
     Auton("BLUE Right Side\nSetup on 3nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_right),
@@ -61,6 +71,12 @@ void initialize()
   master.rumble(".");
 }
 
+
+
+
+
+
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -70,6 +86,12 @@ void disabled()
 {
   // Add your code here
 }
+
+
+
+
+
+
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -85,6 +107,12 @@ void competition_initialize()
   // Add your code here
   
 }
+
+
+
+
+
+
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -108,6 +136,17 @@ void autonomous()
   ez::as::auton_selector.selected_auton_call();
 }
 
+
+
+void move_arm(int input){
+  Arm.move(input);
+}
+
+ez::PID armPid{0.75,0,0,0,"LBMech"};
+
+
+
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -122,15 +161,6 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 
-void neutralscore(){
-  chassis.drive_angle_set(0);
-  while(FrontDistance.get()>230){
-    chassis.pid_drive_set(3,70);
-    chassis.pid_wait_quick();
-    pros::delay(300);
-  }
-}
-
 void opcontrol()
 {
   // This is preference to what you like to drive on
@@ -144,19 +174,15 @@ void opcontrol()
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
-  bool lifterstate;
+  bool lifterstate=0;
   Lifter.set_value(false);
-  Arm1.move_velocity(0);
-  Arm2.move_velocity(0);
-  Arm1.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm2.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm1.tare_position();
-  Arm2.tare_position();
-  Arm1.set_encoder_units(MOTOR_ENCODER_DEGREES);
-  Arm2.set_encoder_units(MOTOR_ENCODER_DEGREES); 
-
-  int armstate = 0;
-  int armtarget = 1;
+  Arm.move_velocity(0);
+  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm.tare_position();
+  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  int armtarget=0;
+  int colorstatus = 0;
+  //0 is off, -1 is allow red, 1 is allow blue
 
   // 1 = neutral stake
   // 0 = alliance stake
@@ -165,55 +191,13 @@ void opcontrol()
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Intake.move_velocity(200);
+      Intake.move_velocity(-200);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Intake.move_velocity(-200);   
+      Intake.move_velocity(200);   
     }
     else{
       Intake.move_velocity(0);
-    }
-
-    // Arm Auto Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
-      if (armstate==1){
-        armstate=-1;
-      }
-      else if(armstate=-1){
-        armstate=1;
-      }
-    }
-    if (armstate==1){
-      if (armtarget==0){
-        if (Arm1.get_position()>=500){
-          Arm1.move_velocity(0);
-          Arm2.move_velocity(0);
-        }
-        else{
-          Arm1.move_velocity(200);
-          Arm2.move_velocity(-200);
-        }
-      }
-      else{
-        if (Arm1.get_position()>=670){
-          Arm1.move_velocity(0);
-          Arm2.move_velocity(0);
-        }
-        else{
-          Arm1.move_velocity(200);
-          Arm2.move_velocity(-200);
-        }
-      }
-    }
-    if (armstate==-1){
-      if (Arm1.get_position()<=0){
-        Arm1.move_velocity(0);
-        Arm2.move_velocity(0);
-      }
-      else{
-        Arm1.move_velocity(-100);
-        Arm2.move_velocity(100);
-      }
     }
 
 
@@ -228,23 +212,46 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
+    // Arm Automatic Control
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+      armPid.target_set(-420);
+      //scoring pos
+    }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      armPid.target_set(-140);
+      //loading pos
+    }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
+      armPid.target_set(0);
+      //off pos
+    }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+      armPid.target_set(-500);
+      //pushdown
+    }
+    move_arm(armPid.compute(Arm.get_position()));
 
-    // Arm Maunual Mode Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      if (armtarget==1){
-        armtarget=0;
+    //Arm 1button control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+      if (armPid.target==0){
+        armPid.target_set(-140);
+      }
+      else if (armPid.target==-140){
+        armPid.target_set(-420);
+      }
+      else if (armPid.target==-420){
+        armPid.target_set(-500);
+      }
+      else if (armPid.target==-500){
+        armPid.target_set(0);
       }
       else{
-        armtarget=1;
+        armPid.target_set(0);
       }
     }
 
-    // Arm Align Automatic Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      neutralscore();
-    }
 
-    // Lifter Control
+    // Lifterr Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       if (lifterstate==1){
         lifterstate=0;
@@ -254,8 +261,6 @@ void opcontrol()
       }
       Lifter.set_value(lifterstate);
     }
-
-
 
     //TESTING ONLY
     if (master.get_digital(DIGITAL_A) && master.get_digital(DIGITAL_LEFT)){

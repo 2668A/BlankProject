@@ -17,3 +17,4 @@ void blue_right();
 void blue_left();
 void deploy();
 void skillsauto();
+void donothing();
