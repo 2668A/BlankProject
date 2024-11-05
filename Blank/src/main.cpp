@@ -34,7 +34,7 @@ void initialize()
   // Configure your chassis controls
 
   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_curve_buttons_toggle(true);
+  chassis.opcontrol_curve_buttons_toggle(false);
 
   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_drive_activebrake_set(2);
@@ -61,7 +61,7 @@ void initialize()
     Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
     Auton("BLUE Right Side\nSetup on 3nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_right),
     Auton("BLUE Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left),
-    Auton("SKILLS auto\nsetup on 2nd from right\nFront lined up with wall\nMogo bar lined up with inner left edge",skillsauto)
+    Auton("SKILLS auto\nsetup on 2nd from right\nFront drive hole on 8th hole\nwall rider between edges",skillsauto)
     }
   );
 
@@ -142,7 +142,7 @@ void move_arm(int input){
   Arm.move(input);
 }
 
-ez::PID armPid{0.75,0,0,0,"LBMech"};
+ez::PID armPid{1,0,0,0,"LBMech"};
 
 
 
@@ -181,11 +181,10 @@ void opcontrol()
   Arm.tare_position();
   Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
   int armtarget=0;
-  int colorstatus = 0;
+  int colorside = 0;
+  ColorSorter.disable_gesture();
   //0 is off, -1 is allow red, 1 is allow blue
 
-  // 1 = neutral stake
-  // 0 = alliance stake
   while (true) 
   {
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -244,6 +243,9 @@ void opcontrol()
       }
       else if (armPid.target==-500){
         armPid.target_set(0);
+        chassis.drive_angle_set(0);
+        chassis.pid_drive_set(-10,70);
+        chassis.pid_wait();
       }
       else{
         armPid.target_set(0);
@@ -260,6 +262,35 @@ void opcontrol()
         lifterstate=1;
       }
       Lifter.set_value(lifterstate);
+    }
+
+    //colorsort
+    double colorhuedetect = ColorSorter.get_hue();
+    if (colorside==-1){
+      if(100.0<colorhuedetect && colorhuedetect<220.0){
+        Intake.move_velocity(100);
+      }
+    }
+    if (colorside==1){
+      if(0.0<colorhuedetect && colorhuedetect<20.0){
+        Intake.move_velocity(100);
+      }
+    }
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y) && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+      if (colorside==0){
+        colorside=-1; 
+        master.set_text(0,0,"ALLOW RED");
+      }
+      else if(colorside==-1){
+        colorside=-colorside;
+        master.set_text(0,0,"ALLOW BLUE");
+      }
+      else if(colorside==1){
+        colorside=-colorside;
+        master.set_text(0,0,"ALLOW RED");
+      }
+      
     }
 
     //TESTING ONLY
