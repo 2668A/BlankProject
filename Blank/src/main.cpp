@@ -268,12 +268,12 @@ void opcontrol()
     double colorhuedetect = ColorSorter.get_hue();
     if (colorside==-1){
       if(100.0<colorhuedetect && colorhuedetect<220.0){
-        Intake.move_velocity(100);
+        Intake.move_velocity(-50);
       }
     }
     if (colorside==1){
       if(0.0<colorhuedetect && colorhuedetect<20.0){
-        Intake.move_velocity(100);
+        Intake.move_velocity(-50);
       }
     }
 
