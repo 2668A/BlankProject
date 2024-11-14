@@ -105,7 +105,7 @@ void disabled()
 void competition_initialize() 
 {
   // Add your code here
-  
+  Arm.tare_position();
 }
 
 
@@ -136,13 +136,32 @@ void autonomous()
   ez::as::auton_selector.selected_auton_call();
 }
 
-
-
 void move_arm(int input){
   Arm.move(input);
 }
 
 ez::PID armPid{1,0,0,0,"LBMech"};
+
+void neutral_load(){
+  armPid.target_set(-130);
+  while(armPid.exit_condition(Arm,true)==ez::RUNNING){
+    move_arm(armPid.compute(Arm.get_position()));
+    chassis.opcontrol_arcade_standard(ez::SPLIT);
+    pros::delay(ez::util::DELAY_TIME);
+  }
+  while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<50){
+    Intake.move_velocity(-250);
+    chassis.opcontrol_arcade_standard(ez::SPLIT);
+    pros::delay(ez::util::DELAY_TIME);
+  }
+  pros::delay(200);
+  Intake.move_velocity(0);
+  Intake.move_velocity(50);
+  pros::delay(100);
+  Intake.move_velocity(0);
+}
+
+
 
 
 
@@ -178,13 +197,12 @@ void opcontrol()
   Lifter.set_value(false);
   Arm.move_velocity(0);
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.tare_position();
   Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
   int armtarget=0;
   int colorside = 0;
   ColorSorter.disable_gesture();
   //0 is off, -1 is allow red, 1 is allow blue
-
+  master.set_text(0,0,"ALLOW ALL");
   while (true) 
   {
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -213,11 +231,11 @@ void opcontrol()
     
     // Arm Automatic Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      armPid.target_set(-420);
+      armPid.target_set(-410);
       //scoring pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(-140);
+      armPid.target_set(-130);
       //loading pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
@@ -225,7 +243,7 @@ void opcontrol()
       //off pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      armPid.target_set(-500);
+      armPid.target_set(-490);
       //pushdown
     }
     move_arm(armPid.compute(Arm.get_position()));
@@ -233,19 +251,16 @@ void opcontrol()
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==0){
-        armPid.target_set(-140);
+        armPid.target_set(-130);
       }
-      else if (armPid.target==-140){
-        armPid.target_set(-420);
+      else if (armPid.target==-130){
+        armPid.target_set(-410);
       }
-      else if (armPid.target==-420){
-        armPid.target_set(-500);
+      else if (armPid.target==-410){
+        armPid.target_set(-490);
       }
-      else if (armPid.target==-500){
+      else if (armPid.target==-490){
         armPid.target_set(0);
-        chassis.drive_angle_set(0);
-        chassis.pid_drive_set(-10,70);
-        chassis.pid_wait();
       }
       else{
         armPid.target_set(0);
@@ -264,31 +279,43 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+      neutral_load();
+    }
+
     //colorsort
     double colorhuedetect = ColorSorter.get_hue();
     if (colorside==-1){
       if(100.0<colorhuedetect && colorhuedetect<220.0){
-        Intake.move_velocity(-50);
+        pros::delay(50);
+        Intake.move_velocity(100);
+        pros::delay(100);
+        Intake.move_velocity(-200);
+        pros::delay(100);
       }
     }
     if (colorside==1){
       if(0.0<colorhuedetect && colorhuedetect<20.0){
-        Intake.move_velocity(-50);
+        pros::delay(50);
+        Intake.move_velocity(100);
+        pros::delay(100);
+        Intake.move_velocity(-200);
+        pros::delay(100);
       }
     }
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y) && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
       if (colorside==0){
         colorside=-1; 
         master.set_text(0,0,"ALLOW RED");
       }
       else if(colorside==-1){
-        colorside=-colorside;
+        colorside=1;
         master.set_text(0,0,"ALLOW BLUE");
       }
       else if(colorside==1){
-        colorside=-colorside;
-        master.set_text(0,0,"ALLOW RED");
+        colorside=0;
+        master.set_text(0,0,"ALLOW ALL");
       }
       
     }
