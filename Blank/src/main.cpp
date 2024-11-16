@@ -154,10 +154,9 @@ void neutral_load(){
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(ez::util::DELAY_TIME);
   }
-  pros::delay(200);
-  Intake.move_velocity(0);
-  Intake.move_velocity(50);
-  pros::delay(100);
+  pros::delay(250);
+  Intake.move_velocity(200);
+  pros::delay(300);
   Intake.move_velocity(0);
 }
 
@@ -295,7 +294,7 @@ void opcontrol()
       }
     }
     if (colorside==1){
-      if(0.0<colorhuedetect && colorhuedetect<20.0){
+      if((0.0<=colorhuedetect && colorhuedetect<20.0)||(340.0<colorhuedetect && colorhuedetect<=360.0)){
         pros::delay(50);
         Intake.move_velocity(100);
         pros::delay(100);
@@ -307,15 +306,15 @@ void opcontrol()
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
       if (colorside==0){
         colorside=-1; 
-        master.set_text(0,0,"ALLOW RED");
+        master.set_text(0,0,"ALLOW RED   ");
       }
       else if(colorside==-1){
         colorside=1;
-        master.set_text(0,0,"ALLOW BLUE");
+        master.set_text(0,0,"ALLOW BLUE   ");
       }
       else if(colorside==1){
         colorside=0;
-        master.set_text(0,0,"ALLOW ALL");
+        master.set_text(0,0,"ALLOW ALL   ");
       }
       
     }

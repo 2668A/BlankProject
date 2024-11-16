@@ -245,11 +245,11 @@ void skillsauto(){
   Clamp.set_value(0);
   Intake.move_velocity(0);
   //grab another goal
-  chassis.pid_drive_set(18,85);
+  chassis.pid_drive_set(16,85);
   chassis.pid_wait();
-  chassis.pid_turn_set(150,70);
+  chassis.pid_turn_set(90,80);
   chassis.pid_wait();
-  chassis.pid_turn_relative_set(30,80);
+  chassis.pid_turn_relative_set(90,80);
   chassis.pid_wait();
   chassis.pid_drive_set(-75,110);
   chassis.pid_wait();
@@ -293,36 +293,24 @@ void skillsauto(){
   chassis.pid_drive_set(-20,80);
   chassis.pid_wait();
   Clamp.set_value(0);
-  //go to next goal (one with blue ring on it)
-  /*
-  chassis.pid_drive_set(20,70);
-  chassis.pid_wait();
-  chassis.pid_turn_set(90,70);
-  chassis.pid_wait();
-  chassis.pid_drive_set(80,110);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-150,70);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-20,70);
-  chassis.pid_wait();
-  Clamp.set_value(1);
-  */
-  //put goal in corner
   //go to next goal (empty goal)
   chassis.pid_drive_set(28,80);
   chassis.pid_wait();
   chassis.pid_turn_set(90,80);
   chassis.pid_wait();
-  chassis.pid_drive_set(90,110);
+  chassis.pid_drive_set(92,110);
   chassis.pid_wait();
   pros::delay(500);
+  //turn to goal
   chassis.pid_turn_set(-45,80);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(45,80);
   chassis.pid_wait();
+  //pick up goal
   chassis.pid_drive_set(-40,80);
   chassis.pid_wait();
   Clamp.set_value(1);
+  //intake rings
   Intake.move_velocity(-200);
   chassis.pid_drive_set(55,80);
   chassis.pid_wait();
@@ -332,12 +320,35 @@ void skillsauto(){
   chassis.pid_wait();
   chassis.pid_drive_set(30,80);
   chassis.pid_wait();
-  chassis.pid_drive_set(-6,80);
+  chassis.pid_drive_set(-8,80);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-90,80);
   chassis.pid_wait();
+  chassis.pid_drive_set(26,80);
+  chassis.pid_wait();
+  //put goal in corder
+  chassis.pid_turn_set(-135,80);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-20,80);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-30,70);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-135,70);
+  chassis.pid_wait();
+  //move to blue goal
   chassis.pid_drive_set(20,80);
   chassis.pid_wait();
+  chassis.pid_turn_relative_set(-45,80);
+  chassis.pid_wait();
+  chassis.pid_drive_set(26,80);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(150,80);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-70,80);
+  chassis.pid_wait();
+  // intake rings on opposite side of ladder (BACKUP)
+  /*
   chassis.pid_turn_relative_set(-45,80);
   chassis.pid_wait();
   chassis.pid_drive_set(35,80);
@@ -350,5 +361,7 @@ void skillsauto(){
   chassis.pid_wait();
   chassis.pid_drive_set(26,80);
   chassis.pid_wait();
+  */
+
   
 }
