@@ -11,3 +11,4 @@ inline pros::ADIDigitalOut Clamp('A');
 inline pros::ADIDigitalOut Lifter('B');
 inline pros::Motor Arm(17);
 inline pros::Optical ColorSorter(20);
+inline pros::Rotation ArmSensor(8);

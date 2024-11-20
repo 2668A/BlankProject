@@ -69,6 +69,12 @@ void initialize()
   chassis.initialize();
   ez::as::initialize();
   master.rumble(".");
+
+  Arm.tare_position();
+  ArmSensor.reset();
+  ArmSensor.reset_position();
+  ArmSensor.set_reversed(true);
+  ArmSensor.set_data_rate(50);
 }
 
 
@@ -105,7 +111,6 @@ void disabled()
 void competition_initialize() 
 {
   // Add your code here
-  Arm.tare_position();
 }
 
 
@@ -140,23 +145,17 @@ void move_arm(int input){
   Arm.move(input);
 }
 
-ez::PID armPid{1,0,0,0,"LBMech"};
+ez::PID armPid{0.1,0,0,0,"LBMech"};
 
 void neutral_load(){
-  armPid.target_set(-130);
-  while(armPid.exit_condition(Arm,true)==ez::RUNNING){
-    move_arm(armPid.compute(Arm.get_position()));
-    chassis.opcontrol_arcade_standard(ez::SPLIT);
-    pros::delay(ez::util::DELAY_TIME);
-  }
   while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<50){
     Intake.move_velocity(-250);
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(ez::util::DELAY_TIME);
   }
-  pros::delay(250);
+  pros::delay(500);
   Intake.move_velocity(200);
-  pros::delay(300);
+  pros::delay(200);
   Intake.move_velocity(0);
 }
 
@@ -197,11 +196,13 @@ void opcontrol()
   Arm.move_velocity(0);
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
   Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  ArmSensor.reset();
   int armtarget=0;
   int colorside = 0;
   ColorSorter.disable_gesture();
   //0 is off, -1 is allow red, 1 is allow blue
   master.set_text(0,0,"ALLOW ALL");
+  armPid.target_set(0);
   while (true) 
   {
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -228,13 +229,13 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
-    // Arm Automatic Control
+    // Arm  Manual Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      armPid.target_set(-410);
+      armPid.target_set(22000);
       //scoring pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(-130);
+      armPid.target_set(33000);
       //loading pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
@@ -242,23 +243,24 @@ void opcontrol()
       //off pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      armPid.target_set(-490);
+      armPid.target_set(20000);
       //pushdown
     }
+    move_arm(armPid.compute(ArmSensor.get_position()));
     move_arm(armPid.compute(Arm.get_position()));
 
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==0){
-        armPid.target_set(-130);
+        armPid.target_set(33000);
       }
-      else if (armPid.target==-130){
-        armPid.target_set(-410);
+      else if (armPid.target==33000){
+        armPid.target_set(22000);
       }
-      else if (armPid.target==-410){
-        armPid.target_set(-490);
+      else if (armPid.target==22000){
+        armPid.target_set(20000);
       }
-      else if (armPid.target==-490){
+      else if (armPid.target==20000){
         armPid.target_set(0);
       }
       else{
