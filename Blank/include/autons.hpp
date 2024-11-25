@@ -10,7 +10,8 @@ void default_constants();
 
 
 // Add autonomous function declarations here
-void draw_square();
+void pid_test();
+void pid_turn_test();
 void red_left();
 void red_right();
 void blue_right();

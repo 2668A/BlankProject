@@ -56,24 +56,20 @@ void initialize()
   // Autonomous Selector
   ez::as::auton_selector.autons_add(
     {
-    Auton("Do Nothing\nPLEASE DONT ACTUALLY RUN THIS DURING COMPETITION", donothing),
-    Auton("RED Left Side\nSetup on 3rd from left\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_left),
-    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
-    Auton("BLUE Right Side\nSetup on 3nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_right),
-    Auton("BLUE Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left),
-    Auton("SKILLS auto\nsetup on 2nd from right\nFront drive hole on 8th hole\nwall rider between edges",skillsauto)
+    Auton("PID TTESTING",pid_test),
+    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right)
     }
   );
 
   // Initialize chassis and auton selector
   chassis.initialize();
-  ez::as::initialize();
+  ez::as::initialize();    
   master.rumble(".");
 
   Arm.tare_position();
   ArmSensor.reset();
   ArmSensor.reset_position();
-  ArmSensor.set_reversed(true);
+  //ArmSensor.set_reversed(true);
   ArmSensor.set_data_rate(50);
 }
 
@@ -145,7 +141,7 @@ void move_arm(int input){
   Arm.move(input);
 }
 
-ez::PID armPid{0.1,0,0,0,"LBMech"};
+ez::PID armPid{0.015,0,0,0,"LBMech"};
 
 void neutral_load(){
   while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<50){
@@ -193,6 +189,8 @@ void opcontrol()
   Clamp.set_value(false);
   bool lifterstate=0;
   Lifter.set_value(false);
+  bool doinkstate=0;
+  Doink.set_value(false);
   Arm.move_velocity(0);
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
   Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
@@ -202,7 +200,7 @@ void opcontrol()
   ColorSorter.disable_gesture();
   //0 is off, -1 is allow red, 1 is allow blue
   master.set_text(0,0,"ALLOW ALL");
-  armPid.target_set(0);
+  armPid.target_set(35500);
   while (true) 
   {
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -235,36 +233,40 @@ void opcontrol()
       //scoring pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(33000);
+      armPid.target_set(32500);
       //loading pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-      armPid.target_set(0);
+      armPid.target_set(35500);
       //off pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      armPid.target_set(20000);
+      armPid.target_set(19000);
       //pushdown
     }
-    move_arm(armPid.compute(ArmSensor.get_position()));
-    move_arm(armPid.compute(Arm.get_position()));
+    int angle_reading = ArmSensor.get_position();
+    if (0<=angle_reading && angle_reading<18000){
+      angle_reading=36000-angle_reading;
+    }
+
+    move_arm(armPid.compute(angle_reading));
 
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
-      if (armPid.target==0){
-        armPid.target_set(33000);
+      if (armPid.target==35500){
+        armPid.target_set(32500);
       }
-      else if (armPid.target==33000){
+      else if (armPid.target==32500){
         armPid.target_set(22000);
       }
       else if (armPid.target==22000){
-        armPid.target_set(20000);
+        armPid.target_set(19000);
       }
-      else if (armPid.target==20000){
-        armPid.target_set(0);
+      else if (armPid.target==19000){
+        armPid.target_set(35500);
       }
       else{
-        armPid.target_set(0);
+        armPid.target_set(35500);
       }
     }
 
@@ -280,9 +282,9 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
-      neutral_load();
-    }
+    //if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+    //  neutral_load();
+    //}
 
     //colorsort
     double colorhuedetect = ColorSorter.get_hue();
@@ -321,8 +323,19 @@ void opcontrol()
       
     }
 
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+      if (doinkstate==1){
+        doinkstate=0;
+      }
+      else{
+        doinkstate=1;
+      }
+      Doink.set_value(doinkstate);
+    }
+
     //TESTING ONLY
-    if (master.get_digital(DIGITAL_A) && master.get_digital(DIGITAL_LEFT)){
+    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
       autonomous();
     }
 
