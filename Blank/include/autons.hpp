@@ -16,6 +16,5 @@ void red_left();
 void red_right();
 void blue_right();
 void blue_left();
-void deploy();
 void skillsauto();
 void donothing();

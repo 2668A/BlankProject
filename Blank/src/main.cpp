@@ -54,12 +54,18 @@ void initialize()
   
 
   // Autonomous Selector
+
   ez::as::auton_selector.autons_add(
     {
     Auton("PID TTESTING",pid_test),
-    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right)
+    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
+    Auton("RED Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", red_left),
+    Auton("BLUE Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", blue_right),
+    Auton("BLUE Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left),
+    Auton("SKILLS", skillsauto)
     }
   );
+
 
   // Initialize chassis and auton selector
   chassis.initialize();
@@ -141,17 +147,17 @@ void move_arm(int input){
   Arm.move(input);
 }
 
-ez::PID armPid{0.015,0,0,0,"LBMech"};
+ez::PID armPid{0.02,0,0,0,"LBMech"};
 
 void neutral_load(){
-  while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<50){
-    Intake.move_velocity(-250);
+  while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<70){
+    Intake.move_velocity(-120);
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(ez::util::DELAY_TIME);
   }
-  pros::delay(500);
-  Intake.move_velocity(200);
-  pros::delay(200);
+  pros::delay(400);
+  Intake.move_velocity(120);
+  pros::delay(300);
   Intake.move_velocity(0);
 }
 
@@ -201,15 +207,22 @@ void opcontrol()
   //0 is off, -1 is allow red, 1 is allow blue
   master.set_text(0,0,"ALLOW ALL");
   armPid.target_set(35500);
+  ColorSorter.set_led_pwm(100);
   while (true) 
   {
+
+    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
+      autonomous();
+    }
+
+
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Intake.move_velocity(-200);
+      Intake.move_velocity(-120);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Intake.move_velocity(200);   
+      Intake.move_velocity(120); 
     }
     else{
       Intake.move_velocity(0);
@@ -228,12 +241,8 @@ void opcontrol()
     }
     
     // Arm  Manual Control
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      armPid.target_set(22000);
-      //scoring pos
-    }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(32500);
+      armPid.target_set(32200);
       //loading pos
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
@@ -254,14 +263,11 @@ void opcontrol()
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(32500);
+        armPid.target_set(32200);
       }
-      else if (armPid.target==32500){
-        armPid.target_set(22000);
-      }
-      else if (armPid.target==22000){
+      else if (armPid.target==32200){
         armPid.target_set(19000);
-      }
+      } 
       else if (armPid.target==19000){
         armPid.target_set(35500);
       }
@@ -282,27 +288,25 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
-    //if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
-    //  neutral_load();
-    //}
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      neutral_load();
+    }
 
     //colorsort
     double colorhuedetect = ColorSorter.get_hue();
     if (colorside==-1){
       if(100.0<colorhuedetect && colorhuedetect<220.0){
-        pros::delay(50);
-        Intake.move_velocity(100);
-        pros::delay(100);
-        Intake.move_velocity(-200);
+        Intake.move_velocity(50);
+        pros::delay(200);
+        Intake.move_velocity(-120);
         pros::delay(100);
       }
     }
     if (colorside==1){
       if((0.0<=colorhuedetect && colorhuedetect<20.0)||(340.0<colorhuedetect && colorhuedetect<=360.0)){
-        pros::delay(50);
-        Intake.move_velocity(100);
-        pros::delay(100);
-        Intake.move_velocity(-200);
+        Intake.move_velocity(50);
+        pros::delay(200);
+        Intake.move_velocity(-120);
         pros::delay(100);
       }
     }
@@ -335,9 +339,7 @@ void opcontrol()
     }
 
     //TESTING ONLY
-    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      autonomous();
-    }
+    
 
 
 

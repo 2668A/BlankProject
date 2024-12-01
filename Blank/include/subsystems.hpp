@@ -13,3 +13,4 @@ inline pros::ADIDigitalOut Doink('C');
 inline pros::Motor Arm(17);
 inline pros::Optical ColorSorter(20);
 inline pros::Rotation ArmSensor(8);
+inline pros::Distance BackDistance(7);
