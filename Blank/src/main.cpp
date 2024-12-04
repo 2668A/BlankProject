@@ -155,7 +155,7 @@ void neutral_load(){
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(ez::util::DELAY_TIME);
   }
-  pros::delay(400);
+  pros::delay(600);
   Intake.move_velocity(120);
   pros::delay(300);
   Intake.move_velocity(0);
