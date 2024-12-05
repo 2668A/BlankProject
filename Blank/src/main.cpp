@@ -157,7 +157,7 @@ void neutral_load(){
   }
   pros::delay(600);
   Intake.move_velocity(120);
-  pros::delay(300);
+  pros::delay(250);
   Intake.move_velocity(0);
 }
 

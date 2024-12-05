@@ -321,7 +321,7 @@ void skillsauto(){
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.move_relative(-110,200);
+  Arm.move_relative(-100,200);
   chassis.pid_drive_set(27,100);
   chassis.pid_wait();
   //intake ring into arm
@@ -332,10 +332,10 @@ void skillsauto(){
   }
   pros::delay(600);
   Intake.move_velocity(120);
-  pros::delay(200);
+  pros::delay(350);
   Intake.move_velocity(0);
   ColorSorter.set_led_pwm(0);
-  Arm.move_relative(-100,100);
+  //Arm.move_relative(-100,100);
   //move to wallstake and intake ring underneath
   chassis.pid_turn_relative_set(20,100);
   chassis.pid_wait();
@@ -343,15 +343,15 @@ void skillsauto(){
   chassis.pid_wait();
   chassis.pid_turn_relative_set(70,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
-  chassis.pid_drive_set(22,100);
+  chassis.pid_drive_set(20,100);
   chassis.pid_wait();
   //score wallstake
-  Arm.move_relative(-330,200);
+  Arm.move_relative(-430,200);
   pros::delay(500);
-  chassis.pid_drive_set(-14,100);
+  Intake.move_velocity(-120);
+  chassis.pid_drive_set(-12,100);
   chassis.pid_wait();
-  Arm.move_relative(54,200);
+  Arm.move_relative(530,200);
   //drive to set of 3 rings
   chassis.pid_turn_relative_set(90,100);
   chassis.pid_wait();
@@ -405,7 +405,7 @@ void skillsauto(){
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.move_relative(-110,200);
+  Arm.move_relative(-100,200);
   chassis.pid_drive_set(27,100);
   chassis.pid_wait();
   //intake ring into arm
@@ -416,10 +416,10 @@ void skillsauto(){
   }
   pros::delay(600);
   Intake.move_velocity(120);
-  pros::delay(200);
+  pros::delay(350);
   Intake.move_velocity(0);
   ColorSorter.set_led_pwm(0);
-  Arm.move_relative(-100,100); 
+  //Arm.move_relative(-100,100); 
   //move to wallstake and intake ring underneath
   chassis.pid_turn_relative_set(-15,100);
   chassis.pid_wait();
@@ -431,12 +431,13 @@ void skillsauto(){
   chassis.pid_drive_set(24,100);
   chassis.pid_wait();
   //score wallstake
-  Arm.move_relative(-330,200);
+  Arm.move_relative(-430,200);
   pros::delay(500);
+  Intake.move_velocity(-120);
   chassis.pid_drive_set(-14,100);
   chassis.pid_wait();
   //drive to set of 3 rings
-  Arm.move_relative(540,200);
+  Arm.move_relative(530,200);
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
   long_constants();
