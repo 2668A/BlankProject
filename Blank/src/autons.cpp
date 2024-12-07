@@ -154,16 +154,16 @@ void red_left(){
   Clamp.set_value(1);
   chassis.pid_turn_relative_set(60,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   chassis.pid_drive_set(-6,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(90,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(20,100);
+  chassis.pid_drive_set(18,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-40,127);
+  chassis.pid_drive_set(-38,127);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(90,100);
   chassis.pid_wait();
@@ -194,10 +194,10 @@ void red_right(){
   chassis.pid_wait();
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
-  pros::delay(500);
+  pros::delay(750);
   Intake.move_velocity(0);
   chassis.pid_turn_relative_set(-80,100);
   chassis.pid_wait();
@@ -217,7 +217,7 @@ void red_right(){
   chassis.pid_wait();
   chassis.pid_drive_set(-18,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   Clamp.set_value(1);
   chassis.pid_turn_relative_set(90,100);
   chassis.pid_wait();
@@ -235,16 +235,16 @@ void blue_right(){
   Clamp.set_value(1);
   chassis.pid_turn_relative_set(-60,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   chassis.pid_drive_set(-6,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(20,100);
+  chassis.pid_drive_set(18,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-40,127);
+  chassis.pid_drive_set(-38,127);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
@@ -275,11 +275,35 @@ void blue_left(){
   chassis.pid_wait();
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
-  pros::delay(500);
+  pros::delay(750);
   Intake.move_velocity(0);
+  chassis.pid_turn_relative_set(100,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-10,100);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(25,100);
+  chassis.pid_wait();
+  Doink.set_value(1);
+  pros::delay(250);
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+  Doink.set_value(0);
+  chassis.pid_drive_set(-6,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-190,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-18,100);
+  chassis.pid_wait();
+  Intake.move_velocity(-150);
+  Clamp.set_value(1);
+  chassis.pid_turn_relative_set(-90,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(30,100);
+  chassis.pid_wait(); 
 }
 
 void donothing(){}
@@ -305,7 +329,7 @@ void skillsauto(){
   Clamp.set_value(1);
   //intake first 2 rings (toward 90 deg then 180 deg)
   chassis.pid_turn_relative_set(90,100);
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_wait();
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
@@ -327,29 +351,30 @@ void skillsauto(){
   //intake ring into arm
   ColorSorter.set_led_pwm(100);
   while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<70){
-    Intake.move_velocity(-120);
+    Intake.move_velocity(-150);
     pros::delay(ez::util::DELAY_TIME);
   }
   pros::delay(600);
   Intake.move_velocity(120);
-  pros::delay(350);
+  pros::delay(275);
   Intake.move_velocity(0);
   ColorSorter.set_led_pwm(0);
   //Arm.move_relative(-100,100);
   //move to wallstake and intake ring underneath
-  chassis.pid_turn_relative_set(20,100);
+  chassis.pid_turn_relative_set(15,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-24,100);
+  chassis.pid_drive_set(-26,100);
   chassis.pid_wait();
-  chassis.pid_turn_relative_set(70,100);
+  //chassis.pid_turn_relative_set(75,100);
+  chassis.pid_turn_set(179,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(20,100);
+  chassis.pid_drive_set(21,100);
   chassis.pid_wait();
   //score wallstake
   Arm.move_relative(-430,200);
-  pros::delay(500);
-  Intake.move_velocity(-120);
-  chassis.pid_drive_set(-12,100);
+  pros::delay(750);
+  Intake.move_velocity(-150);
+  chassis.pid_drive_set(-15,100);
   chassis.pid_wait();
   Arm.move_relative(530,200);
   //drive to set of 3 rings
@@ -380,7 +405,7 @@ void skillsauto(){
   // move to next goal
   chassis.pid_drive_set(10,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(177,100);
+  chassis.pid_turn_set(180,100);
   chassis.pid_wait();
   long_constants();
   chassis.pid_drive_set(-76,127);
@@ -389,52 +414,51 @@ void skillsauto(){
   Clamp.set_value(1);
   //intake first 2 rings (toward 90 deg then 180 deg)
   chassis.pid_turn_relative_set(-90,100);
-  Intake.move_velocity(-120);
+  Intake.move_velocity(-150);
   chassis.pid_wait();
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
   //raising arm while moving to next ring (180 deg)
-  chassis.pid_drive_set(24,100);
+  chassis.pid_drive_set(26,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(135,100);
+  chassis.pid_turn_set(45,100);
   chassis.pid_wait();  
-  chassis.pid_turn_relative_set(-48,100);
+  chassis.pid_turn_relative_set(45,100);
   chassis.pid_wait();
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.move_relative(-100,200);
+  Arm.move_relative(-95,200);
   chassis.pid_drive_set(27,100);
   chassis.pid_wait();
   //intake ring into arm
   ColorSorter.set_led_pwm(100);
   while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<70){
-    Intake.move_velocity(-120);
+    Intake.move_velocity(-150);
     pros::delay(ez::util::DELAY_TIME);
   }
   pros::delay(600);
   Intake.move_velocity(120);
-  pros::delay(350);
+  pros::delay(250);
   Intake.move_velocity(0);
   ColorSorter.set_led_pwm(0);
   //Arm.move_relative(-100,100); 
   //move to wallstake and intake ring underneath
-  chassis.pid_turn_relative_set(-15,100);
+  chassis.pid_turn_relative_set(-10,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-26,100);
+  chassis.pid_drive_set(-30,100);
   chassis.pid_wait();
-  chassis.pid_turn_relative_set(-75,100);
+  chassis.pid_turn_relative_set(-80,100);
   chassis.pid_wait();
-  Intake.move_velocity(-120);
-  chassis.pid_drive_set(24,100);
+  chassis.pid_drive_set(20,100);
   chassis.pid_wait();
   //score wallstake
   Arm.move_relative(-430,200);
-  pros::delay(500);
-  Intake.move_velocity(-120);
-  chassis.pid_drive_set(-14,100);
+  pros::delay(750);
+  Intake.move_velocity(-150);
+  chassis.pid_drive_set(-15,100);
   chassis.pid_wait();
   //drive to set of 3 rings
   Arm.move_relative(530,200);
@@ -478,8 +502,23 @@ void skillsauto(){
   chassis.pid_drive_set(-30,100);
   chassis.pid_wait();
   Clamp.set_value(1); 
-  Intake.move_velocity(-120);
-  chassis.pid_turn_set(40,100);
+  Intake.move_velocity(-150);
+  chassis.pid_drive_set(40,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-135,100);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_drive_set(-24,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(24,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-45,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(24,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-160,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-80,100);
   chassis.pid_wait();
 
   

@@ -151,7 +151,7 @@ ez::PID armPid{0.02,0,0,0,"LBMech"};
 
 void neutral_load(){
   while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<70){
-    Intake.move_velocity(-120);
+    Intake.move_velocity(-150);
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(ez::util::DELAY_TIME);
   }
@@ -219,10 +219,10 @@ void opcontrol()
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Intake.move_velocity(-120);
+      Intake.move_velocity(-150);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Intake.move_velocity(120); 
+      Intake.move_velocity(150); 
     }
     else{
       Intake.move_velocity(0);
@@ -298,7 +298,7 @@ void opcontrol()
       if(100.0<colorhuedetect && colorhuedetect<220.0){
         Intake.move_velocity(50);
         pros::delay(200);
-        Intake.move_velocity(-120);
+        Intake.move_velocity(-150);
         pros::delay(100);
       }
     }
@@ -306,7 +306,7 @@ void opcontrol()
       if((0.0<=colorhuedetect && colorhuedetect<20.0)||(340.0<colorhuedetect && colorhuedetect<=360.0)){
         Intake.move_velocity(50);
         pros::delay(200);
-        Intake.move_velocity(-120);
+        Intake.move_velocity(-150);
         pros::delay(100);
       }
     }
