@@ -73,6 +73,11 @@ void initialize()
   ez::as::initialize();    
   master.rumble(".");
 
+  Arm.tare_position();
+  ArmSensor.reset();
+  ArmSensor.reset_position();
+  //ArmSensor.set_reversed(true);
+  ArmSensor.set_data_rate(50);
 }
 
 
@@ -140,7 +145,11 @@ void autonomous()
 }
 
 
+void move_arm(int input){
+  Arm.move(input);
+}
 
+ez::PID armPid{0.02,0,0,0,"LBMech"};
 
 
 
@@ -172,6 +181,16 @@ void opcontrol()
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
+  Arm.move_velocity(0);
+  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  ArmSensor.reset();
+  int armtarget=0;
+  armPid.target_set(35500);
+
+
+
+
   while (true) 
   {
 
@@ -206,6 +225,29 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
+    int angle_reading = ArmSensor.get_position();
+    if (0<=angle_reading && angle_reading<18000){
+      angle_reading=36000-angle_reading;
+    }
+
+    move_arm(armPid.compute(angle_reading));
+
+    //Arm 1button control
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+      if (armPid.target==35500){
+        armPid.target_set(33000);
+      }
+      else if (armPid.target==33000){
+        armPid.target_set(22000);
+      } 
+      else if (armPid.target==22000){
+        armPid.target_set(35500);
+      }
+      else{
+        armPid.target_set(35500);
+      }
+    }
+
 
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
