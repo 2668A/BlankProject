@@ -6,8 +6,9 @@
 // Chassis constructor, edit accordingly
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-11, 12, -13},  // Left Chassis Ports, (use negative numbers for reversed motors!)
-    {14, -15, 1},  // Right Chassis Ports (use negative numbers for reversed motors!)
+    {1,-2,-3},  // Right Chassis Ports (use negative numbers for reversed motors!)
+    {-4,5,6},  // Left Chassis Ports, (use negative numbers for reversed motors!)
+    
 
     10,          // IMU (inertial) port
     3.25,      // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -72,11 +73,6 @@ void initialize()
   ez::as::initialize();    
   master.rumble(".");
 
-  Arm.tare_position();
-  ArmSensor.reset();
-  ArmSensor.reset_position();
-  //ArmSensor.set_reversed(true);
-  ArmSensor.set_data_rate(50);
 }
 
 
@@ -143,23 +139,6 @@ void autonomous()
   ez::as::auton_selector.selected_auton_call();
 }
 
-void move_arm(int input){
-  Arm.move(input);
-}
-
-ez::PID armPid{0.02,0,0,0,"LBMech"};
-
-void neutral_load(){
-  while(ColorSorter.get_hue()>20 && ColorSorter.get_hue()<70){
-    Intake.move_velocity(-150);
-    chassis.opcontrol_arcade_standard(ez::SPLIT);
-    pros::delay(ez::util::DELAY_TIME);
-  }
-  pros::delay(600);
-  Intake.move_velocity(120);
-  pros::delay(250);
-  Intake.move_velocity(0);
-}
 
 
 
@@ -193,21 +172,6 @@ void opcontrol()
   chassis.drive_brake_set(driver_preference_brake);
   bool clampstate=0;
   Clamp.set_value(false);
-  bool lifterstate=0;
-  Lifter.set_value(false);
-  bool doinkstate=0;
-  Doink.set_value(false);
-  Arm.move_velocity(0);
-  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
-  ArmSensor.reset();
-  int armtarget=0;
-  int colorside = 0;
-  ColorSorter.disable_gesture();
-  //0 is off, -1 is allow red, 1 is allow blue
-  master.set_text(0,0,"ALLOW ALL");
-  armPid.target_set(35500);
-  ColorSorter.set_led_pwm(100);
   while (true) 
   {
 
@@ -219,16 +183,18 @@ void opcontrol()
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-      Intake.move_velocity(-150);
+      Intake1.move_velocity(-200);
+      Intake2.move_velocity(100);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      Intake.move_velocity(150); 
+      Intake1.move_velocity(200); 
+      Intake2.move_velocity(-100);
     }
     else{
-      Intake.move_velocity(0);
+      Intake1.move_velocity(0);
+      Intake2.move_velocity(0);
     }
-
-
+    
     // Clamp Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
       if (clampstate==1){
@@ -240,107 +206,6 @@ void opcontrol()
       Clamp.set_value(clampstate);
     }
     
-    // Arm  Manual Control
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(32200);
-      //loading pos
-    }
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-      armPid.target_set(35500);
-      //off pos
-    }
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      armPid.target_set(19000);
-      //pushdown
-    }
-    int angle_reading = ArmSensor.get_position();
-    if (0<=angle_reading && angle_reading<18000){
-      angle_reading=36000-angle_reading;
-    }
-
-    move_arm(armPid.compute(angle_reading));
-
-    //Arm 1button control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
-      if (armPid.target==35500){
-        armPid.target_set(32200);
-      }
-      else if (armPid.target==32200){
-        armPid.target_set(19000);
-      } 
-      else if (armPid.target==19000){
-        armPid.target_set(35500);
-      }
-      else{
-        armPid.target_set(35500);
-      }
-    }
-
-
-    // Lifterr Control
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
-      if (lifterstate==1){
-        lifterstate=0;
-      }
-      else{
-        lifterstate=1;
-      }
-      Lifter.set_value(lifterstate);
-    }
-
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      neutral_load();
-    }
-
-    //colorsort
-    double colorhuedetect = ColorSorter.get_hue();
-    if (colorside==-1){
-      if(100.0<colorhuedetect && colorhuedetect<220.0){
-        Intake.move_velocity(50);
-        pros::delay(200);
-        Intake.move_velocity(-150);
-        pros::delay(100);
-      }
-    }
-    if (colorside==1){
-      if((0.0<=colorhuedetect && colorhuedetect<20.0)||(340.0<colorhuedetect && colorhuedetect<=360.0)){
-        Intake.move_velocity(50);
-        pros::delay(200);
-        Intake.move_velocity(-150);
-        pros::delay(100);
-      }
-    }
-
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-      if (colorside==0){
-        colorside=-1; 
-        master.set_text(0,0,"ALLOW RED   ");
-      }
-      else if(colorside==-1){
-        colorside=1;
-        master.set_text(0,0,"ALLOW BLUE   ");
-      }
-      else if(colorside==1){
-        colorside=0;
-        master.set_text(0,0,"ALLOW ALL   ");
-      }
-      
-    }
-
-
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
-      if (doinkstate==1){
-        doinkstate=0;
-      }
-      else{
-        doinkstate=1;
-      }
-      Doink.set_value(doinkstate);
-    }
-
-    //TESTING ONLY
-    
-
 
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

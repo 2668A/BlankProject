@@ -6,11 +6,5 @@
 // inline pros::Motor intake(1);
 // inline pros::adi::DigitalIn limit_switch('A');
 
-inline pros::Motor Intake(18);
-inline pros::ADIDigitalOut Clamp('A');
-inline pros::ADIDigitalOut Lifter('B');
-inline pros::ADIDigitalOut Doink('C');
-inline pros::Motor Arm(17);
-inline pros::Optical ColorSorter(20);
-inline pros::Rotation ArmSensor(8);
-inline pros::Distance BackDistance(7);
+inline pros::Motor Intake1(8);
+inline pros::Motor Intake2(12);
