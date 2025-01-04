@@ -52,7 +52,7 @@
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.
  *
- * IMPORTANT: Only the okapi or pros namespace may be used, not both
+ * IMPORTANT Only the okapi or pros namespace may be used, not both
  * concurrently! The okapi namespace will export all symbols inside the pros
  * namespace.
  */
@@ -60,7 +60,7 @@
 // using namespace pros::literals;
 // using namespace okapi;
 // using namespace ez;
-using namespace okapi::literals;
+;using namespace okapi::literals;
 
 /**
  * Prototypes for the competition control tasks are redefined here to ensure

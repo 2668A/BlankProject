@@ -59,10 +59,10 @@ void initialize()
   ez::as::auton_selector.autons_add(
     {
     Auton("PID TTESTING",pid_test),
-    Auton("RED Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", red_right),
-    Auton("RED Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", red_left),
-    Auton("BLUE Right Side\nSetup on 2nd from right\nBack lined up with inner forward edge\nWall riders lined up with inner left edge", blue_right),
-    Auton("BLUE Left Side\nSetup on 2nd from left\nBack lined up with inner forward edge\nWall riders lined up with inner right edge", blue_left),
+    Auton("RED Right Side", red_right),
+    Auton("RED Left Side", red_left),
+    Auton("BLUE Right Side", blue_right),
+    Auton("BLUE Left Side\non edge between tiles 2 and 3\nwall riders between edges", blue_left),
     Auton("SKILLS", skillsauto)
     }
   );
@@ -149,7 +149,7 @@ void move_arm(int input){
   Arm.move(input);
 }
 
-ez::PID armPid{0.02,0,0,0,"LBMech"};
+ez::PID armPid{0.0175,0,0,0,"LBMech"};
 
 
 
@@ -187,7 +187,10 @@ void opcontrol()
   ArmSensor.reset();
   int armtarget=0;
   armPid.target_set(35500);
-
+  bool lifterstate=0;
+  Lifter.set_value(false);
+  bool doinkstate=0;
+  Doink.set_value(false);
 
 
 
@@ -248,7 +251,25 @@ void opcontrol()
       }
     }
 
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+      if (lifterstate==1){
+        lifterstate=0;
+      }
+      else{
+        lifterstate=1;
+      }
+      Lifter.set_value(lifterstate);
+    }
 
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+      if (doinkstate==1){
+        doinkstate=0;
+      }
+      else{
+        doinkstate=1;
+      }
+      Doink.set_value(doinkstate);
+    }
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     pros::delay(ez::util::DELAY_TIME);

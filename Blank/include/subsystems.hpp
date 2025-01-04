@@ -8,6 +8,8 @@
 
 inline pros::Motor Intake1(8);
 inline pros::Motor Intake2(12);
-inline pros::ADIDigitalOut Clamp('A');
+inline pros::adi::DigitalOut Clamp('A');
+inline pros::adi::DigitalOut Doink('B');
+inline pros::adi::DigitalOut Lifter('C');
 inline pros::Rotation ArmSensor(7);
 inline pros::Motor Arm(13)
