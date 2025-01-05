@@ -162,7 +162,7 @@ void blue_left(){
   chassis.pid_drive_set(16,100);
   chassis.pid_wait();
   Intake2.move_velocity(100);
-  chassis.drive_set(40,100);
+  chassis.pid_drive_set(40,100);
   chassis.pid_wait();
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();
