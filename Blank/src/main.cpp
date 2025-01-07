@@ -61,7 +61,7 @@ void initialize()
     Auton("PID TTESTING",pid_test),
     Auton("RED Right Side", red_right),
     Auton("RED Left Side", red_left),
-    Auton("BLUE Right Side", blue_right),
+    Auton("BLUE Right Side\non edge between tiles 2 and 3\nwall riders between edges", blue_right),
     Auton("BLUE Left Side\non edge between tiles 2 and 3\nwall riders between edges", blue_left),
     Auton("SKILLS", skillsauto)
     }
@@ -198,7 +198,7 @@ void opcontrol()
   {
 
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      autonomous();
+      blue_right();
     }
 
 

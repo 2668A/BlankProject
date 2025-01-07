@@ -132,7 +132,31 @@ void red_right(){
 }
 
 void blue_right(){
-  
+  chassis.pid_drive_set(-25.151, 100);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  pros::delay(250);
+  chassis.pid_turn_relative_set(-105.1,100);
+  chassis.pid_wait();
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(100);
+  pros::delay(500);
+  chassis.pid_drive_set(22.9,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-80.00, 100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(15.17, 100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-38.0, 100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-85, 100);
+  Lifter.set_value(1);
+  chassis.pid_wait();
+  chassis.pid_drive_set(46.1, 100);
+  chassis.pid_wait();
+  pros::delay(500);
+  chassis.pid_drive_set(-20,100);
+  chassis.pid_wait();
 }
 
 void blue_left(){
