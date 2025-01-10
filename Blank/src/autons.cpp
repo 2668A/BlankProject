@@ -149,13 +149,19 @@ void blue_right(){
   chassis.pid_wait();
   chassis.pid_drive_set(-38.0, 100);
   chassis.pid_wait();
+  pros::delay(500);
   chassis.pid_turn_relative_set(-85, 100);
-  Lifter.set_value(1);
   chassis.pid_wait();
+  Lifter.set_value(1);
   chassis.pid_drive_set(46.1, 100);
   chassis.pid_wait();
   pros::delay(500);
+  Lifter.set_value(0);
   chassis.pid_drive_set(-20,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(45,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(22,100);
   chassis.pid_wait();
 }
 
@@ -180,15 +186,15 @@ void blue_left(){
   chassis.pid_wait();
   chassis.pid_turn_relative_set(-110,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-14,100);
+  chassis.pid_drive_set(-17,100);
   chassis.pid_wait();
   Clamp.set_value(1);
+  Intake2.move_velocity(100);
   chassis.pid_drive_set(16,100);
   chassis.pid_wait();
-  Intake2.move_velocity(100);
-  chassis.pid_drive_set(40,100);
+  chassis.pid_turn_relative_set(-110,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(45,100);
+  chassis.pid_drive_set(50,100);
   chassis.pid_wait();
 }
 

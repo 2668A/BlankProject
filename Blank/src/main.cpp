@@ -149,7 +149,39 @@ void move_arm(int input){
   Arm.move(input);
 }
 
+
+
 ez::PID armPid{0.0175,0,0,0,"LBMech"};
+
+void neutral_load(){
+  while(Intakedist.get()>50){
+    Intake1.move_velocity(-200);
+    Intake2.move_velocity(100);
+    chassis.opcontrol_arcade_standard(ez::SPLIT);
+    pros::delay(ez::util::DELAY_TIME);
+    int angle_reading = ArmSensor.get_position();
+    if (0<=angle_reading && angle_reading<18000){
+      angle_reading=36000-angle_reading;
+    }
+    move_arm(armPid.compute(angle_reading));
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      break;
+    }
+  }
+  pros::delay(500);
+  Intake1.move_velocity(0);
+  Intake2.move_velocity(0);
+}
+
+void neutral_score(){
+  double currentdist = Frontdist.get();
+  chassis.drive_angle_set(0);
+  chassis.pid_drive_set((currentdist-90.0)*0.0394,100);
+  chassis.pid_wait();
+  armPid.target_set(22000);
+}
+
+
 
 
 
@@ -170,39 +202,42 @@ ez::PID armPid{0.0175,0,0,0,"LBMech"};
 
 void opcontrol()
 {
-  // This is preference to what you like to drive on
-  // MOTOR_BRAKE_HOLD (recommended), MOTOR_BRAKE_BRAKE, MOTOR_BRAKE_COAST
-  pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_COAST;
-  // chassis.opcontrol_tank();  //  Tank control
-     // Standard split arcade USE THIS
-  // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-  // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
-  // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
+  pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_HOLD;
   chassis.drive_brake_set(driver_preference_brake);
+
   bool clampstate=0;
   Clamp.set_value(false);
+
   Arm.move_velocity(0);
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
   Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
   ArmSensor.reset();
   int armtarget=0;
   armPid.target_set(35500);
+
   bool lifterstate=0;
   Lifter.set_value(false);
+
   bool doinkstate=0;
   Doink.set_value(false);
 
+  int colorstate=0; //0 is none, -1 is red, 1 is blue
+  Intakecolor.set_led_pwm(100);
 
 
   while (true) 
   {
 
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      blue_right();
+      blue_left();
     }
 
-
+    //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
+    
+    
+    
+    
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
@@ -217,6 +252,10 @@ void opcontrol()
       Intake2.move_velocity(0);
     }
     
+
+
+
+
     // Clamp Control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
       if (clampstate==1){
@@ -233,7 +272,11 @@ void opcontrol()
       angle_reading=36000-angle_reading;
     }
 
-    move_arm(armPid.compute(angle_reading));
+
+
+
+
+
 
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
@@ -251,6 +294,10 @@ void opcontrol()
       }
     }
 
+    move_arm(armPid.compute(angle_reading));
+
+
+    //intake lifter
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       if (lifterstate==1){
         lifterstate=0;
@@ -261,6 +308,9 @@ void opcontrol()
       Lifter.set_value(lifterstate);
     }
 
+
+
+    //Doinker
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
       if (doinkstate==1){
         doinkstate=0;
@@ -270,6 +320,17 @@ void opcontrol()
       }
       Doink.set_value(doinkstate);
     }
+
+    //autoload trust
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      neutral_load();
+    }
+
+    //autoscore trust
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      neutral_score();
+    }
+
 
     // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     pros::delay(ez::util::DELAY_TIME);
