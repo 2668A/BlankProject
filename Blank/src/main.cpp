@@ -229,7 +229,7 @@ void opcontrol()
   {
 
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      blue_left();
+      autonomous();
     }
 
     //driving
@@ -241,11 +241,11 @@ void opcontrol()
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
-      Intake2.move_velocity(100);
+      Intake2.move_velocity(120);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
       Intake1.move_velocity(200); 
-      Intake2.move_velocity(-100);
+      Intake2.move_velocity(-120);
     }
     else{
       Intake1.move_velocity(0);
