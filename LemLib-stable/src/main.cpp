@@ -5,9 +5,9 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor groups
-pros::MotorGroup leftMotors({-4, 5, 6},
+pros::MotorGroup leftMotors({1, -2, -3},
                             pros::MotorGearset::blue); // left motor group - ports 4 (reversed), 5, 6 
-pros::MotorGroup rightMotors({1, -2, -3}, pros::MotorGearset::blue); // right motor group - ports 1, 7 (reversed), 9 (reversed)
+pros::MotorGroup rightMotors({-4, 5, 6}, pros::MotorGearset::blue); // right motor group - ports 1, 7 (reversed), 9 (reversed)
 
 // Inertial Sensor on port 10
 pros::Imu imu(10);
@@ -21,6 +21,23 @@ pros::Rotation verticalEnc(20);
 lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_2, -0.75);
 // vertical tracking wheel. 2" diameter, 1.75" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_2, -1.75);
+
+inline pros::Rotation ArmSensor(7);
+inline pros::Motor Intake1(8);
+inline pros::Motor Intake2(12);
+inline pros::Motor Arm(13);
+inline pros::Rotation Horizontal(14);
+inline pros::Distance Intakedist(17);
+inline pros::Optical Intakecolor(18);
+inline pros::Distance Frontdist(19);
+inline pros::Rotation Vertical(20);
+inline pros::adi::DigitalOut Clamp('A');
+inline pros::adi::DigitalOut Doink('B');
+inline pros::adi::DigitalOut Lifter('C');
+
+lemlib::PID armPid(0.0175,0,0);
+
+
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
@@ -44,14 +61,14 @@ lemlib::ControllerSettings linearController(10, // proportional gain (kP)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
+lemlib::ControllerSettings angularController(10,// proportional gain (kP)
                                              0, // integral gain (kI)
-                                             10, // derivative gain (kD)
-                                             3, // anti windup
-                                             1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
+                                             100, // derivative gain (kD)
+                                             0, // anti windup
+                                             0, // small error range, in degrees
+                                             0, // small error range timeout, in milliseconds
+                                             0, // large error range, in degrees
+                                             0, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
 
@@ -77,6 +94,11 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
+
+
+
+
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -111,10 +133,20 @@ void initialize() {
     });
 }
 
+
+
+
+
+
 /**
  * Runs while the robot is disabled
  */
 void disabled() {}
+
+
+
+
+
 
 /**
  * runs after initialize if the robot is connected to field control
@@ -124,6 +156,11 @@ void competition_initialize() {}
 // get a path used for pure pursuit
 // this needs to be put outside a function
 ASSET(example_txt); // '.' replaced with "_" to make c++ happy
+
+
+
+
+
 
 /**
  * Runs during auto
@@ -159,12 +196,46 @@ void autonomous() {
     pros::lcd::print(4, "pure pursuit finished!");
 }
 
+
+
+
+void pidtest(){
+    chassis.turnToHeading(90,700);
+}
+
+
+
+
+
+
+
+
 /**
  * Runs in driver control
  */
 void opcontrol() {
     // controller
     // loop to continuously update motors
+
+    bool clampstate=0;
+  Clamp.set_value(false);
+
+  Arm.move_velocity(0);
+  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  ArmSensor.reset();
+
+  bool lifterstate=0;
+  Lifter.set_value(false);
+
+  bool doinkstate=0;
+  Doink.set_value(false);
+
+  int colorstate=0; //0 is none, -1 is red, 1 is blue
+  Intakecolor.set_led_pwm(100);
+
+  double armtarget=35500;
+
     while (true) {
         // get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -173,5 +244,80 @@ void opcontrol() {
         chassis.arcade(leftY, rightX);
         // delay to save resources
         pros::delay(10);
+
+        if(controller.get_digital_new_press(DIGITAL_LEFT)&&controller.get_digital_new_press(DIGITAL_B)){
+            pidtest();
+        }
+
+        int angle_reading = ArmSensor.get_position();
+            if (0<=angle_reading && angle_reading<18000){
+                angle_reading=36000-angle_reading;
+        }
+
+        //Arm 1button control
+        if (controller.get_digital_new_press(DIGITAL_L2)){
+            if (armtarget==35500){
+                armtarget=33300;
+            }
+            else if (armtarget==33300){
+                armtarget=22000;
+            } 
+            else if (armtarget==22000){
+                armtarget=35500;
+            }
+            else{
+                armtarget=35500;
+            }
+        }
+
+        Arm.move_velocity(armPid.update(armtarget-angle_reading));
+
+        // Intake Control
+        if (controller.get_digital(DIGITAL_R1)){
+            Intake1.move_velocity(-200);
+            Intake2.move_velocity(120);
+        }
+        else if (controller.get_digital(DIGITAL_R2)){
+            Intake1.move_velocity(200); 
+            Intake2.move_velocity(-120);
+        }
+        else{
+            Intake1.move_velocity(0);
+            Intake2.move_velocity(0);
+        }
+        
+        if (controller.get_digital_new_press(DIGITAL_L1)){
+            if (clampstate==1){
+                clampstate=0;
+            }
+            else{
+                clampstate=1;
+            }
+            Clamp.set_value(clampstate);
+        }
+
+        //intake lifter
+        if (controller.get_digital_new_press(DIGITAL_X)){
+            if (lifterstate==1){
+                lifterstate=0;
+            }
+            else{
+                lifterstate=1;
+            }
+            Lifter.set_value(lifterstate);
+        }
+
+
+
+        //Doinker
+        if (controller.get_digital_new_press(DIGITAL_A)){
+            if (doinkstate==1){
+                doinkstate=0;
+            }
+            else{
+                doinkstate=1;
+            }
+            Doink.set_value(doinkstate);
+        }
     }
 }
