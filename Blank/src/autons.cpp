@@ -454,9 +454,30 @@ void skillsauto(){
   Clamp.set_value(0);
   Intake1.move_velocity(0);
   Intake2.move_velocity(0);
-  chassis.pid_drive_set(10,100);
+  chassis.pid_drive_set(24,100);
   chassis.pid_wait();
-  //
+  //EXPERIMENTAL NEXT GOAL
+  chassis.pid_turn_set(-270,100);
+  chassis.pid_wait();
+  long_constants();
+  chassis.pid_drive_set(90,115);
+  chassis.pid_wait();
+  default_constants();
+  chassis.pid_turn_relative_set(-90,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-40,100);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  pros::delay(500);
+  chassis.pid_drive_set(40,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(225,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-25,100);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+
+
 
 
 
