@@ -267,6 +267,7 @@ void donothing(){}
 
 void skillsauto(){
   //score on alliance stake
+  
   chassis.drive_angle_set(-90);
   Arm.move_relative(-275,200);
   pros::delay(500);
@@ -313,7 +314,7 @@ void skillsauto(){
   chassis.pid_wait();
   while(Intakedist.get()>50){
     Intake1.move_velocity(-200);
-    Intake2.move_velocity(100);
+    Intake2.move_velocity(110);
   }
   pros::delay(900);
   Intake2.move_velocity(-75);
@@ -321,28 +322,29 @@ void skillsauto(){
   Intake1.move_velocity(0);
   Intake2.move_velocity(0);
   Arm.move_relative(-50,10);
+  pros::delay(500);
   //move to stake and score
   chassis.pid_turn_relative_set(20,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-27.,100);
+  chassis.pid_drive_set(-29.,100);
   chassis.pid_wait();
   chassis.pid_turn_relative_set(70,100);
   chassis.pid_wait();
   Intake1.move_velocity(-200);
   Intake2.move_velocity(120);
-  chassis.pid_drive_set(18,100);
+  chassis.pid_drive_set(21,100);
   chassis.pid_wait();
-  Arm.move_relative(-160,200);
-  pros::delay(750);
-  Arm.move_relative(273,150);
+  Arm.move_relative(-170,200);
   pros::delay(750);
   //drive to next 3 rings
-  chassis.pid_drive_set(-10,100);
+  chassis.pid_drive_set(-13,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(-90,100);
+  Arm.move_absolute(0,150);
+  pros::delay(750);
+  chassis.pid_turn_set(265,100);
   chassis.pid_wait();
   long_constants();
-  chassis.pid_drive_set(48,127);
+  chassis.pid_drive_set(49,127);
   chassis.pid_wait();
   default_constants();
   chassis.pid_drive_set(14,70);
@@ -366,10 +368,10 @@ void skillsauto(){
   // move to next goal
   chassis.pid_drive_set(12,100);
   chassis.pid_wait();
-  chassis.pid_turn_set(177,100);
+  chassis.pid_turn_set(179,100);
   chassis.pid_wait();
   long_constants();
-  chassis.pid_drive_set(-76,127);
+  chassis.pid_drive_set(-74,127);
   chassis.pid_wait();
   default_constants();
   Clamp.set_value(1);
@@ -384,7 +386,7 @@ void skillsauto(){
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
   //raise arm while moving to next rings
-  chassis.pid_drive_set(24,100);
+  chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();  
@@ -394,10 +396,10 @@ void skillsauto(){
   chassis.pid_drive_set(25,100);
   chassis.pid_wait();
   Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.move_relative(-53,200);
+  Arm.move_absolute(-57,200);
   Intake1.move_velocity(-200);
   Intake2.move_velocity(100);
-  chassis.pid_drive_set(27,100);
+  chassis.pid_drive_set(30,100);
   chassis.pid_wait();
   while(Intakedist.get()>50){
     Intake1.move_velocity(-200);
@@ -408,7 +410,53 @@ void skillsauto(){
   pros::delay(250);
   Intake1.move_velocity(0);
   Intake2.move_velocity(0);
-  Arm.move_relative(-50,10);
+  Arm.move_relative(-53,10);
+  //move to stake and score
+  chassis.pid_turn_relative_set(-20,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-31.,100);
+  chassis.pid_wait();
+  pros::delay(500); 
+  chassis.pid_turn_relative_set(-70,100);  
+  chassis.pid_wait();
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(120);
+  chassis.pid_drive_set(22,100);
+  chassis.pid_wait();
+  Arm.move_relative(-170,200);
+  pros::delay(750);
+  //move to next 3 rings
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+  Arm.move_absolute(0,150);
+  pros::delay(750);
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+  long_constants();
+  chassis.pid_drive_set(47,127);
+  chassis.pid_wait();
+  default_constants();
+  chassis.pid_drive_set(14,70);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-10,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(120,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(14,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-14,100);
+  chassis.pid_wait();
+  //put goal in corner
+  chassis.pid_turn_set(135,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-14,100);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  Intake1.move_velocity(0);
+  Intake2.move_velocity(0);
+  chassis.pid_drive_set(10,100);
+  chassis.pid_wait();
+
 
 
 

@@ -225,9 +225,9 @@ void opcontrol()
   Intakecolor.set_led_pwm(100);
 
 
+
   while (true) 
   {
-
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
       autonomous();
     }
@@ -239,7 +239,10 @@ void opcontrol()
     
     
     // Intake Control
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&&master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+      neutral_load();
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
       Intake2.move_velocity(120);
     }
@@ -251,7 +254,8 @@ void opcontrol()
       Intake1.move_velocity(0);
       Intake2.move_velocity(0);
     }
-    
+
+   
 
 
 
@@ -281,9 +285,9 @@ void opcontrol()
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33000);
+        armPid.target_set(33100);
       }
-      else if (armPid.target==33000){
+      else if (armPid.target==33100){
         armPid.target_set(22000);
       } 
       else if (armPid.target==22000){
@@ -322,9 +326,9 @@ void opcontrol()
     }
 
     //autoload trust
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      neutral_load();
-    }
+    //if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+    //  neutral_load();
+    //}
 
     //autoscore trust
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
