@@ -181,6 +181,19 @@ void neutral_score(){
   armPid.target_set(22000);
 }
 
+void alliance_load(){
+  while(Intakedist.get()>50){
+    Intake1.move_velocity(-200);
+    Intake2.move_velocity(100);
+    chassis.opcontrol_arcade_standard(ez::SPLIT);
+    pros::delay(ez::util::DELAY_TIME);
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      break;
+    }
+  }
+  Intake1.move_velocity(0);
+  Intake2.move_velocity(0);
+}
 
 
 
@@ -333,6 +346,10 @@ void opcontrol()
     //autoscore trust
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
       neutral_score();
+    }
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      alliance_load();
     }
 
 

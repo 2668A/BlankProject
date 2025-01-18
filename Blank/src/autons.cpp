@@ -386,7 +386,7 @@ void skillsauto(){
   chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
   //raise arm while moving to next rings
-  chassis.pid_drive_set(26,100);
+  chassis.pid_drive_set(28,100);
   chassis.pid_wait();
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();  
@@ -421,7 +421,7 @@ void skillsauto(){
   chassis.pid_wait();
   Intake1.move_velocity(-200);
   Intake2.move_velocity(120);
-  chassis.pid_drive_set(22,100);
+  chassis.pid_drive_set(20,100);
   chassis.pid_wait();
   Arm.move_relative(-170,200);
   pros::delay(750);
@@ -456,6 +456,7 @@ void skillsauto(){
   Intake2.move_velocity(0);
   chassis.pid_drive_set(10,100);
   chassis.pid_wait();
+  //
 
 
 
