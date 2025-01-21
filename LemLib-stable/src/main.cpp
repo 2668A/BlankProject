@@ -18,7 +18,7 @@ pros::Rotation horizontalEnc(-14);
 // vertical tracking wheel encoder. Rotation sensor, port 20, not reversed
 pros::Rotation verticalEnc(20);
 // horizontal tracking wheel. 2" diameter, 0.75" offset, back of the robot (negative)
-lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_2, -0.75);
+lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_2, -2.25);
 // vertical tracking wheel. 2" diameter, 1.75" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_2, -1.75);
 
@@ -26,16 +26,14 @@ inline pros::Rotation ArmSensor(7);
 inline pros::Motor Intake1(8);
 inline pros::Motor Intake2(12);
 inline pros::Motor Arm(13);
-inline pros::Rotation Horizontal(14);
 inline pros::Distance Intakedist(17);
 inline pros::Optical Intakecolor(18);
 inline pros::Distance Frontdist(19);
-inline pros::Rotation Vertical(20);
 inline pros::adi::DigitalOut Clamp('A');
 inline pros::adi::DigitalOut Doink('B');
 inline pros::adi::DigitalOut Lifter('C');
 
-lemlib::PID armPid(0.0175,0,0);
+lemlib::PID armPid(0.01,0,0);
 
 
 
@@ -64,11 +62,11 @@ lemlib::ControllerSettings linearController(10, // proportional gain (kP)
 lemlib::ControllerSettings angularController(10,// proportional gain (kP)
                                              0, // integral gain (kI)
                                              100, // derivative gain (kD)
-                                             0, // anti windup
-                                             0, // small error range, in degrees
-                                             0, // small error range timeout, in milliseconds
-                                             0, // large error range, in degrees
-                                             0, // large error range timeout, in milliseconds
+                                             3, // anti windup
+                                             1, // small error range, in degrees
+                                             50, // small error range timeout, in milliseconds
+                                             3, // large error range, in degrees
+                                             150, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
 
@@ -83,13 +81,13 @@ lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
 // input curve for throttle input during driver control
 lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127
                                      10, // minimum output where drivetrain will move out of 127
-                                     1.019 // expo curve gain
+                                     1.000 // expo curve gain
 );
 
 // input curve for steer input during driver control
 lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
                                   10, // minimum output where drivetrain will move out of 127
-                                  1.019 // expo curve gain
+                                  1.000 // expo curve gain
 );
 
 // create the chassis
@@ -108,6 +106,7 @@ lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
+    pros::delay(1000);
     chassis.calibrate(); // calibrate sensors
 
     // the default rate is 50. however, if you need to change the rate, you
@@ -206,8 +205,47 @@ void pidtest(){
 
 
 
+void neutral_load(){
+  while(Intakedist.get()>50){
+    Intake1.move_velocity(-200);
+    Intake2.move_velocity(100);
+    // get joystick positions
+    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    // move the chassis with curvature drive
+    chassis.arcade(leftY, rightX);
+    pros::delay(10);
+    int angle_reading = ArmSensor.get_position();
+    if (0<=angle_reading && angle_reading<18000){
+      angle_reading=36000-angle_reading;
+    }
+    Arm.move_velocity(armPid.update(33300-angle_reading));
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      break;
+    }
+  }
+  pros::delay(500);
+  Intake1.move_velocity(0);
+  Intake2.move_velocity(0);
+}
 
-
+void alliance_load(){
+  while(Intakedist.get()>50){
+    Intake1.move_velocity(-200);
+    Intake2.move_velocity(100);
+    // get joystick positions
+    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    // move the chassis with curvature drive
+    chassis.arcade(leftY, rightX);
+    pros::delay(10);
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      break;
+    }
+  }
+  Intake1.move_velocity(0);
+  Intake2.move_velocity(0);
+}
 
 
 /**
@@ -218,23 +256,23 @@ void opcontrol() {
     // loop to continuously update motors
 
     bool clampstate=0;
-  Clamp.set_value(false);
+    Clamp.set_value(false);
 
-  Arm.move_velocity(0);
-  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
-  ArmSensor.reset();
+    Arm.move_velocity(0);
+    Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+    Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+    ArmSensor.reset();
 
-  bool lifterstate=0;
-  Lifter.set_value(false);
+    bool lifterstate=0;
+    Lifter.set_value(false);
 
-  bool doinkstate=0;
-  Doink.set_value(false);
+    bool doinkstate=0;
+    Doink.set_value(false);
 
-  int colorstate=0; //0 is none, -1 is red, 1 is blue
-  Intakecolor.set_led_pwm(100);
+    int colorstate=0; //0 is none, -1 is red, 1 is blue
+    Intakecolor.set_led_pwm(100);
 
-  double armtarget=35500;
+    double armtarget=35500;
 
     while (true) {
         // get joystick positions
@@ -250,16 +288,17 @@ void opcontrol() {
         }
 
         int angle_reading = ArmSensor.get_position();
-            if (0<=angle_reading && angle_reading<18000){
-                angle_reading=36000-angle_reading;
+        if (-18000<=angle_reading && angle_reading<5000){
+            angle_reading=36000+angle_reading;
         }
+        angle_reading=abs(angle_reading);
 
         //Arm 1button control
         if (controller.get_digital_new_press(DIGITAL_L2)){
             if (armtarget==35500){
-                armtarget=33300;
+                armtarget=33500;
             }
-            else if (armtarget==33300){
+            else if (armtarget==33500){
                 armtarget=22000;
             } 
             else if (armtarget==22000){
@@ -273,7 +312,10 @@ void opcontrol() {
         Arm.move_velocity(armPid.update(armtarget-angle_reading));
 
         // Intake Control
-        if (controller.get_digital(DIGITAL_R1)){
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&&controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+            neutral_load();
+        }
+        else if (controller.get_digital(DIGITAL_R1)){
             Intake1.move_velocity(-200);
             Intake2.move_velocity(120);
         }
@@ -319,5 +361,15 @@ void opcontrol() {
             }
             Doink.set_value(doinkstate);
         }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+            alliance_load();
+        }
+
+        double currentx=std::ceil(chassis.getPose().x*100.0)/100.0;
+        double currenty=std::ceil(chassis.getPose().y*100.0)/100.0;
+        double currenttheta=std::ceil(chassis.getPose().theta*100.0)/100.0;
+        controller.set_text(0,0,std::to_string(currentx)+" "+std::to_string(currenty)+" "+std::to_string(currenttheta));
+
     }
 }
