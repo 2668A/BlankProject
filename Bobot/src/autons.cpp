@@ -318,7 +318,7 @@ void odom_boomerang_injected_pure_pursuit_example() {
 ///
 void measure_offsets() {
   // Number of times to test
-  int iterations = 10;
+  int iterations = 20;
 
   // Our final offsets
   double l_offset = 0.0, r_offset = 0.0, b_offset = 0.0, f_offset = 0.0;
