@@ -20,8 +20,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(-14, 2, 1.6);  // This tracking wheel is perpendicular to the drive wheels
-ez::tracking_wheel vert_tracker(20, 2, 1.4);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel horiz_tracker(-14, 2, 0.5);  // This tracking wheel is perpendicular to the drive wheels
+ez::tracking_wheel vert_tracker(20, 2, 1);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -58,23 +58,19 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Drive\n\nDrive forward and come back", drive_example},
-      {"Turn\n\nTurn 3 times.", turn_example},
+      {"SKILLS AUTO\nSetup using 5-by on rear hs axle\nreset imu, arm, pneumatic before",skillsauto},
+      {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 1 tr, 3 nr",red_left_goal},
+      {"RED LEFT SIDE STAKE\nSetup on outer edge 3 from left\nScores 2 tr, 2 nr",red_left_stake},
+      {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2 tr",red_right_rush},
+      {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 1 tr, 3 nr",blue_right_goal},
+      {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 2 tr, 2 nr",blue_right_stake},
+      {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2 tr",blue_left_rush},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
       {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
-      {"Combine all 3 movements", combining_movements},
-      {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
-      {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
-      {"Pure Pursuit\n\nGo to (0, 30) and pass through (6, 10) on the way.  Come back to (0, 0)", odom_pure_pursuit_example},
-      {"Pure Pursuit Wait Until\n\nGo to (24, 24) but start running an intake once the robot passes (12, 24)", odom_pure_pursuit_wait_until_example},
-      {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
-      {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
+      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets}
   });
 
-  // Initialize chassis and auton selector
+  // Initialize chassis and auton selector  
   chassis.initialize();
   ez::as::initialize();
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
@@ -280,7 +276,25 @@ void alliance_load(){
   Intake2.move_velocity(0);
 }
 
-
+void armtest(){
+  Clamp.set_value(false);
+  Arm.move_velocity(0);
+  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+  Arm.tare_position();
+  ArmSensor.reset();
+  int angle_reading = 36000;
+  while(angle_reading>32900){
+    master.set_text(0,0,to_string(angle_reading));
+    angle_reading = ArmSensor.get_position();
+    if (-18000<=angle_reading && angle_reading<5000){
+      angle_reading=36000+abs(angle_reading);
+    }
+    Arm.move_velocity(-100);
+    pros::delay(50);
+  }
+  Arm.move_velocity(0);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -322,8 +336,11 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
+    
+
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      autonomous();
+      //autonomous();
+      armtest();
     }
 
     //driving
@@ -366,11 +383,11 @@ void opcontrol() {
     }
     
     int angle_reading = ArmSensor.get_position();
-    if (0<=angle_reading && angle_reading<18000){
-      angle_reading=36000-angle_reading;
+    if (-18000<=angle_reading && angle_reading<5000){
+      angle_reading=36000+abs(angle_reading);
     }
 
-
+    master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
 
 
 
@@ -379,13 +396,16 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33100);
+        armPid.target_set(32800);
       }
-      else if (armPid.target==33100){
+      else if (armPid.target==32800){
         armPid.target_set(22000);
       } 
       else if (armPid.target==22000){
         armPid.target_set(35500);
+      }
+      else if (armPid.target==30000){
+        armPid.target_set(22000);
       }
       else{
         armPid.target_set(35500);
@@ -396,7 +416,7 @@ void opcontrol() {
 
 
     //intake lifter
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
       if (lifterstate==1){
         lifterstate=0;
       }
@@ -431,6 +451,10 @@ void opcontrol() {
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
       alliance_load();
+    }
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+      armPid.target_set(30000);
     }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

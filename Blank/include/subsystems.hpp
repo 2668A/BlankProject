@@ -4,7 +4,7 @@
 
 // Your non-drivetrain motors, sensors, etc. should go here. Below are examples:
 // inline pros::Motor intake(1);
-// inline pros::adi::DigitalIn limit_switch('A');
+// inline pros::adi::DigitalIn  limit_switch('A');
 
 inline pros::Rotation ArmSensor(7);
 inline pros::Motor Intake1(8);
