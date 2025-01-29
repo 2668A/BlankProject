@@ -710,17 +710,17 @@ void skillsauto(){
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   Intake1.move_velocity(-200);
-  chassis.pid_drive_set(26,100);
+  chassis.pid_drive_set(28,100);
   chassis.pid_wait();
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_turn_set(3,100);
+  chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   int angle_reading = 36000;
-  while(angle_reading>34200 && Arm.get_position()>-80){
+  while(angle_reading>34050 && Arm.get_position()>-72){
     master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
     angle_reading = ArmSensor.get_position();
     if (-18000<=angle_reading && angle_reading<18000){
@@ -731,7 +731,7 @@ void skillsauto(){
   }
   Arm.move_velocity(0);
   Intake2.move_velocity(130);
-  chassis.pid_drive_set(53,100);
+  chassis.pid_drive_set(51,100);
   chassis.pid_wait();
   pros::delay(1500);
   Intake2.move_velocity(-25);
@@ -795,10 +795,10 @@ void skillsauto(){
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_turn_set(-3,100);
+  chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   angle_reading = 36000;
-  while(angle_reading>34200 && Arm.get_position()>-80){
+  while(angle_reading>34050 && Arm.get_position()>-72){
     master.set_text(0,0,to_string(angle_reading));
     angle_reading = ArmSensor.get_position();
     if (-18000<=angle_reading && angle_reading<18000){
@@ -848,5 +848,21 @@ void skillsauto(){
   chassis.pid_drive_set(-16,100);
   chassis.pid_wait();
   Clamp.set_value(0);
+
+  // last part
+
+  chassis.pid_drive_set(12,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(0,100);
+  chassis.pid_wait();
+  long_constants();
+  chassis.pid_drive_set(80,120,true);
+  chassis.pid_wait();
+  default_constants();
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+
+
   
 }
