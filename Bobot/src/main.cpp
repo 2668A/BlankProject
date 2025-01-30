@@ -249,8 +249,10 @@ void neutral_load(){
       break;
     }
   }
-  pros::delay(500);
+  pros::delay(150);
   Intake1.move_velocity(0);
+  Intake2.move_velocity(-50);
+  pros::delay(400);
   Intake2.move_velocity(0);
 }
 
@@ -339,8 +341,7 @@ void opcontrol() {
     
 
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
-      //autonomous();
-      armtest();
+      autonomous();
     }
 
     //driving

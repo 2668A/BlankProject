@@ -484,11 +484,13 @@ void red_left_goal() {
   chassis.pid_drive_set(40,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_turn_relative_set(90,100);
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+  Lifter.set_value(0);
+  chassis.pid_turn_relative_set(-90,100);
   chassis.pid_wait();
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
-
 
 }
 
@@ -574,6 +576,9 @@ void red_right_rush(){
   chassis.pid_wait();
   chassis.pid_drive_set(18,100);
   chassis.pid_wait(); 
+
+  //chassis.pid_drive_set(-45,100);
+  //chassis.pid_wait();
   
 
 }
@@ -598,10 +603,13 @@ void blue_right_goal(){
   chassis.pid_turn_set(91,100);
   chassis.pid_wait();
   Lifter.set_value(1);
-  chassis.pid_drive_set(40,100);
+  chassis.pid_drive_set(46,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_turn_relative_set(-90,100);
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+  Lifter.set_value(0);
+  chassis.pid_turn_relative_set(90,100);
   chassis.pid_wait();
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
@@ -654,11 +662,11 @@ void blue_left_rush(){
   chassis.pid_drive_set(44,126,true);
   chassis.pid_wait();
   default_constants();
-  chassis.pid_turn_set(30,100);
+  chassis.pid_turn_set(80,100);
   chassis.pid_wait();
   Doink.set_value(1);
   pros::delay(500);
-  chassis.pid_turn_set(90,70);
+  chassis.pid_turn_set(120,70);
   chassis.pid_wait();
   Doink.set_value(0);
   pros::delay(500);
@@ -689,6 +697,10 @@ void blue_left_rush(){
   chassis.pid_wait();
   chassis.pid_drive_set(18,100);
   chassis.pid_wait(); 
+
+  //chassis.pid_drive_set(-45,100);
+  //chassis.pid_wait();
+
 }
 
 void skillsauto(){
@@ -710,17 +722,17 @@ void skillsauto(){
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   Intake1.move_velocity(-200);
-  chassis.pid_drive_set(28,100);
+  chassis.pid_drive_set(27,100);
   chassis.pid_wait();
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(26,100);
+  chassis.pid_drive_set(25,100);
   chassis.pid_wait();
-  pros::delay(500);
+  pros::delay(1000);
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   int angle_reading = 36000;
-  while(angle_reading>34050 && Arm.get_position()>-72){
+  while(angle_reading>34100 && Arm.get_position()>-65){
     master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
     angle_reading = ArmSensor.get_position();
     if (-18000<=angle_reading && angle_reading<18000){
@@ -733,15 +745,21 @@ void skillsauto(){
   Intake2.move_velocity(130);
   chassis.pid_drive_set(51,100);
   chassis.pid_wait();
-  pros::delay(1500);
-  Intake2.move_velocity(-25);
-  pros::delay(250);
+  while(Intakedist.get()>50){
+    Intake1.move_velocity(-200);
+    Intake2.move_velocity(120);
+  }
+  pros::delay(150);
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(0);
+  Intake2.move_velocity(-50);
+  pros::delay(400);
   Intake2.move_velocity(0);
   Arm.move_absolute(-120,40);
   pros::delay(500);
   chassis.pid_turn_set(15,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-29,100);
+  chassis.pid_drive_set(-30,100);
   chassis.pid_wait();
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
@@ -750,21 +768,21 @@ void skillsauto(){
   chassis.pid_wait();
   Arm.move_absolute(-300,200);
   pros::delay(750);
-  chassis.pid_drive_set(-16,100);
+  chassis.pid_drive_set(-13,100);
   chassis.pid_wait();
   chassis.pid_turn_set(-180,100);
   chassis.pid_wait();
   long_constants();
-  chassis.pid_drive_set(62,120,true);
+  chassis.pid_drive_set(65,120,true);
   chassis.pid_wait();
   default_constants();      
-  chassis.pid_drive_set(-16,100);
+  chassis.pid_drive_set(-19,100);
   chassis.pid_wait();
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(14,100);
+  chassis.pid_drive_set(16,100);
   chassis.pid_wait();
-  chassis.pid_drive_set(-14,100);
+  chassis.pid_drive_set(-16,100);
   chassis.pid_wait();
   chassis.pid_turn_set(-45,100);
   chassis.pid_wait();
@@ -795,46 +813,17 @@ void skillsauto(){
   chassis.pid_drive_set(26,100);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_turn_set(0,100);
+  chassis.pid_turn_set(-25,100);
   chassis.pid_wait();
-  angle_reading = 36000;
-  while(angle_reading>34050 && Arm.get_position()>-72){
-    master.set_text(0,0,to_string(angle_reading));
-    angle_reading = ArmSensor.get_position();
-    if (-18000<=angle_reading && angle_reading<18000){
-      angle_reading=36000+abs(angle_reading);
-    }
-    Arm.move_velocity(-70);
-    pros::delay(10);
-  }
-  Arm.move_velocity(0);
-  chassis.pid_drive_set(53,100);
+  chassis.pid_drive_set(24,100);
   chassis.pid_wait();
-  pros::delay(1500);
-  Intake2.move_velocity(-75);
   pros::delay(250);
-  Intake2.move_velocity(0);
-  Arm.move_absolute(-120,60);
-  pros::delay(500);
-  chassis.pid_turn_set(-15,100);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-29,100);
-  chassis.pid_wait();
-  chassis.pid_turn_set(-90,100);
-  chassis.pid_wait();
-  Intake2.move_velocity(120);
-  chassis.pid_drive_set(20,100);
-  chassis.pid_wait();
-  Arm.move_absolute(-300,200);
-  pros::delay(750);
-  chassis.pid_drive_set(-16,100);
+  chassis.pid_drive_set(-24,100);
   chassis.pid_wait();
   chassis.pid_turn_set(180,100);
   chassis.pid_wait();
-  long_constants();
-  chassis.pid_drive_set(62,120,true);
-  chassis.pid_wait();
-  default_constants();      
+  chassis.pid_drive_set(42,100);
+  chassis.pid_wait();      
   chassis.pid_drive_set(-16,100);
   chassis.pid_wait();
   chassis.pid_turn_set(-90,100);
@@ -848,20 +837,38 @@ void skillsauto(){
   chassis.pid_drive_set(-16,100);
   chassis.pid_wait();
   Clamp.set_value(0);
+  Intake1.move_velocity(0);
 
   // last part
 
-  chassis.pid_drive_set(12,100);
+  chassis.pid_drive_set(14,100);
   chassis.pid_wait();
+  Intake2.move_velocity(0);
+  Arm.move_absolute(0,150);
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
+  Intake1.move_velocity(-200);
   long_constants();
-  chassis.pid_drive_set(80,120,true);
+  chassis.pid_drive_set(98,120,true);
   chassis.pid_wait();
   default_constants();
+  Intake2.move_velocity(25);
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
-
+  Intake2.move_velocity(0);
+  Intake1.move_velocity(0);
+  chassis.pid_drive_set(-50,100);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(120);
+  chassis.pid_drive_set(55,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(135,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-16,100);
+  chassis.pid_wait();
+  Clamp.set_value(0); 
 
 
   
