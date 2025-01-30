@@ -738,7 +738,7 @@ void skillsauto(){
     if (-18000<=angle_reading && angle_reading<18000){
       angle_reading=36000+abs(angle_reading);
     }
-    Arm.move_velocity(-70);
+    Arm.move_velocity(-70); 
     pros::delay(10);
   }
   Arm.move_velocity(0);
