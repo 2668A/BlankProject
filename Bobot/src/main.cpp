@@ -165,10 +165,15 @@ void ez_screen_task() {
                            1);  // Don't override the top Page line
 
           // Display all trackers that are being used
-          screen_print_tracker(chassis.odom_tracker_left, "l", 4);
+          /*screen_print_tracker(chassis.odom_tracker_left, "l", 4);
           screen_print_tracker(chassis.odom_tracker_right, "r", 5);
           screen_print_tracker(chassis.odom_tracker_back, "b", 6);
           screen_print_tracker(chassis.odom_tracker_front, "f", 7);
+          */
+        int angle_reading_a = ArmSensor.get_position();
+          angle_reading_a=36000+angle_reading_a;
+          ez::screen_print(std::to_string(ArmSensor.get_position()),4);
+          ez::screen_print(std::to_string(angle_reading_a),5);
         }
       }
     }
@@ -232,7 +237,7 @@ void move_arm(int input){
 
 
 
-ez::PID armPid{0.0175,0,0,0,"LBMech"};
+ez::PID armPid{0.02 ,0,0,0,"LBMech"};
 
 void neutral_load(){
   while(Intakedist.get()>50){
@@ -351,10 +356,7 @@ void opcontrol() {
     
     
     // Intake Control
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&&master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      neutral_load();
-    }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
       Intake2.move_velocity(120);
     }
@@ -384,11 +386,12 @@ void opcontrol() {
     }
     
     int angle_reading = ArmSensor.get_position();
-    if (-18000<=angle_reading && angle_reading<5000){
-      angle_reading=36000+abs(angle_reading);
+    if (angle_reading<0|| angle_reading<1000){
+      angle_reading=36000+angle_reading;
     }
+    
 
-    master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
+    
 
 
 
@@ -397,16 +400,16 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(32800);
+        armPid.target_set(33200);
       }
-      else if (armPid.target==32800){
-        armPid.target_set(22000);
+      else if (armPid.target==33200){
+        armPid.target_set(20000);
       } 
-      else if (armPid.target==22000){
+      else if (armPid.target==20000){
         armPid.target_set(35500);
       }
       else if (armPid.target==30000){
-        armPid.target_set(22000);
+        armPid.target_set(20000);
       }
       else{
         armPid.target_set(35500);
@@ -446,12 +449,14 @@ void opcontrol() {
     //}
 
     //autoscore trust
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      neutral_score();
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      armPid.target_set(33200);
     }
-
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      alliance_load();
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+      armPid.target_set(15000);
+    }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
+      armPid.target_set(13000);
     }
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
