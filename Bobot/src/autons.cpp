@@ -401,15 +401,23 @@ void odom_drive_example() {
 
 ///
 // Odom Pure Pursuit
-///
+/// 
 void odom_pure_pursuit_example() {
   // Drive to 0, 30 and pass through 6, 10 and 0, 20 on the way, with slew
-  chassis.pid_odom_set({{{0, 24}, fwd, DRIVE_SPEED}},true);
+  
+  
+  chassis.pid_odom_set({{0, -24}, rev, DRIVE_SPEED});
+  pros::delay(250);
   chassis.pid_wait();
-  chassis.pid_odom_set({{{24, 24}, fwd, DRIVE_SPEED}},true);
+  pros::delay(1000);
+  chassis.pid_odom_set({{-24, -25}, fwd, DRIVE_SPEED});
+  pros::delay(250);
   chassis.pid_wait();
-  chassis.pid_odom_set({{{0, 0}, fwd, DRIVE_SPEED}},true);
+  pros::delay(1000);
+  chassis.pid_odom_set({{2, 1}, fwd, DRIVE_SPEED});
+  pros::delay(250);
   chassis.pid_wait();
+  pros::delay(1000);
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
 }
@@ -645,14 +653,19 @@ void red_right_rush(){
 
 void blue_right_goal(){
   chassis.odom_enable(true);
-  chassis.pid_odom_set({{{0,-30}, rev, 110}},true);
+  chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
   chassis.pid_wait();
   Clamp.set_value(1);
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
-  chassis.pid_odom_set({{{-28,-30}, fwd, 110}},true);
+  chassis.pid_odom_set( {{{-28, -30}, fwd, 110}} );
   chassis.pid_wait();
-  pros::delay(1000);
+  pros::delay(500);
+  chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
+  chassis.pid_wait();
+  chassis.pid_turn_set(-45,100);
+  chassis.pid_odom_set( {{{-12,-43.5}, fwd, 110},{{-24,-48}, fwd, 110},{{-36,-31.5}, fwd, 110}} );
+  chassis.pid_wait();
 
 }
 

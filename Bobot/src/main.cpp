@@ -344,9 +344,6 @@ void opcontrol() {
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
       autonomous();
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-      armPid.target_set(13000);
-    }
 
     //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -449,7 +446,7 @@ void opcontrol() {
 
     //autoscore trust
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-      armPid.target_set(33200);
+      armPid.target_set(12000);
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
       armPid.target_set(15000);
