@@ -20,8 +20,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(-14, 2, 0.5);  // This tracking wheel is perpendicular to the drive wheels
-ez::tracking_wheel vert_tracker(20, 2, 1);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel vert1_tracker(-14, 1.95, 6.75);  // This tracking wheel is parallel lefgt to the drive wheels
+ez::tracking_wheel vert2_tracker(20, 1.95, 6.75);   // This tracking wheel is parallel right to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -38,11 +38,11 @@ void initialize() {
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
   //  - change `back` to `front` if the tracking wheel is in front of the midline
   //  - ignore this if you aren't using a horizontal tracker
-   chassis.odom_tracker_front_set(&horiz_tracker);
+  chassis.odom_tracker_left_set(&vert1_tracker);
   // Look at your vertical tracking wheel and decide if it's to the left or right of the center of the robot
   //  - change `left` to `right` if the tracking wheel is to the right of the centerline
   //  - ignore this if you aren't using a vertical tracker
-   chassis.odom_tracker_right_set(&vert_tracker);
+  chassis.odom_tracker_right_set(&vert2_tracker);
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
@@ -66,7 +66,7 @@ void initialize() {
       {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 2 tr, 2 nr",blue_right_stake},
       {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2 tr",blue_left_rush},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
+      {"Pure Pursuit\nPure Pursuit test with odom", odom_pure_pursuit_example},
       {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets}
   });
 
@@ -165,15 +165,11 @@ void ez_screen_task() {
                            1);  // Don't override the top Page line
 
           // Display all trackers that are being used
-          /*screen_print_tracker(chassis.odom_tracker_left, "l", 4);
+          screen_print_tracker(chassis.odom_tracker_left, "l", 4);
           screen_print_tracker(chassis.odom_tracker_right, "r", 5);
           screen_print_tracker(chassis.odom_tracker_back, "b", 6);
           screen_print_tracker(chassis.odom_tracker_front, "f", 7);
-          */
-        int angle_reading_a = ArmSensor.get_position();
-          angle_reading_a=36000+angle_reading_a;
-          ez::screen_print(std::to_string(ArmSensor.get_position()),4);
-          ez::screen_print(std::to_string(angle_reading_a),5);
+          
         }
       }
     }
@@ -348,6 +344,9 @@ void opcontrol() {
     if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_LEFT)){
       autonomous();
     }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
+      armPid.target_set(13000);
+    }
 
     //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
@@ -454,9 +453,6 @@ void opcontrol() {
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
       armPid.target_set(15000);
-    }
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-      armPid.target_set(13000);
     }
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
