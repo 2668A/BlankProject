@@ -719,6 +719,7 @@ void blue_right_stake(){
 }
 
 void blue_left_rush(){
+  chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 150_ms, 3_in, 250_ms, 500_ms);
   //start at x=+12.5,y=-8.25
   chassis.odom_look_ahead_set(40_in);
   chassis.pid_odom_set(44, 127);
@@ -731,13 +732,45 @@ void blue_left_rush(){
   chassis.pid_turn_set(90, 80);
   chassis.pid_wait();
   Doink.set_value(0);
-  chassis.pid_turn_relative_set(-180,100);
+  pros::delay(250);
+  chassis.pid_turn_relative_set(-183,100);
   chassis.pid_wait();
   chassis.odom_look_ahead_set(20_in);
-  chassis.pid_odom_set(-14,100);
+  chassis.pid_odom_set(-16,100);
   chassis.pid_wait();
-  chassis.odom_look_ahead_set(7_in);
   Clamp.set_value(1);
+  Intake2.move_velocity(120);
+  chassis.pid_turn_relative_set(-75,100);
+  chassis.pid_wait();
+  Intake2.move_velocity(0);
+  Intake1.move_velocity(-200);
+  chassis.pid_odom_set(12,100);
+  chassis.pid_wait();
+  chassis.pid_turn_relative_set(-90,100);
+  chassis.pid_wait();
+  Clamp.set_value(0);
+  chassis.pid_turn_relative_set(-179,100);
+  chassis.pid_wait();
+  chassis.pid_odom_set(-18,100);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+  Intake2.move_velocity(120);
+  Intake1.move_velocity(-200);
+  pros::delay(1000);
+  chassis.odom_look_ahead_set(7_in);
+  chassis.pid_turn_relative_set(-100,100);
+  chassis.pid_wait();
+  Lifter.set_value(1);
+  chassis.pid_odom_set( {{{54+12.5,3+8.25}, fwd, 110}} );
+  chassis.pid_wait();
+  Lifter.set_value(0);
+  chassis.pid_odom_set( {{{54+12.5-12,3+8.25}, fwd, 110}} );
+  chassis.pid_wait();
+  chassis.pid_turn_set(0,100);
+  chassis.pid_wait();
+
+
+
 }
 
 void skillsauto(){
