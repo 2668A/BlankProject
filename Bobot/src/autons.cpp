@@ -543,7 +543,7 @@ void color_sort_blue(){
         currentcolor=-1;
       }
       if (Intakedist.get()<50 && currentcolor!=allicolor){
-        pros::delay(75);
+        pros::delay(60);
         Intake2.set_reversed(true);
         pros::delay(75);
         Intake2.set_reversed(false);
@@ -567,7 +567,7 @@ void color_sort_red(){
         currentcolor=-1;
       }
       if (Intakedist.get()<50 && currentcolor!=allicolor){
-        pros::delay(75);
+        pros::delay(60);
         Intake2.set_reversed(true);
         pros::delay(75);
         Intake2.set_reversed(false);
@@ -805,9 +805,27 @@ void movearmcustom(int angle){
   Arm.move_velocity(0);
 }
 
+void armcustom(int angle){
+  Arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  int tickspassed=0;
+  armPid.target_set(angle);
+  while(tickspassed<200){
+    int angle_reading = ArmSensor.get_position();
+    if (angle_reading<0|| angle_reading<1000){
+      angle_reading=36000+angle_reading;
+    }
+    Arm.move(armPid.compute(angle_reading));
+    tickspassed++;
+    pros::delay(10);
+  }
+  Arm.move(0);
+
+}
+
 void skillsauto(){
-  ArmSensor.reset_position();
+  ArmSensor.set_position(33200);
   Arm.set_zero_position(0);
+  pros::delay(500);
   chassis.odom_look_ahead_set(7_in);
   Arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   double starty=7;
@@ -821,13 +839,12 @@ void skillsauto(){
   chassis.pid_turn_set(180,100);
   chassis.pid_wait();
   Arm.move_velocity(0);
-  Arm.set_zero_position(0);
   Intake1.move_velocity(-200);
   Intake2.move_velocity(150);
   chassis.pid_odom_set( {{{-24,-24-starty}, fwd, 90},{{-48,-24-starty}, fwd, 110},{{-60,-50-starty}, fwd, 90}} );
   chassis.pid_wait();
   pros::delay(750);
-  movearmcustom(36000);
+  movearmcustom(33200);
   chassis.pid_odom_set({{{-48,-78-starty}, fwd, 110}});
   chassis.pid_wait();
   pros::delay(1250);
@@ -837,14 +854,14 @@ void skillsauto(){
   pros::delay(50);
   Intake2.move_velocity(0);
   pros::delay(1500);
-  movearmcustom(33000);
+  movearmcustom(30000);
   chassis.pid_odom_set({{{-48,-48-starty}, rev, 110}});
   chassis.pid_wait();
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
   chassis.pid_odom_set(12,90);
   chassis.pid_wait();
-  movearmcustom(26000);
+  movearmcustom(20000);
   chassis.pid_odom_set(-12,90);
   chassis.pid_wait();
   Arm.move_velocity(150);

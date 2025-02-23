@@ -233,7 +233,6 @@ void move_arm(int input){
 
 
 
-ez::PID armPid{0.02 ,0,0,0,"LBMech"};
 
 void neutral_load(){
   while(Intakedist.get()>50){

@@ -18,4 +18,4 @@ inline pros::Rotation Vertical(20);
 inline pros::adi::DigitalOut Clamp('A');
 inline pros::adi::DigitalOut Doink('B');
 inline pros::adi::DigitalOut Lifter('C');
-
+inline ez::PID armPid{0.02 ,0,0,0,"LBMech"};
