@@ -534,7 +534,7 @@ void color_sort_blue(){
   double rawcolorval=40;
   while(true){
     int allicolor=-1;
-    if(Intake2.get_actual_velocity()!=0){
+    if(Intake2.get_target_velocity()!=0){
       rawcolorval=Intakecolor.get_hue();
       if ((rawcolorval<20)||(rawcolorval>330)){
         currentcolor=1;
@@ -558,7 +558,7 @@ void color_sort_red(){
   double rawcolorval=40;
   while(true){
     int allicolor=1;
-    if(Intake2.get_actual_velocity()!=0){
+    if(Intake2.get_target_velocity()!=0){
       rawcolorval=Intakecolor.get_hue();
       if ((rawcolorval<20)||(rawcolorval>330)){
         currentcolor=1;
@@ -696,10 +696,10 @@ void red_left_goal() {
 
 void red_left_stake() {
   pros::Task colorsort(color_sort_red);
-  chassis.odom_y_flip();
-  //chassis.odom_x_flip();
+  //chassis.odom_y_flip();
+  chassis.odom_x_flip();
   chassis.odom_theta_flip();
-  blue_right_stake();
+  stake_base();
   
 }
 
