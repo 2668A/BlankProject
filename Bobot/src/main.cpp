@@ -67,6 +67,7 @@ void initialize() {
       {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2 tr, 1 nr",blue_left_rush},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Pure Pursuit\nPure Pursuit test with odom", odom_pure_pursuit_example},
+      {"color sort testing\ncolor sort test ", colorsorttest},
       {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets}
   });
 
@@ -74,6 +75,67 @@ void initialize() {
   chassis.initialize();
   ez::as::initialize();
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
+}
+
+
+void color_sort_blue(){
+  int currentcolor=1;
+  double rawcolorval=40;
+  master.set_text(0,0,"running blue   ");
+  while(true){
+    int allicolor=-1;
+    
+    if(Intake2.get_target_velocity()!=0){
+      rawcolorval=Intakecolor.get_hue();
+      if ((rawcolorval<20)||(rawcolorval>330)){
+        currentcolor=1; 
+        master.set_text(0,0,"red        ");
+      }
+      else if ((rawcolorval>60)&&(rawcolorval<330)){
+        currentcolor=-1;
+        master.set_text(0,0,"blue        ");
+      } 
+      if (Intakedist.get()<50 && currentcolor!=allicolor){
+        pros::delay(50);
+        Intake2.move_velocity(-120);
+        pros::delay(75);
+        Intake2.move_velocity(120);
+        currentcolor=0;
+        master.set_text(0,0,"exec         ");
+      }
+    }
+    pros::delay(5);
+  }
+}
+
+void color_sort_red(){
+  int currentcolor=1;
+  double rawcolorval=40;
+  master.set_text(0,0,"running red    ");
+  while(true){
+    
+    int allicolor=1;
+    if(Intake2.get_target_velocity()!=0){
+      rawcolorval=Intakecolor.get_hue();
+      if ((rawcolorval<20)||(rawcolorval>330)){
+        currentcolor=1; 
+        master.set_text(0,0,"red         ");
+      }
+      else if ((rawcolorval>60)&&(rawcolorval<330)){
+        currentcolor=-1;
+        master.set_text(0,0,"blue          ");
+      }
+      if (Intakedist.get()<50 && currentcolor!=allicolor){
+        pros::delay(50);
+        Intake2.move_velocity(-120);
+        pros::delay(75);
+        Intake2.move_velocity(120);
+        currentcolor=0;
+        master.set_text(0,0,"exec          ");
+      }
+    }
+    pros::delay(5);
+  }
 }
 
 /**
@@ -97,6 +159,9 @@ void disabled() {
 void competition_initialize() {
   // . . .
 }
+
+
+int colorsortactive=0;
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -128,6 +193,18 @@ void autonomous() {
   You can do cool curved motions, but you have to give your robot the best chance
   to be consistent
   */
+  int currentpage = ez::as::auton_selector.auton_page_current;
+  master.set_text(0,0,to_string(currentpage));
+  if(currentpage<=3 && currentpage>=1){
+    pros::Task colorsort(color_sort_red);
+  }
+  else if(currentpage<=6 && currentpage>=4){
+    pros::Task colorsort(color_sort_blue);
+  }
+  else if(currentpage==9){
+    pros::Task colorsort(color_sort_blue);
+  }
+  colorsortactive=1;
 
   ez::as::auton_selector.selected_auton_call();  // Calls selected auton from autonomous selector
 }
@@ -334,6 +411,9 @@ void opcontrol() {
   int colorstate=0; //0 is none, -1 is red, 1 is blue
   Intakecolor.set_led_pwm(100);
 
+  chassis.pid_tuner_disable();
+  ez::as::initialize();
+
   while (true) {
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
@@ -395,9 +475,9 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33200);
+        armPid.target_set(33250);
       }
-      else if (armPid.target==33200){
+      else if (armPid.target==33250){
         armPid.target_set(20000);
       } 
       else if (armPid.target==20000){

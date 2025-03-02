@@ -25,3 +25,4 @@ void blue_right_goal();
 void blue_right_stake();
 void blue_left_rush();
 void skillsauto();
+void colorsorttest();
