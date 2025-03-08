@@ -77,7 +77,7 @@ void initialize() {
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
 }
 
-
+/*
 void color_sort_blue(){
   int currentcolor=1;
   double rawcolorval=40;
@@ -138,6 +138,9 @@ void color_sort_red(){
   }
 }
 
+*/
+//colorsort here :)
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -193,6 +196,7 @@ void autonomous() {
   You can do cool curved motions, but you have to give your robot the best chance
   to be consistent
   */
+  /*
   int currentpage = ez::as::auton_selector.auton_page_current;
   master.set_text(0,0,to_string(currentpage));
   if(currentpage<=3 && currentpage>=1){
@@ -205,6 +209,7 @@ void autonomous() {
     pros::Task colorsort(color_sort_blue);
   }
   colorsortactive=1;
+  */
 
   ez::as::auton_selector.selected_auton_call();  // Calls selected auton from autonomous selector
 }
