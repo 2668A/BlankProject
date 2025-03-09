@@ -5,6 +5,15 @@
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
+
+
+
+
+
+
+// SETUP SECTION
+
+
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
@@ -77,7 +86,7 @@ void initialize() {
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
 }
 
-/*
+
 void color_sort_blue(){
   int currentcolor=1;
   double rawcolorval=40;
@@ -138,8 +147,14 @@ void color_sort_red(){
   }
 }
 
-*/
-//colorsort here :)
+
+
+
+
+
+
+// COMPETITION SECTION
+
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -162,7 +177,6 @@ void disabled() {
 void competition_initialize() {
   // . . .
 }
-
 
 int colorsortactive=0;
 
@@ -196,7 +210,6 @@ void autonomous() {
   You can do cool curved motions, but you have to give your robot the best chance
   to be consistent
   */
-  /*
   int currentpage = ez::as::auton_selector.auton_page_current;
   master.set_text(0,0,to_string(currentpage));
   if(currentpage<=3 && currentpage>=1){
@@ -209,7 +222,7 @@ void autonomous() {
     pros::Task colorsort(color_sort_blue);
   }
   colorsortactive=1;
-  */
+  
 
   ez::as::auton_selector.selected_auton_call();  // Calls selected auton from autonomous selector
 }
@@ -309,12 +322,14 @@ void ez_template_extras() {
 
 
 
+
+
+// DRIVER SECTION
+
+
 void move_arm(int input){
   Arm.move(input);
 }
-
-
-
 
 void neutral_load(){
   while(Intakedist.get()>50){
@@ -523,12 +538,7 @@ void opcontrol() {
       Doink.set_value(doinkstate);
     }
 
-    //autoload trust
-    //if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
-    //  neutral_load();
-    //}
 
-    //autoscore trust
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
       armPid.target_set(12000);
     }
@@ -538,6 +548,11 @@ void opcontrol() {
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
       armPid.target_set(30000);
+    }
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+      chassis.odom_xyt_set(0,0,0);
+      chassis.pid_odom_set(2,100);
+      chassis.pid_wait();
     }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
