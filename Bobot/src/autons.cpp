@@ -713,7 +713,7 @@ void stake_base(){
   chassis.pid_wait();
   chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
-  chassis.pid_odom_set( {{{36+7.5,-12-9.75}, fwd, 110},{{48,-24-9.75}, fwd, 110},{{48,-36-9.75}, fwd, 110}});
+  chassis.pid_odom_set( {{{36+7.5,-12-9.75}, fwd, 110},{{46,-24-9.75}, fwd, 110},{{46,-36-9.75}, fwd, 110}});
   chassis.pid_wait();
   chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
