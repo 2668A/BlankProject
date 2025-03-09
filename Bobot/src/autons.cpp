@@ -788,7 +788,6 @@ void red_right_rush(){
 
 
 
-
 void blue_right_goal(){
   //starts at x=0, y=+7.5 from corner
   pros::Task colorsort(color_sort_blue);
@@ -858,6 +857,7 @@ void armcustom(int angle){
 }
 
 void skillsauto(){
+  chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 100_ms, 750_ms);
   int offset = 400;
   ArmSensor.set_position(33200);
   Arm.set_zero_position(0);
@@ -870,9 +870,9 @@ void skillsauto(){
   Arm.move_velocity(0); 
   chassis.pid_odom_set( {{{0,-6-starty}, rev, 110},{{-24,-starty}, rev, 110}} );
   chassis.pid_wait();
-  Arm.move_velocity(200); 
   Clamp.set_value(1);
   //clamp goal
+  Arm.move_velocity(200); 
   chassis.pid_turn_set(180,100); 
   chassis.pid_wait();
   Arm.move_velocity(0);
@@ -886,7 +886,7 @@ void skillsauto(){
   movearmcustom(33200+offset);
   chassis.pid_odom_set({{{-48,-78-starty}, fwd, 110}});
   chassis.pid_wait();
-  pros::delay(1000);
+  pros::delay(700);
   Intake2.move_velocity(0);
   Intake1.move_velocity(0);
   Intake2.move_velocity(-120);
@@ -923,8 +923,8 @@ void skillsauto(){
   chassis.pid_wait();
   chassis.pid_odom_set(-16,115);   
   chassis.pid_wait();
-  //put goal down & move to next side
   Clamp.set_value(0);
+  //put goal down & move to next side
   Intake1.move_velocity(200);
   Intake2.move_velocity(-120);
   chassis.pid_odom_set(16,115);
@@ -968,7 +968,7 @@ void skillsauto(){
   chassis.pid_odom_set(72,127);
   chassis.pid_wait();
   chassis.odom_look_ahead_set(7_in);
-  Intake2.move_velocity(30);
+  Intake2.move_velocity(100);
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
   Intake2.move_velocity(0);
@@ -989,22 +989,13 @@ void skillsauto(){
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();
   Clamp.set_value(0);
-  chassis.pid_odom_set(-12,115);
+  chassis.pid_odom_set(-16,115);
   chassis.pid_wait();
-  chassis.pid_odom_set(12,115);
+  chassis.pid_odom_set(16,115);
   chassis.pid_wait();
   chassis.pid_turn_set(-7,110);
   chassis.pid_wait();
   chassis.odom_look_ahead_set(40_in);
-  chassis.pid_odom_set(100,126);
+  chassis.pid_odom_set(120,126);
   chassis.pid_wait();
-  
-
-
-
-
-
-
-
-  
 }
