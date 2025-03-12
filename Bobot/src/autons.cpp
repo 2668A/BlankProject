@@ -555,14 +555,29 @@ void measure_offsets() {
 
 ///*
 void color_sort_blue(){
+  //this variable stores the color of the ring currently in the intake
+  //1 stands for red, 0 stands for none, -1 stands for blue
   int currentcolor=1;
+  
+  //this variable stores the raw color reading from the color sensor
   double rawcolorval=40;
+
+  //indicates which color is being let onto the goal
   master.set_text(0,0,"running red    ");
+
+  //loop to make sure task runs continuoously 
   while(true){
     
+    //sets alliance color (allows these rings through)
     int allicolor=-1;
+
+    //only color-sorts if intake is running
     if(Intake2.get_target_velocity()!=0){
+
+      //get new color reading
       rawcolorval=Intakecolor.get_hue();
+
+      //assign currentcolor based on raw reading, display to screen
       if ((rawcolorval<20)||(rawcolorval>330)){
         currentcolor=1; 
         master.set_text(0,0,"red         ");
@@ -571,28 +586,54 @@ void color_sort_blue(){
         currentcolor=-1;
         master.set_text(0,0,"blue          ");
       }
+
+      //if ring is wrong color and detected on intake
       if (Intakedist.get()<50 && currentcolor!=allicolor){
+
+        //small delay to allow ring to reach best position to throw off
         pros::delay(50);
+        //reverses intake to throw ring off
         Intake2.move_velocity(-120);
+        //delay to allow ring to clear intake
         pros::delay(75);
+        //move intake the same way again
         Intake2.move_velocity(120);
+        //reset color variable
         currentcolor=0;
+        //indicate that ring is filtered out
         master.set_text(0,0,"exec          ");
       }
     }
+
+    //delay to save resources
     pros::delay(5);
   }
 }
 
 void color_sort_red(){
+  //this variable stores the color of the ring currently in the intake
+  //1 stands for red, 0 stands for none, -1 stands for blue
   int currentcolor=1;
+  
+  //this variable stores the raw color reading from the color sensor
   double rawcolorval=40;
+
+  //indicates which color is being let onto the goal
   master.set_text(0,0,"running red    ");
+
+  //loop to make sure task runs continuoously 
   while(true){
     
+    //sets alliance color (allows these rings through)
     int allicolor=1;
+
+    //only color-sorts if intake is running
     if(Intake2.get_target_velocity()!=0){
+
+      //get new color reading
       rawcolorval=Intakecolor.get_hue();
+
+      //assign currentcolor based on raw reading, display to screen
       if ((rawcolorval<20)||(rawcolorval>330)){
         currentcolor=1; 
         master.set_text(0,0,"red         ");
@@ -601,15 +642,26 @@ void color_sort_red(){
         currentcolor=-1;
         master.set_text(0,0,"blue          ");
       }
+
+      //if ring is wrong color and detected on intake
       if (Intakedist.get()<50 && currentcolor!=allicolor){
+
+        //small delay to allow ring to reach best position to throw off
         pros::delay(50);
+        //reverses intake to throw ring off
         Intake2.move_velocity(-120);
+        //delay to allow ring to clear intake
         pros::delay(75);
+        //move intake the same way again
         Intake2.move_velocity(120);
+        //reset color variable
         currentcolor=0;
+        //indicate that ring is filtered out
         master.set_text(0,0,"exec          ");
       }
     }
+
+    //delay to save resources
     pros::delay(5);
   }
 }
@@ -634,30 +686,45 @@ void colorsorttest(){
 void goal_base(){
   //BASED ON BLUE
   chassis.odom_enable(true);
+
   chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
   chassis.pid_wait();
+
   Clamp.set_value(1);
+
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
+
   chassis.pid_odom_set( {{{-28, -30}, fwd, 110}} );
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
   chassis.pid_wait();
+
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{-12,-43.5}, fwd, 110},{{-24,-48}, fwd, 110},{{-38,-48}, fwd, 110}});
   chassis.pid_wait();
+  
   chassis.pid_odom_set( {{{-24,-24}, rev, 110}} );
   chassis.pid_wait();
+
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();
+
   Lifter.set_value(1);
+
   chassis.pid_odom_set( {{{28, -7.5}, fwd, 110}} );
   chassis.pid_wait();
+
   pros::delay(500);
+
   Lifter.set_value(0);
+
   chassis.pid_odom_set( {{{12, -7.5}, rev, 110}} );
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{17, -24}, fwd, 110}} );
   chassis.pid_wait();
 }
@@ -667,31 +734,47 @@ void goal_base_alt(){
   chassis.odom_enable(true);
   chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
   chassis.pid_wait();
+
   Clamp.set_value(1);
+
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
+
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{-12,-41}, fwd, 110},{{-24,-46}, fwd, 110}});
   chassis.pid_wait();
+
   pros::delay(500);
+
   chassis.pid_odom_set({{-38,-46}, fwd, 110});
   chassis.pid_wait();
+
   chassis.pid_turn_set(-95,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set(-24,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{-28, -30}, fwd, 110}} );
   chassis.pid_wait();
+
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();
+
   Lifter.set_value(1);
+
   chassis.pid_odom_set( {{{28, -7.5}, fwd, 110}} );
   chassis.pid_wait();
+
   pros::delay(500);
+
   Lifter.set_value(0);
+
   chassis.pid_odom_set( {{{12, -7.5}, rev, 110}} );
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{17, -24}, fwd, 110}} );
   chassis.pid_wait();
 }
@@ -700,83 +783,128 @@ void stake_base(){
   //based on blue
   chassis.pid_swing_set(ez::RIGHT_SWING,-55,100);
   chassis.pid_wait();
-  Arm.move_velocity(-150); 
+
+  Arm.move_velocity(-150);
   pros::delay(750);
   Arm.move_velocity(0); 
+
   chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
+
   Arm.move_absolute(75,150);
+
   Clamp.set_value(1);
+
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
+  
   chassis.pid_odom_set( {{{24+7.5,-26-9.75}, fwd, 110}} );
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
-  chassis.pid_odom_set( {{{36+7.5,-12-9.75}, fwd, 110},{{46,-24-9.75}, fwd, 110},{{46,-36-9.75}, fwd, 110}});
+
+  chassis.pid_odom_set( {{{36+7.5,-12-9.75}, fwd, 110},{{44,-24-9.75}, fwd, 110},{{44,-36-9.75}, fwd, 110}});
   chassis.pid_wait();
+
   chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
+
   chassis.pid_turn_set(-90, 100);
   chassis.pid_wait();
+
   Lifter.set_value(1);
+
   chassis.pid_odom_set( {{{5,24-9.75}, fwd, 110}} );
   chassis.pid_wait();
+
   Lifter.set_value(0);
+
   chassis.pid_turn_set(80, 100);
   chassis.pid_wait();
+
   chassis.pid_odom_set(16,100);
   chassis.pid_wait(); 
 }
 
 void rush_base(){
   chassis.odom_look_ahead_set(40_in);
+
   chassis.pid_odom_set(44, 120);
   chassis.pid_wait();
+
   chassis.odom_look_ahead_set(7_in);
+
   chassis.pid_turn_set(35, 100);
   chassis.pid_wait();
+
   Doink.set_value(1);
+
   pros::delay(400);
+
   chassis.pid_turn_set(90, 80);
   chassis.pid_wait();
+
   Doink.set_value(0);
+
   pros::delay(250);
+
   chassis.pid_turn_set(-100,100);
   chassis.pid_wait();
+
   chassis.odom_look_ahead_set(20_in);
+
   chassis.pid_odom_set(-16,100);
   chassis.pid_wait();
   Clamp.set_value(1);
+
   Intake2.move_velocity(120);
+
   chassis.pid_turn_set(-170,100);
   chassis.pid_wait();
+
   Intake2.move_velocity(0);
   Intake1.move_velocity(-200);
+
   chassis.pid_odom_set(14,100);
   chassis.pid_wait();
+
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
+
   Clamp.set_value(0);
+
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set(-24,100);
   chassis.pid_wait();
+
   Clamp.set_value(1);
+
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
+
   pros::delay(1000);
+
   chassis.odom_look_ahead_set(7_in);
+
   chassis.pid_turn_set(135,100);
   chassis.pid_wait();
+
   Lifter.set_value(1);
+
   chassis.pid_odom_set( {{{60+12.5,0-8.25}, fwd, 110}} );
   chassis.pid_wait();
+
   Lifter.set_value(0);
+
   chassis.pid_odom_set( {{{60+12.5-8,0-8.25+12}, fwd, 110}} );
   chassis.pid_wait();
+
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
+
   chassis.pid_odom_set(20, 100);
   chassis.pid_wait();
 }
@@ -1054,74 +1182,150 @@ void skillsauto(){
   //reversing intake to get rid of excess rings
   Intake1.move_velocity(200);
   Intake2.move_velocity(-120);
+
+  //moving to align with next goal
   chassis.pid_odom_set(16,115);
   chassis.pid_wait();
+
+  //turning toward next goal
   chassis.pid_turn_set(-92,110);
   chassis.pid_wait();
+
+  //mmovign to next goal at full speed
   chassis.odom_look_ahead_set(25_in);
   chassis.pid_odom_set(-72,127);
   chassis.pid_wait();
   chassis.odom_look_ahead_set(7_in);
+
+  //resetting position, trying to eliminate accumulated error
   chassis.odom_xyt_set(0,0,0);
+
+  //clamp next goal
   Clamp.set_value(1);
+
+  //turn to first ring, toward blue
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
+  
+  //start intake 
   Intake1.move_velocity(-200);
   Intake2.move_velocity(120);
+
+  //intaking rings using name path as other side 
   chassis.pid_odom_set( {{{-24,0}, fwd, 100},{{-24,-24}, fwd, 110},{{-50,-36}, fwd, 100}} );
   chassis.pid_wait();
+
+  //turning to go back
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
+
+  //reversing away from wall
   chassis.pid_odom_set(-24,115);
   chassis.pid_wait();
+
+  //turnign toward "triangle" of rings, toward red
   chassis.pid_turn_set(90,100);
   chassis.pid_wait();
+
+  //intaking triangle 
   chassis.pid_odom_set({{16,-24},fwd,100});
   chassis.pid_wait();
+  
+  // back away from wall
   chassis.pid_odom_set(-14,115);
   chassis.pid_wait();
+
+  // turn back toward corner
   chassis.pid_turn_set(-45,100);
   chassis.pid_wait();
+
+  //start here
+
+  //reverse into corner
   chassis.pid_odom_set(-18,115);
   chassis.pid_wait();
+
+  //release goal
   Clamp.set_value(0);
+
+  //drive away from corner
   chassis.pid_odom_set(18,115);
   chassis.pid_wait();
+
+  //start spinning intake to pick up rings along the way
   Intake1.move_velocity(-200);
   Intake2.move_velocity(0);
+
+  //turn toward blue
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
+
+  //moving to blue left corner at full speed
   chassis.odom_look_ahead_set(25_in);
   chassis.pid_odom_set(72,127);
   chassis.pid_wait();
   chassis.odom_look_ahead_set(7_in);
+
+  //allowing first ring to move up intake slightly to prepare for second ring
   Intake2.move_velocity(100);
+
+  //turn toward second ring
   chassis.pid_turn_set(0,100);
   chassis.pid_wait();
+
+  //stopping intake
   Intake2.move_velocity(0);
+
+  //intake 2nd ring
   chassis.pid_odom_set(26,115);
   chassis.pid_wait();
+
+  //turn toward last empty goal
   chassis.pid_turn_relative_set(135,100);
   chassis.pid_wait();
+
+  //drive backward into goal
   chassis.pid_odom_set(-40,115);
   chassis.pid_wait();
+
+  //clamp goal
   Clamp.set_value(1);
+
+  //drive forward to prepare to put into corner
   chassis.pid_odom_set(6,115);
   chassis.pid_wait();
+
+  //spin intake and deposit both rings in intake onto goal
   Intake2.move_velocity(120);
+
+  //turn toward corner
   chassis.pid_turn_set(-180,100);
   chassis.pid_wait();
+
+  //drive toward corner while intaking rings
   chassis.pid_odom_set(47,115);
   chassis.pid_wait();
+
+  //turn back toward corner
   chassis.pid_turn_set(45,100);
   chassis.pid_wait();
+
+  //release goal
   Clamp.set_value(0);
+
+  //push goal into corner
   chassis.pid_odom_set(-18,115);
   chassis.pid_wait();
+
+  //drive out of corner
   chassis.pid_odom_set(18,115);
   chassis.pid_wait();
+
+  //turn towarwd goal with blue ring
   chassis.pid_turn_set(-7,110);
   chassis.pid_wait();
+
+  //drive full speed, push into corner
   chassis.odom_look_ahead_set(40_in);
   chassis.pid_odom_set(120,126);
   chassis.pid_wait();

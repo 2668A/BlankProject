@@ -87,67 +87,6 @@ void initialize() {
 }
 
 
-void color_sort_blue(){
-  int currentcolor=1;
-  double rawcolorval=40;
-  master.set_text(0,0,"running blue   ");
-  while(true){
-    int allicolor=-1;
-    
-    if(Intake2.get_target_velocity()!=0){
-      rawcolorval=Intakecolor.get_hue();
-      if ((rawcolorval<20)||(rawcolorval>330)){
-        currentcolor=1; 
-        master.set_text(0,0,"red        ");
-      }
-      else if ((rawcolorval>60)&&(rawcolorval<330)){
-        currentcolor=-1;
-        master.set_text(0,0,"blue        ");
-      } 
-      if (Intakedist.get()<50 && currentcolor!=allicolor){
-        pros::delay(50);
-        Intake2.move_velocity(-120);
-        pros::delay(75);
-        Intake2.move_velocity(120);
-        currentcolor=0;
-        master.set_text(0,0,"exec         ");
-      }
-    }
-    pros::delay(5);
-  }
-}
-
-void color_sort_red(){
-  int currentcolor=1;
-  double rawcolorval=40;
-  master.set_text(0,0,"running red    ");
-  while(true){
-    
-    int allicolor=1;
-    if(Intake2.get_target_velocity()!=0){
-      rawcolorval=Intakecolor.get_hue();
-      if ((rawcolorval<20)||(rawcolorval>330)){
-        currentcolor=1; 
-        master.set_text(0,0,"red         ");
-      }
-      else if ((rawcolorval>60)&&(rawcolorval<330)){
-        currentcolor=-1;
-        master.set_text(0,0,"blue          ");
-      }
-      if (Intakedist.get()<50 && currentcolor!=allicolor){
-        pros::delay(50);
-        Intake2.move_velocity(-120);
-        pros::delay(75);
-        Intake2.move_velocity(120);
-        currentcolor=0;
-        master.set_text(0,0,"exec          ");
-      }
-    }
-    pros::delay(5);
-  }
-}
-
-
 
 
 
@@ -210,18 +149,6 @@ void autonomous() {
   You can do cool curved motions, but you have to give your robot the best chance
   to be consistent
   */
-  int currentpage = ez::as::auton_selector.auton_page_current;
-  master.set_text(0,0,to_string(currentpage));
-  if(currentpage<=3 && currentpage>=1){
-    pros::Task colorsort(color_sort_red);
-  }
-  else if(currentpage<=6 && currentpage>=4){
-    pros::Task colorsort(color_sort_blue);
-  }
-  else if(currentpage==9){
-    pros::Task colorsort(color_sort_blue);
-  }
-  colorsortactive=1;
   
 
   ez::as::auton_selector.selected_auton_call();  // Calls selected auton from autonomous selector
@@ -278,7 +205,7 @@ void ez_screen_task() {
     pros::delay(ez::util::DELAY_TIME);
   }
 }
-pros::Task ezScreenTask(ez_screen_task);
+pros::Task ezScreenTask(ez_screen_task);  
 
 /**
  * Gives you some extras to run in your opcontrol:
@@ -329,70 +256,6 @@ void ez_template_extras() {
 
 void move_arm(int input){
   Arm.move(input);
-}
-
-void neutral_load(){
-  while(Intakedist.get()>50){
-    Intake1.move_velocity(-200);
-    Intake2.move_velocity(100);
-    chassis.opcontrol_arcade_standard(ez::SPLIT);
-    pros::delay(ez::util::DELAY_TIME);
-    int angle_reading = ArmSensor.get_position();
-    if (0<=angle_reading && angle_reading<18000){
-      angle_reading=36000-angle_reading;
-    }
-    move_arm(armPid.compute(angle_reading));
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      break;
-    }
-  }
-  pros::delay(150);
-  Intake1.move_velocity(0);
-  Intake2.move_velocity(-50);
-  pros::delay(400);
-  Intake2.move_velocity(0);
-}
-
-void neutral_score(){
-  double currentdist = Frontdist.get();
-  chassis.drive_angle_set(0);
-  chassis.pid_drive_set((currentdist-90.0)*0.0394,100);
-  chassis.pid_wait();
-  armPid.target_set(22000);
-}
-
-void alliance_load(){
-  while(Intakedist.get()>50){
-    Intake1.move_velocity(-200);
-    Intake2.move_velocity(100);
-    chassis.opcontrol_arcade_standard(ez::SPLIT);
-    pros::delay(ez::util::DELAY_TIME);
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-      break;
-    }
-  }
-  Intake1.move_velocity(0);
-  Intake2.move_velocity(0);
-}
-
-void armtest(){
-  Clamp.set_value(false);
-  Arm.move_velocity(0);
-  Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-  Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
-  Arm.tare_position();
-  ArmSensor.reset();
-  int angle_reading = 36000;
-  while(angle_reading>32900){
-    master.set_text(0,0,to_string(angle_reading));
-    angle_reading = ArmSensor.get_position();
-    if (-18000<=angle_reading && angle_reading<5000){
-      angle_reading=36000+abs(angle_reading);
-    }
-    Arm.move_velocity(-100);
-    pros::delay(50);
-  }
-  Arm.move_velocity(0);
 }
 
 /**
