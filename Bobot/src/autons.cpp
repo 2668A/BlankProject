@@ -827,7 +827,7 @@ void stake_base(){
   chassis.pid_wait(); 
 }
 
-void rush_base(){
+void rush_base_blue(){
   chassis.odom_look_ahead_set(40_in);
 
   chassis.pid_odom_set(44, 120);
@@ -847,7 +847,89 @@ void rush_base(){
 
   Doink.set_value(0);
 
-  pros::delay(250);
+  pros::delay(500);
+
+  chassis.pid_turn_set(-100,100);
+  chassis.pid_wait();
+
+  chassis.odom_look_ahead_set(20_in);
+
+  chassis.pid_odom_set(-16,100);
+  chassis.pid_wait();
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(120);
+
+  chassis.pid_turn_set(-170,100);
+  chassis.pid_wait();
+
+  Intake2.move_velocity(0);
+  Intake1.move_velocity(-200);
+
+  chassis.pid_odom_set(14,100);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(90,100);
+  chassis.pid_wait();
+
+  Clamp.set_value(0);
+
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-24,100);
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(120);
+  Intake1.move_velocity(-200);
+
+  pros::delay(1000);
+
+  chassis.odom_look_ahead_set(7_in);
+
+  chassis.pid_turn_set(135,100);
+  chassis.pid_wait();
+
+  Lifter.set_value(1);
+
+  chassis.pid_odom_set( {{{60+12.5,0-8.25}, fwd, 110}} );
+  chassis.pid_wait();
+
+  Lifter.set_value(0);
+
+  chassis.pid_odom_set( {{{60+12.5-8,0-8.25+12}, fwd, 110}} );
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(0,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(20, 100);
+  chassis.pid_wait();
+}
+
+void rush_base_red(){
+  chassis.odom_look_ahead_set(40_in);
+
+  chassis.pid_odom_set(44, 120);
+  chassis.pid_wait();
+
+  chassis.odom_look_ahead_set(7_in);
+
+  chassis.pid_turn_set(75, 100);
+  chassis.pid_wait();
+
+  Doink.set_value(1);
+
+  pros::delay(400);
+
+  chassis.pid_turn_set(120, 80);
+  chassis.pid_wait();
+
+  Doink.set_value(0);
+
+  pros::delay(500);
 
   chassis.pid_turn_set(-100,100);
   chassis.pid_wait();
@@ -914,7 +996,6 @@ void rush_base(){
 
 
 
-
 // RED SECTION
 
 
@@ -944,7 +1025,7 @@ void red_right_rush(){
   chassis.odom_x_flip();
   chassis.odom_theta_flip();
 
-  rush_base();
+  rush_base_red();
   
 
 }
@@ -975,7 +1056,7 @@ void blue_left_rush(){
   chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 150_ms, 3_in, 250_ms, 500_ms);
   pros::Task colorsort(color_sort_blue);
   //start at x=+12.5,y=-8.25
-  rush_base();
+  rush_base_blue();
 
 
 

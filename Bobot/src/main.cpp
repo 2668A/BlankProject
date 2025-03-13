@@ -316,11 +316,11 @@ void opcontrol() {
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
-      Intake2.move_velocity(120);
+      Intake2.move_velocity(140);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
       Intake1.move_velocity(200); 
-      Intake2.move_velocity(-120);
+      Intake2.move_velocity(-140);
     }
     else{
       Intake1.move_velocity(0);
@@ -344,7 +344,7 @@ void opcontrol() {
     }
     
     int angle_reading = ArmSensor.get_position();
-    if (angle_reading<0|| angle_reading<1000){
+    if (angle_reading<0 || angle_reading<1000){
       angle_reading=36000+angle_reading;
     }
     
