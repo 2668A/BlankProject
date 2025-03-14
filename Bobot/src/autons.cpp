@@ -1143,7 +1143,7 @@ void skillsauto(){
 
   //moving arm outward with ring to score on alliance stake
   Arm.move_velocity(-200); 
-  pros::delay(500);
+  pros::delay(750);
   Arm.move_velocity(0); 
 
   //driving backward, ring slips out of arm and stays on alliance stake, goes toward the goal on the right
@@ -1344,11 +1344,12 @@ void skillsauto(){
   //moving to blue left corner at full speed
   chassis.odom_look_ahead_set(25_in);
   chassis.pid_odom_set(72,127);
+  
   chassis.pid_wait();
   chassis.odom_look_ahead_set(7_in);
 
   //allowing first ring to move up intake slightly to prepare for second ring
-  Intake2.move_velocity(100);
+  Intake2.move_velocity(80);
 
   //turn toward second ring
   chassis.pid_turn_set(0,100);
