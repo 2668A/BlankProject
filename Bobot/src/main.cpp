@@ -361,6 +361,8 @@ void opcontrol() {
         armPid.target_set(33250);
       }
       else if (armPid.target==33250){
+        Intake2.move_velocity(-200);
+        pros::delay(100);
         armPid.target_set(20000);
       } 
       else if (armPid.target==20000){
@@ -410,6 +412,8 @@ void opcontrol() {
     }
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+      Intake2.move_velocity(-200);
+      pros::delay(100);
       armPid.target_set(30000);
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
