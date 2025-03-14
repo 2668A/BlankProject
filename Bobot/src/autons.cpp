@@ -1165,7 +1165,7 @@ void skillsauto(){
 
   //start spinning intake 
   Intake1.move_velocity(-200);
-  Intake2.move_velocity(120);
+  Intake2.move_velocity(140);
 
   //start intaking rings (3), toward right then blue 
   chassis.pid_odom_set( {{{-24,-24-starty}, fwd, 100},{{-48,-24-starty}, fwd, 110},{{-60,-50-starty}, fwd, 100}} );
@@ -1262,7 +1262,7 @@ void skillsauto(){
 
   //reversing intake to get rid of excess rings
   Intake1.move_velocity(200);
-  Intake2.move_velocity(-120);
+  Intake2.move_velocity(-140);
 
   //moving to align with next goal
   chassis.pid_odom_set(16,115);
@@ -1290,7 +1290,7 @@ void skillsauto(){
   
   //start intake 
   Intake1.move_velocity(-200);
-  Intake2.move_velocity(120);
+  Intake2.move_velocity(140);
 
   //intaking rings using name path as other side 
   chassis.pid_odom_set( {{{-24,0}, fwd, 100},{{-24,-24}, fwd, 110},{{-50,-36}, fwd, 100}} );
@@ -1377,7 +1377,7 @@ void skillsauto(){
   chassis.pid_wait();
 
   //spin intake and deposit both rings in intake onto goal
-  Intake2.move_velocity(120);
+  Intake2.move_velocity(140);
 
   //turn toward corner
   chassis.pid_turn_set(-180,100);
@@ -1394,12 +1394,19 @@ void skillsauto(){
   //release goal
   Clamp.set_value(0);
 
+  //back off
+  chassis.pid_odom_set(6,100);
+  chassis.pid_wait();
+
+  //close clamp
+  Clamp.set_value(1);
+
   //push goal into corner
-  chassis.pid_odom_set(-18,115);
+  chassis.pid_odom_set(-26,115);
   chassis.pid_wait();
 
   //drive out of corner
-  chassis.pid_odom_set(18,115);
+  chassis.pid_odom_set(18,100);
   chassis.pid_wait();
 
   //turn towarwd goal with blue ring
