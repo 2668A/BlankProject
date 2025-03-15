@@ -67,7 +67,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto},
+      {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto_alt},
       {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 1 tr, 3 nr",red_left_goal},
       {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from right, face left\nScores 2 tr, 2 nr",red_left_stake},
       {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2 tr",red_right_rush},
@@ -77,7 +77,7 @@ void initialize() {
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Pure Pursuit\nPure Pursuit test with odom", odom_pure_pursuit_example},
       {"color sort testing\ncolor sort test ", colorsorttest},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets}
+      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracki_g wheels.", measure_offsets},
   });
 
   // Initialize chassis and auton selector  

@@ -26,3 +26,4 @@ void blue_right_stake();
 void blue_left_rush();
 void skillsauto();
 void colorsorttest();
+void skillsauto_alt();
