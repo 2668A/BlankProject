@@ -1423,3 +1423,352 @@ void skillsauto(){
   chassis.pid_odom_set(-12,70);
   chassis.pid_wait();
 }
+
+void skillsauto_alt(){
+  // SKILLS AUTONOMOUS
+  // Theoretical Score: 43 
+  // Set up with back crossbar against inner edge of tile
+  // Put preload in arm, position on top of intake 
+
+
+
+  //setting exit constants, allows driving movements to stop faster, saving more time 
+  chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 100_ms, 750_ms);
+
+  //offset arm rotation by a certain amount, issue with field control
+  int offset = 400;
+
+  //setting arm positions, on encoder and rotation sensor
+  ArmSensor.set_position(33200);
+  Arm.set_zero_position(0);
+
+  //setting odometry constants, this one controls how far ahead the robot "looks" on its assigned path
+  chassis.odom_look_ahead_set(7_in);
+
+  //setting arm braking, ensures that arm holds itself up
+  Arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+  //setting odometry offset, since robot doesn't start perfectly on the edge of a tile we have to correct it
+  double starty=7;
+
+  //moving arm outward with ring to score on alliance stake
+  Arm.move_velocity(-200); 
+  pros::delay(750);
+  Arm.move_velocity(0); 
+
+  //driving backward, ring slips out of arm and stays on alliance stake, goes toward the goal on the right
+  chassis.pid_odom_set( {{{0,-6-starty}, rev, 110},{{-24,-starty}, rev, 110}} );
+  chassis.pid_wait();
+
+  //clamps goal using pneumatics
+  Clamp.set_value(1);
+
+  //moving arm inward to not interfere with rings
+  Arm.move_velocity(200); 
+
+  //turning to the first ring, toward blue side
+  chassis.pid_turn_set(180,100); 
+  chassis.pid_wait();
+
+  //stopping previous arm movements
+  Arm.move_velocity(0);
+
+  //start spinning intake 
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(140);
+
+  //start intaking rings (3), toward right then blue 
+  chassis.pid_odom_set( {{{-24,-24-starty}, fwd, 100},{{-48,-24-starty}, fwd, 110},{{-60,-50-starty}, fwd, 100}} );
+  chassis.pid_wait();
+  
+  //little delay to allow last ring on the goal before arm moves
+  pros::delay(250);
+
+  //moving arm upward into "loading" position, notice offset
+  movearmcustom(33200+offset);
+  
+  //moving to nexxt ring, toward blue
+  chassis.pid_odom_set({{{-48,-78-starty}, fwd, 110}});
+  chassis.pid_wait();
+
+  //delay to allow ring time to move into arm
+  pros::delay(700);
+
+  //stopping intake
+  Intake2.move_velocity(0);
+  Intake1.move_velocity(0);
+
+  //spinnning intake backward while raising arm to "storage" position, prevents hooks from getting stuck
+  Intake2.move_velocity(-120);
+  movearmcustom(30000);
+
+  //stopping intake again
+  Intake2.move_velocity(-0);
+
+  //moving backward to near wall stake
+  chassis.pid_odom_set({{{-48,-48-starty}, rev, 110}});
+  chassis.pid_wait();
+
+  //turning to wall stake
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+  //moving forward, if there are any inaccuracies built up this will correct them using the wall stake aligner
+  chassis.pid_odom_set(16,100);
+  chassis.pid_wait();
+
+  //moving arm to score the ring on wall stak
+  movearmcustom(20000);
+
+  //backing away from wall stake
+  chassis.pid_odom_set(-16,115);
+  chassis.pid_wait();
+
+  //moving arm back down
+  Arm.move_velocity(150);
+
+  //turning toward red to intake last 3 rings
+  chassis.pid_turn_set(-3,100);
+  chassis.pid_wait();
+
+  //stopping arm 
+  Arm.move_velocity(0);
+
+  //start intake
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(120);
+
+  //drive into "triangle" of rings 
+  chassis.pid_odom_set(64,115);
+  chassis.pid_wait();
+
+  //back up
+  chassis.pid_odom_set(-14,115);
+  chassis.pid_wait();
+
+  //turn to last ring 
+  chassis.pid_turn_relative_set(-105,100);
+  chassis.pid_wait();
+
+  //intake last irng 
+  chassis.pid_odom_set(18,115);
+  chassis.pid_wait();
+
+  //back away 
+  chassis.pid_odom_set(-16,115);
+  chassis.pid_wait();
+
+  //turn back toward corner
+  chassis.pid_turn_set(135,100);
+  chassis.pid_wait();
+
+  //reverse drive
+  chassis.pid_odom_set(-16,115);   
+  chassis.pid_wait();
+
+  //put goal down
+  Clamp.set_value(0);
+
+
+  //reversing intake to get rid of excess rings
+  Intake1.move_velocity(200);
+  Intake2.move_velocity(-140);
+
+  //moving to align with next goal
+  chassis.pid_odom_set(16,115);
+  chassis.pid_wait();
+
+  //turning toward next goal
+  chassis.pid_turn_set(-92,110);
+  chassis.pid_wait();
+
+  //mmovign to next goal at full speed
+  chassis.odom_look_ahead_set(25_in);
+  chassis.pid_odom_set(-72,127);
+  chassis.pid_wait();
+  chassis.odom_look_ahead_set(7_in);
+
+  //resetting position, trying to eliminate accumulated error
+  chassis.odom_xyt_set(0,0,0);
+
+  //clamp next goal
+  Clamp.set_value(1);
+
+  //turn to first ring, toward blue
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+  
+  //start intake 
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(140);
+
+  //intaking rings using name path as other side 
+  chassis.pid_odom_set( {{{-24,0}, fwd, 100},{{-24,-24}, fwd, 110},{{-50,-34}, fwd, 100}} );
+  chassis.pid_wait();
+
+
+  //small delay
+  pros::delay(250);
+
+  //moving arm upward into "loading" position, notice offset
+  movearmcustom(33200+offset);
+
+
+  chassis.pid_odom_set( {{{-72,-24}, fwd, 100}} );
+  chassis.pid_wait();
+  
+  pros::delay(700);
+
+  //stopping intake
+  Intake2.move_velocity(0);
+  Intake1.move_velocity(0);
+
+  //spinnning intake backward while raising arm to "storage" position, prevents hooks from getting stuck
+  Intake2.move_velocity(-120);
+  movearmcustom(30000);
+
+  //stopping intake again
+  Intake2.move_velocity(-0);
+
+  chassis.pid_odom_set( {{{-48,-24}, fwd, 100}} );
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-180,110);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(14,100);
+  chassis.pid_wait();
+
+  movearmcustom(20000);
+
+  pros::delay(750);
+
+  //backing away from wall stake
+  chassis.pid_odom_set(-16,115);
+  chassis.pid_wait();
+
+  //moving arm back down
+  Arm.move_velocity(150);
+
+  //turnign toward "triangle" of rings, toward red
+  chassis.pid_turn_set(90,100);
+  chassis.pid_wait();
+
+  //stopping arm 
+  Arm.move_velocity(0);
+
+  //intaking triangle 
+  chassis.pid_odom_set({{16,-24},fwd,100});
+  chassis.pid_wait();
+  
+  // back away from wall
+  chassis.pid_odom_set(-14,115);
+  chassis.pid_wait();
+
+  // turn back toward corner
+  chassis.pid_turn_set(-45,100);
+  chassis.pid_wait();
+
+  //start here
+
+  //reverse into corner
+  chassis.pid_odom_set(-18,115);
+  chassis.pid_wait();
+
+  //release goal
+  Clamp.set_value(0);
+
+  //drive away from corner
+  chassis.pid_odom_set(18,115);
+  chassis.pid_wait();
+
+  //start spinning intake to pick up rings along the way
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(0);
+
+  //turn toward blue
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+  //moving to blue left corner at full speed
+  chassis.odom_look_ahead_set(25_in);
+  chassis.pid_odom_set(72,127);
+
+  chassis.pid_wait();
+  chassis.odom_look_ahead_set(7_in);
+
+  //allowing first ring to move up intake slightly to prepare for second ring
+  Intake2.move_velocity(80);
+
+  //turn toward second ring
+  chassis.pid_turn_set(0,100);
+  chassis.pid_wait();
+
+  //stopping intake
+  Intake2.move_velocity(0);
+
+  //intake 2nd ring
+  chassis.pid_odom_set(26,115);
+  chassis.pid_wait();
+
+  //turn toward last empty goal
+  chassis.pid_turn_relative_set(135,100);
+  chassis.pid_wait();
+
+  //drive backward into goal
+  chassis.pid_odom_set(-40,115);
+  chassis.pid_wait();
+
+  //clamp goal
+  Clamp.set_value(1);
+
+  //drive forward to prepare to put into corner
+  chassis.pid_odom_set(6,115);
+  chassis.pid_wait();
+
+  //spin intake and deposit both rings in intake onto goal
+  Intake2.move_velocity(140);
+
+  //turn toward corner
+  chassis.pid_turn_set(-180,100);
+  chassis.pid_wait();
+
+  //drive toward corner while intaking rings
+  chassis.pid_odom_set(47,115);
+  chassis.pid_wait();
+
+  //turn back toward corner
+  chassis.pid_turn_set(45,100);
+  chassis.pid_wait();
+
+  //release goal
+  Clamp.set_value(0);
+
+  //back off
+  chassis.pid_odom_set(6,100);
+  chassis.pid_wait();
+
+  //close clamp
+  Clamp.set_value(1);
+
+  //push goal into corner
+  chassis.pid_odom_set(-26,115);
+  chassis.pid_wait();
+
+  //drive out of corner
+  chassis.pid_odom_set(18,100);
+  chassis.pid_wait();
+
+  //turn towarwd goal with blue ring
+  chassis.pid_turn_set(-7,110);
+  chassis.pid_wait();
+
+  //drive full speed, push into corner
+  chassis.odom_look_ahead_set(40_in);
+  chassis.pid_odom_set(110,126);
+  chassis.pid_wait();
+
+  //back off
+  chassis.pid_odom_set(-12,70);
+  chassis.pid_wait();
+}
