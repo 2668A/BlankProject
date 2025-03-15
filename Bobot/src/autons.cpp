@@ -1430,9 +1430,9 @@ void skillsauto_alt(){
   // Set up with back crossbar against inner edge of tile
   // Put preload in arm, position on top of intake 
 
-  chassis.pid_turn_exit_condition_set(80_ms, 3_deg, 200_ms, 7_deg, 100_ms, 500_ms);
-  chassis.pid_swing_exit_condition_set(80_ms, 3_deg, 250_ms, 7_deg, 100_ms, 500_ms);
-  chassis.pid_drive_exit_condition_set(80_ms, 1_in, 200_ms, 3_in, 100_ms, 500_ms);
+  chassis.pid_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 100_ms, 500_ms);
+  chassis.pid_swing_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 100_ms, 500_ms);
+  chassis.pid_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 100_ms, 500_ms);
   chassis.pid_odom_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 100_ms, 750_ms);
 
 
@@ -1527,7 +1527,7 @@ void skillsauto_alt(){
   //backing away from wall stake
   chassis.pid_odom_set(-16,115);
   chassis.pid_wait();
-
+ 
   //moving arm back down
   Arm.move_velocity(150);
 
@@ -1611,7 +1611,7 @@ void skillsauto_alt(){
   chassis.pid_wait();
 
   //small delay
-  pros::delay(500);
+  pros::delay(750);
 
   //moving arm upward into "loading" position, notice offset
   movearmcustom(33200+offset);
@@ -1662,19 +1662,21 @@ void skillsauto_alt(){
   Intake1.move_velocity(-200);
   Intake2.move_velocity(130);
 
+  chassis.odom_look_ahead_set(20);
+
   //intaking triangle 
-  chassis.pid_odom_set({{16,-28},fwd,115});
+  chassis.pid_odom_set({{14,-28},fwd,115});
   chassis.pid_wait();
+
+  chassis.odom_look_ahead_set(7);
   
   // back away from wall
-  chassis.pid_odom_set(-14,115);
+  chassis.pid_odom_set(-12,115);
   chassis.pid_wait();
 
   // turn back toward corner
-  chassis.pid_turn_set(-45,110);
+  chassis.pid_turn_set(-50,110);
   chassis.pid_wait();
-
-  //start here
 
   //reverse into corner
   chassis.pid_odom_set(-18,115);
@@ -1711,7 +1713,7 @@ void skillsauto_alt(){
   Clamp.set_value(1);
 
   //spin intake and deposit both rings in intake onto goal
-  Intake2.move_velocity(130);
+  Intake2.move_velocity(140);
   Intake1.move_velocity(-200);
 
   //turn toward corner
@@ -1719,11 +1721,13 @@ void skillsauto_alt(){
   chassis.pid_wait();
 
   //drive toward corner while intaking rings
-  chassis.pid_odom_set(47,115);
+  chassis.pid_odom_set(59,115);
   chassis.pid_wait();
 
+  pros::delay(500);
+
   //turn back toward corner
-  chassis.pid_turn_set(60,110);
+  chassis.pid_turn_set(70,110);
   chassis.pid_wait();
 
   //release goal
@@ -1734,21 +1738,21 @@ void skillsauto_alt(){
   chassis.pid_wait();
 
   //drive out of corner
-  chassis.pid_odom_set(18,115);
+  chassis.pid_odom_set(22,115);
   chassis.pid_wait();
 
   //turn towarwd goal with blue ring
-  chassis.pid_turn_set(-7,110);
+  chassis.pid_turn_set(-10,110);
   chassis.pid_wait();
 
   Intake1.move_velocity(200);
 
   //drive full speed, push into corner
   chassis.odom_look_ahead_set(40_in);
-  chassis.pid_odom_set(120,126);
+  chassis.pid_odom_set(115,127);
   chassis.pid_wait();
 
   //back off
-  chassis.pid_odom_set(-12,70);
+  chassis.pid_odom_set(-12,70); 
   chassis.pid_wait();
 }
