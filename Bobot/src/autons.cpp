@@ -1344,7 +1344,7 @@ void skillsauto(){
   //moving to blue left corner at full speed
   chassis.odom_look_ahead_set(25_in);
   chassis.pid_odom_set(72,127);
-  
+
   chassis.pid_wait();
   chassis.odom_look_ahead_set(7_in);
 
@@ -1416,6 +1416,10 @@ void skillsauto(){
 
   //drive full speed, push into corner
   chassis.odom_look_ahead_set(40_in);
-  chassis.pid_odom_set(120,126);
+  chassis.pid_odom_set(110,126);
+  chassis.pid_wait();
+
+  //back off
+  chassis.pid_odom_set(-12,70);
   chassis.pid_wait();
 }
