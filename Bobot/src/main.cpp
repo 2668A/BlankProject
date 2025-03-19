@@ -70,7 +70,7 @@ void initialize() {
       {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto_alt},
       {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 1 tr, 3 nr",red_left_goal},
       {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from right, face left\nScores 2 tr, 2 nr",red_left_stake},
-      {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2 tr",red_right_rush},
+      {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2 tr",red_right_rush_alt},
       {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 1 tr, 3 nr",blue_right_goal},
       {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 2 tr, 2 nr",blue_right_stake},
       {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2 tr, 1 nr",blue_left_rush},

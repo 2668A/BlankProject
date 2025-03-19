@@ -582,7 +582,7 @@ void color_sort_blue(){
         currentcolor=1; 
         master.set_text(0,0,"red         ");
       }
-      else if ((rawcolorval>60)&&(rawcolorval<330)){
+      else if ((rawcolorval>120)&&(rawcolorval<330)){
         currentcolor=-1;
         master.set_text(0,0,"blue          ");
       }
@@ -638,7 +638,7 @@ void color_sort_red(){
         currentcolor=1; 
         master.set_text(0,0,"red         ");
       }
-      else if ((rawcolorval>60)&&(rawcolorval<330)){
+      else if ((rawcolorval>120)&&(rawcolorval<330)){
         currentcolor=-1;
         master.set_text(0,0,"blue          ");
       }
@@ -991,7 +991,75 @@ void rush_base_red(){
   chassis.pid_wait();
 }
 
+void rush_alt_base_red(){
+  chassis.odom_look_ahead_set(40_in);
 
+  chassis.pid_odom_set(44, 120);
+  chassis.pid_wait();
+
+  Doink.set_value(1);
+
+  pros::delay(250);
+
+  chassis.odom_look_ahead_set(20_in);
+
+  chassis.pid_odom_set(-45,120);
+  chassis.pid_wait();
+
+  chassis.odom_look_ahead_set(7_in);
+
+  Doink.set_value(0);
+
+  pros::delay(250);
+  
+  chassis.pid_turn_set(-170,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-20,110);
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(130);
+
+  chassis.pid_odom_set(6,100);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-75,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-12,110);
+  chassis.pid_wait();
+
+  Clamp.set_value(0);
+
+  chassis.pid_odom_set(12,110);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(20,100);
+  chassis.pid_wait();
+  
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(0);
+
+  chassis.pid_odom_set(26,110);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(81,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-26,100);
+  chassis.pid_wait();
+
+  Intake2.move_velocity(130);
+
+  Clamp.set_value(1);
+
+  pros::delay(1000);
+
+  
+  
+}
 
 
 
@@ -1030,7 +1098,11 @@ void red_right_rush(){
 
 }
 
+void red_right_rush_alt(){
+  pros::Task colorsort(color_sort_red);
 
+  rush_base_red();
+}
 
 
 
