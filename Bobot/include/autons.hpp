@@ -28,3 +28,6 @@ void skillsauto();
 void colorsorttest();
 void skillsauto_alt();
 void red_right_rush_alt();
+void blue_left_rush_alt();
+void blue_left_awp();
+void red_right_awp();

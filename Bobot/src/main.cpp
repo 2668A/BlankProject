@@ -68,23 +68,22 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto_alt},
-      {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 1 tr, 3 nr",red_left_goal},
-      {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from right, face left\nScores 2 tr, 2 nr",red_left_stake},
-      {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2 tr",red_right_rush_alt},
-      {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 1 tr, 3 nr",blue_right_goal},
-      {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 2 tr, 2 nr",blue_right_stake},
-      {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2 tr, 1 nr",blue_left_rush},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Pure Pursuit\nPure Pursuit test with odom", odom_pure_pursuit_example},
+      {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 5r1t",red_left_goal},
+      {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from left, face right\nScores 5r2t",red_left_stake},
+      {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2r2t",red_right_rush_alt},
+      {"RED RIGHT SIDE AWP\nSetup on outer edge 3 from right\nScores 4r3t",red_right_awp},
+      {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 5r1t",blue_right_goal},
+      {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 5r2t",blue_right_stake},
+      {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2r2t",blue_left_rush_alt},
+      {"BLUE LEFT SIDE AWP\nSetup on outer edge 3 from left\nScores 4r3t",blue_left_awp},
       {"color sort testing\ncolor sort test ", colorsorttest},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracki_g wheels.", measure_offsets},
   });
 
   // Initialize chassis and auton selector  
   chassis.initialize();
   ez::as::initialize();
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
-}
+} 
 
 
 
@@ -316,11 +315,11 @@ void opcontrol() {
     // Intake Control
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       Intake1.move_velocity(-200);
-      Intake2.move_velocity(140);
+      Intake2.move_velocity(130);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
       Intake1.move_velocity(200); 
-      Intake2.move_velocity(-140);
+      Intake2.move_velocity(-130);
     }
     else{
       Intake1.move_velocity(0);
@@ -358,9 +357,9 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33250);
+        armPid.target_set(33200);
       }
-      else if (armPid.target==33250){
+      else if (armPid.target==33200){
         Intake2.move_velocity(-200);
         pros::delay(100);
         armPid.target_set(20000);
