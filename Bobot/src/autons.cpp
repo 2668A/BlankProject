@@ -676,7 +676,31 @@ void colorsorttest(){
 
 
 
-
+void movearmcustom(int angle){
+  int angle_reading = ArmSensor.get_position();
+  if (angle_reading<=0|| angle_reading<5000){
+    angle_reading=36000+angle_reading;
+  }
+  int movedir=0;
+  if (angle_reading<angle){
+    movedir=1;
+  }
+  else{
+    movedir=-1;
+  }
+  int counter=0;
+  while (abs(angle_reading-angle)>500 && counter <= 700/5){
+    master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
+    angle_reading = ArmSensor.get_position();
+    if (angle_reading<=0|| angle_reading<5000){ 
+      angle_reading=36000+angle_reading;
+    }
+    Arm.move_velocity(movedir*150);
+    pros::delay(5);
+    counter++;
+  }
+  Arm.move_velocity(0);
+}
 
 
 
@@ -827,6 +851,63 @@ void stake_base(){
 
   chassis.pid_odom_set(16,100);
   chassis.pid_wait(); 
+}
+
+void stake_base_alt(){
+  chassis.odom_look_ahead_set(10_in);
+  //based on blue
+  chassis.pid_swing_set(ez::RIGHT_SWING,-53,100);
+  chassis.pid_wait();
+
+  Arm.move_velocity(-150);
+  pros::delay(750);
+  Arm.move_velocity(0); 
+
+  chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
+  chassis.pid_wait();
+
+  Arm.move_absolute(75,150);
+
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(140);
+  Intake1.move_velocity(-200);
+
+  chassis.pid_turn_set(-135,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set( {{{38+7.5,-12-9.75}, fwd, 110},{{46,-24-9.75}, fwd, 110},{{46,-26-9.75}, fwd, 110}});
+  chassis.pid_wait();
+
+  chassis.pid_odom_set({{43,-36-9.75}, fwd, 110});
+  chassis.pid_wait();
+
+  chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
+  chassis.pid_wait();
+
+  chassis.pid_odom_set( {{{24+7.5,-26-9.75}, fwd, 110}} );
+  chassis.pid_wait();
+
+  pros::delay(250);
+
+  chassis.pid_turn_set(-90, 100);
+  chassis.pid_wait();
+
+  Lifter.set_value(1);
+
+  chassis.pid_odom_set( {{{5,24-9.75}, fwd, 110}} );
+  chassis.pid_wait();
+
+  Lifter.set_value(0);
+
+  chassis.pid_turn_set(80, 100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(18,100);
+  chassis.pid_wait(); 
+
+  
+
 }
 
 void rush_base_blue(){
@@ -1123,37 +1204,71 @@ void awp_base(){
   pros::delay(750);
   Arm.move_velocity(0); 
 
-  chassis.pid_odom_set( {{{-26-7.5,-9.75}, rev, 110}} );
+  chassis.pid_odom_set( {{{-26-7.5,-9.75}, rev, 100}} );
   chassis.pid_wait();
 
   Arm.move_absolute(75,150);
 
   Clamp.set_value(1);
 
-  Intake2.move_velocity(120);
+  Intake2.move_velocity(140);
   Intake1.move_velocity(-200);
 
   chassis.pid_turn_set(-180,100);
   chassis.pid_wait();
 
-  chassis.pid_odom_set( {{{-26-7.5,-24-9.75}, fwd, 110}} );
+  chassis.pid_odom_set( {{{-30-7.5,-30-9.75}, fwd, 110}} );
   chassis.pid_wait();
+
+  pros::delay(250);
 
   chassis.pid_turn_set(30,100);
   chassis.pid_wait();
 
-  chassis.pid_odom_set( {{{4,48-9.75}, fwd, 110}} );
+  Lifter.set_value(1);
+
+  chassis.pid_odom_set( {{{-18,8-9.75}, fwd, 110}} );
   chassis.pid_wait();
+
+  Lifter.set_value(0);
+
+  pros::delay(500);
 
   Clamp.set_value(0);
 
   chassis.pid_turn_set(100,100);
   chassis.pid_wait();
 
-  Intake2.move_velocity(00);
-  Intake1.move_velocity(0);
+  Intake2.move_velocity(00); 
 
-  chassis.pid_odom_set( {{{-24-7.5,58-9.75}, rev, 110}} );
+  chassis.pid_odom_set( {{{-36-7.5,36-9.75}, rev, 110}} );
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(140);
+  Intake1.move_velocity(-200);
+
+  chassis.pid_odom_set( {{{-38-7.5,68-9.75}, fwd, 110}} );
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-180,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(50,100);
+  chassis.pid_wait();
+
+
+
+
+}
+
+void safe_base(){
+  //based on red
+  
+  chassis.odom_enable(true);
+
+  chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
   chassis.pid_wait();
 
   Clamp.set_value(1);
@@ -1161,16 +1276,41 @@ void awp_base(){
   Intake2.move_velocity(120);
   Intake1.move_velocity(-200);
 
-  chassis.pid_odom_set( {{{-24-7.5,96-9.75}, fwd, 110}} );
+  chassis.pid_odom_set( {{{-28, -30}, fwd, 110}} );
   chassis.pid_wait();
 
   pros::delay(1000);
 
+  chassis.pid_turn_set(135,100);
+  chassis.pid_wait();
 
+  Clamp.set_value(0);
+
+  chassis.pid_turn_set(0,100);
+  chassis.pid_wait();
+  
+  chassis.pid_odom_set( {{{-28, -50}, rev, 110}} );
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  Lifter.set_value(1);
+
+  chassis.pid_odom_set( {{{28, -4}, fwd, 110}} );
+  chassis.pid_wait();
+
+  Lifter.set_value(0);
+  chassis.pid_odom_set(-12,100);
+  chassis.pid_wait();
+  chassis.pid_odom_set(6,100);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-180,100);
+  chassis.pid_wait();
+  chassis.pid_odom_set(16,100);
+  chassis.pid_wait();
 
 
 }
-
 // RED SECTION
 
 
@@ -1191,6 +1331,15 @@ void red_left_stake() {
   chassis.odom_x_flip();
   chassis.odom_theta_flip();
   stake_base();
+  
+}
+
+void red_left_stake_alt() {
+  pros::Task colorsort(color_sort_red);
+  //chassis.odom_y_flip();
+  chassis.odom_x_flip();
+  chassis.odom_theta_flip();
+  stake_base_alt();
   
 }
 
@@ -1219,8 +1368,10 @@ void red_right_awp(){
   awp_base();
 }
 
-
-
+void red_right_safe(){
+  pros::Task colorsort(color_sort_red);
+  safe_base();
+}
 
 
 // BLUE SECTION
@@ -1237,6 +1388,12 @@ void blue_right_stake(){
   //starts at x=-7.5, y=+9.75 from corner
   pros::Task colorsort(color_sort_blue);
   stake_base();
+}
+
+void blue_right_stake_alt(){
+  //starts at x=-7.5, y=+9.75 from corner
+  pros::Task colorsort(color_sort_blue);
+  stake_base_alt();
 }
 
 void blue_left_rush(){
@@ -1261,36 +1418,19 @@ void blue_left_awp(){
   awp_base();
 }
 
+void blue_left_safe(){
+  pros::Task colorsort(color_sort_blue);
+  //chassis.odom_y_flip();
+  chassis.odom_x_flip();
+  chassis.odom_theta_flip();
+  safe_base();
+}
 
 
 //SKILLS SECTION
 
 
-void movearmcustom(int angle){
-  int angle_reading = ArmSensor.get_position();
-  if (angle_reading<=0|| angle_reading<5000){
-    angle_reading=36000+angle_reading;
-  }
-  int movedir=0;
-  if (angle_reading<angle){
-    movedir=1;
-  }
-  else{
-    movedir=-1;
-  }
-  int counter=0;
-  while (abs(angle_reading-angle)>500 && counter <= 700/5){
-    master.set_text(0,0,to_string(angle_reading)+" "+to_string(ArmSensor.get_position()));
-    angle_reading = ArmSensor.get_position();
-    if (angle_reading<=0|| angle_reading<5000){ 
-      angle_reading=36000+angle_reading;
-    }
-    Arm.move_velocity(movedir*150);
-    pros::delay(5);
-    counter++;
-  }
-  Arm.move_velocity(0);
-}
+
 
 void armcustom(int angle){
   Arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);

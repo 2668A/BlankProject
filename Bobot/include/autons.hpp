@@ -31,3 +31,7 @@ void red_right_rush_alt();
 void blue_left_rush_alt();
 void blue_left_awp();
 void red_right_awp();
+void red_right_safe();
+void blue_left_safe();
+void red_left_stake_alt();
+void blue_right_stake_alt();

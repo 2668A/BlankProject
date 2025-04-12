@@ -70,12 +70,16 @@ void initialize() {
       {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto_alt},
       {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 5r1t",red_left_goal},
       {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from left, face right\nScores 5r2t",red_left_stake},
+      {"RED LEFT SIDE STAKE ALT\nSetup on outer edge 2 from left, face right\nScores 4r3t",red_left_stake_alt},
       {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2r2t",red_right_rush_alt},
       {"RED RIGHT SIDE AWP\nSetup on outer edge 3 from right\nScores 4r3t",red_right_awp},
+      {"RED RIGHT SIDE SAFE\nSetup on outer edge 2 from right\nScores 2r2t",red_right_safe},
       {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 5r1t",blue_right_goal},
       {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 5r2t",blue_right_stake},
+      {"BLUE RIGHT SIDE STAKE ALT\nSetup on outer edge 3 from right\nScores 4r3t",blue_right_stake_alt},
       {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2r2t",blue_left_rush_alt},
       {"BLUE LEFT SIDE AWP\nSetup on outer edge 3 from left\nScores 4r3t",blue_left_awp},
+      {"BLUE LEFT SIDE SAFE\nSetup on outer edge 2 from left\nScores 2r2t",blue_left_safe},       
       {"color sort testing\ncolor sort test ", colorsorttest},
   });
 
@@ -357,9 +361,9 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33200);
+        armPid.target_set(33100);
       }
-      else if (armPid.target==33200){
+      else if (armPid.target==33100){
         Intake2.move_velocity(-200);
         pros::delay(100);
         armPid.target_set(20000);
@@ -367,7 +371,7 @@ void opcontrol() {
       else if (armPid.target==20000){
         armPid.target_set(35500);
       }
-      else if (armPid.target==30000){
+      else if (armPid.target==28000){
         armPid.target_set(20000);
       }
       else{
@@ -402,18 +406,19 @@ void opcontrol() {
       Doink.set_value(doinkstate);
     }
 
-
+  
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
       armPid.target_set(12000);
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      armPid.target_set(15000);
+      armPid.target_set(33100);
     }
+  
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
       Intake2.move_velocity(-200);
       pros::delay(100);
-      armPid.target_set(30000);
+      armPid.target_set(28000);
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       chassis.odom_xyt_set(0,0,0);
