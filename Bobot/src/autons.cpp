@@ -803,6 +803,53 @@ void goal_base_alt(){
   chassis.pid_wait();
 }
 
+void goal_base_corner(){
+  chassis.odom_look_ahead_set(10_in);
+  chassis.odom_enable(true);
+  chassis.pid_odom_set( {{{0,-30}, rev, 110}} );
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  Intake2.move_velocity(120);
+  Intake1.move_velocity(-200);
+
+  chassis.pid_turn_set(-135,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set( {{{-12,-41}, fwd, 110},{{-24,-46}, fwd, 110}});
+  chassis.pid_wait();
+
+  chassis.pid_odom_set({{-36,-36}, fwd, 110});
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-80,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-48,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set( {{{-28, -30}, fwd, 110}} );     
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+  Lifter.set_value(1);
+
+  chassis.pid_odom_set(-26,100);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-45,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(55,100);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set(-6,100);
+  chassis.pid_wait();
+}
+
 void stake_base(){
 
   chassis.odom_look_ahead_set(10_in);
@@ -863,7 +910,7 @@ void stake_base_alt(){
   pros::delay(750);
   Arm.move_velocity(0); 
 
-  chassis.pid_odom_set( {{{26+7.5,-9.75}, rev, 110}} );
+  chassis.pid_odom_set( {{{30+7.5,-9.75}, rev, 110}} );
   chassis.pid_wait();
 
   Arm.move_absolute(75,150);
@@ -1241,7 +1288,7 @@ void awp_base(){
 
   Intake2.move_velocity(00); 
 
-  chassis.pid_odom_set( {{{-36-7.5,36-9.75}, rev, 110}} );
+  chassis.pid_odom_set( {{{-40-7.5,32-9.75}, rev, 110}} );
   chassis.pid_wait();
 
   Clamp.set_value(1);
@@ -1257,8 +1304,6 @@ void awp_base(){
 
   chassis.pid_odom_set(50,100);
   chassis.pid_wait();
-
-
 
 
 }
@@ -1320,12 +1365,12 @@ void red_left_goal() {
   chassis.odom_x_flip();
   chassis.odom_theta_flip();
   //goal_base();
-  goal_base_alt();
+  goal_base_corner();
   
 
 }
 
-void red_left_stake() {
+void red_left_stake() { 
   pros::Task colorsort(color_sort_red);
   //chassis.odom_y_flip();
   chassis.odom_x_flip();
@@ -1380,7 +1425,7 @@ void red_right_safe(){
 void blue_right_goal(){
   //starts at x=0, y=+7.5 from corner
   pros::Task colorsort(color_sort_blue);
-  goal_base();
+  goal_base_corner();
   
 }
 
