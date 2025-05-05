@@ -35,3 +35,5 @@ void red_right_safe();
 void blue_left_safe();
 void red_left_stake_alt();
 void blue_right_stake_alt();
+void red_left_stake_wall();
+void blue_right_stake_wall();

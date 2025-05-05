@@ -68,15 +68,15 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       {"SKILLS AUTO\nSetup hs cross on inner edge\nreset imu, arm, pneumatic before",skillsauto_alt},
-      {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 5r1t",red_left_goal},
-      {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from left, face right\nScores 5r2t",red_left_stake},
-      {"RED LEFT SIDE STAKE ALT\nSetup on outer edge 2 from left, face right\nScores 4r3t",red_left_stake_alt},
+      {"RED LEFT SIDE GOAL\nSetup on edge 2 from left\nScores 6r1t",red_left_goal},
+      {"RED LEFT SIDE STAKE\nSetup on outer edge 2 from left, face right\nScores 6r2t",red_left_stake},
+      {"RED LEFT SIDE STAKE WALL\nSetup on outer edge 2 from left, face right\nScores 6r3t",red_left_stake_wall},
       {"RED RIGHT SIDE RUSH\nSetup on outer edge 1 from right\nScores 2r2t",red_right_rush_alt},
       {"RED RIGHT SIDE AWP\nSetup on outer edge 3 from right\nScores 4r3t",red_right_awp},
       {"RED RIGHT SIDE SAFE\nSetup on outer edge 2 from right\nScores 2r2t",red_right_safe},
-      {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 5r1t",blue_right_goal},
-      {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 5r2t",blue_right_stake},
-      {"BLUE RIGHT SIDE STAKE ALT\nSetup on outer edge 3 from right\nScores 4r3t",blue_right_stake_alt},
+      {"BLUE RIGHT SIDE GOAL\nSetup on edge 2 from right\nScores 6r1t",blue_right_goal},
+      {"BLUE RIGHT SIDE STAKE\nSetup on outer edge 3 from right\nScores 6r2t",blue_right_stake},
+      {"BLUE RIGHT SIDE STAKE Wall\nSetup on outer edge 3 from right\nScores 6r3t",blue_right_stake_wall},
       {"BLUE LEFT SIDE RUSH\nSetup on outer edge 1 from left\nScores 2r2t",blue_left_rush_alt},
       {"BLUE LEFT SIDE AWP\nSetup on outer edge 3 from left\nScores 4r3t",blue_left_awp},
       {"BLUE LEFT SIDE SAFE\nSetup on outer edge 2 from left\nScores 2r2t",blue_left_safe},       
@@ -361,10 +361,10 @@ void opcontrol() {
     //Arm 1button control
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
       if (armPid.target==35500){
-        armPid.target_set(33100);
+        armPid.target_set(33150);
       }
-      else if (armPid.target==33100){
-        Intake2.move_velocity(-200);
+      else if (armPid.target==33150){
+        Intake2.move_velocity(-100);
         pros::delay(100);
         armPid.target_set(20000);
       } 
@@ -411,19 +411,27 @@ void opcontrol() {
       armPid.target_set(12000);
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-      armPid.target_set(33100);
+      armPid.target_set(33150);
     }
   
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      Intake2.move_velocity(-200);
+      Intake2.move_velocity(-100);
       pros::delay(100);
       armPid.target_set(28000);
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       chassis.odom_xyt_set(0,0,0);
-      chassis.pid_odom_set(2,100);
+      chassis.pid_odom_set(-9,100);
       chassis.pid_wait();
+      Intake2.move_velocity(-120);
+      Arm.move_velocity(-200);
+      pros::delay(750);
+      Arm.move_velocity(0);
+      Intake2.move_velocity(0);
+      chassis.pid_odom_set(-8,100);
+      chassis.pid_wait();
+      armPid.target_set(35500);
     }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
