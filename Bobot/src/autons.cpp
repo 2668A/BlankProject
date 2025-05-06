@@ -1023,7 +1023,7 @@ void stake_base_corner(){
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
 
-  Lifter.set_value(1);
+  Lifter.set_value(1); 
   
   chassis.pid_odom_set(59,100);
   chassis.pid_wait();
