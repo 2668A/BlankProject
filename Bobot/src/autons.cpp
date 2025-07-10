@@ -2394,3 +2394,98 @@ void skillsauto_alt(){
   chassis.pid_odom_set(-12,70); 
   chassis.pid_wait();
 }
+
+void vexairush(){
+  Doink.set_value(true);
+
+  chassis.pid_drive_set(30,115);
+  chassis.pid_wait_until(29_in);
+
+  chassis.pid_turn_set(-30,100);
+  chassis.pid_wait_until(-28);
+
+  chassis.pid_drive_set(6,110);
+  chassis.pid_wait();
+
+  Doink.set_value(true);
+
+  chassis.pid_turn_set(-26,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-18,100);
+  chassis.pid_wait();
+
+  Doink.set_value(false);
+
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+
+  Doink.set_value(false);
+
+  chassis.pid_turn_set(180-35,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-12,100);
+  chassis.pid_wait();
+
+  Clamp.set_value(1);
+
+  chassis.pid_turn_set(-26,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-23,110);
+  chassis.pid_wait();
+
+  
+  Intake1.move_velocity(-200);
+  Intake2.move_velocity(140);
+  //replace this with whatever ur intake functions are
+
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(24,110);
+  chassis.pid_wait();
+  
+  //IF HAS COLORSORT RUN THIS PART
+
+    chassis.pid_turn_set(0,100);
+    chassis.pid_wait();
+
+    chassis.pid_drive_set(24,100);
+    chassis.pid_wait();
+    
+    pros::delay(250);
+
+    chassis.pid_drive_set(18,100);
+    chassis.pid_wait();
+    
+    chassis.pid_turn_set(-180,100);
+    chassis.pid_wait();
+
+    chassis.pid_drive_set(42,100);
+    chassis.pid_wait();
+
+  chassis.pid_turn_set(-135,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(26,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-6,100);
+  chassis.pid_wait();
+  chassis.pid_drive_set(8,100);
+  chassis.pid_wait();
+  //remove these 4 lines if corner ring grab is consistent
+
+  chassis.pid_drive_set(-18,100);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(90,100);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(48,115);
+  chassis.pid_wait();
+
+
+}
