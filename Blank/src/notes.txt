@@ -1,6 +1,0 @@
-4 important files: 
-- autons.hpp (use to specify which auton to run)
-- subsystems.cpp (define motors and sensors, excluding drivetrain)
-- main.cpp (drivetrain tuning and opcontrol code)
-- autons.cpp (auton code)
-dont mess with anything else
