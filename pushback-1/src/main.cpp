@@ -127,7 +127,6 @@ void initialize() {
     
 }
 
-
 void disabled() {}
 
 void competition_initialize() {}
@@ -135,30 +134,25 @@ void competition_initialize() {}
 void pidtestpath(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     chassis.setPose(0,0,0);
-    // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
+
     chassis.moveToPoint(24, 24, 10000, {.maxSpeed = 60, .minSpeed = 5});
     chassis.waitUntilDone();
+
     pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+    pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
     pros::delay(5000);
-    // Move to x: 0 and y: 0 and face heading 270, going backwards. Timeout set to 4000ms
 
     chassis.turnToHeading(-90,4000,{.maxSpeed = 60});
     chassis.waitUntilDone();
-    chassis.moveToPoint(0, 0, 10000,{.maxSpeed = 60, .minSpeed = 5} );
-    
-    // cancel the movement after it has traveled 10 inches
-    chassis.waitUntilDone();
-    pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-    pros::delay(5000);
-    // Turn to face the point x:45, y:-45. Timeout set to 1000
-    // dont turn faster than 60 (out of a maximum of 127)
-   
-    
 
+    chassis.moveToPoint(0, 0, 10000,{.maxSpeed = 60, .minSpeed = 5} );
+    chassis.waitUntilDone();
+
+    pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+    pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+    pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    pros::delay(5000);
 }
 
 void pidtestpathpose(){
@@ -192,32 +186,89 @@ void pidtestpathpose(){
 
 void rightauto(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
-    chassis.setPose(15,-2.5,45);
+    chassis.setPose(6.75,0,0);
     intake_bottom.move(200);
     intake_middle.move(200);
-    chassis.moveToPoint(32,12,20000,{.maxSpeed=60});
-    chassis.turnToHeading(-45,20000,{.maxSpeed=60});
-    chassis.moveToPoint(16,36,20000,{.maxSpeed=40});
+    chassis.moveToPoint(27,30,20000,{.maxSpeed=40});
     chassis.waitUntilDone();
     chassis.turnToPoint(48,0,20000,{.maxSpeed=60});
     chassis.waitUntilDone();
-    chassis.moveToPoint(48,0,20000,{.maxSpeed=60});
+    chassis.moveToPoint(48,0,20000,{.maxSpeed=80});
     chassis.waitUntilDone();
-    chassis.turnToHeading(180,20000,{.maxSpeed=60});
+    chassis.turnToHeading(180,20000,{.maxSpeed=80});
     chassis.waitUntilDone();
     intake_bottom.move(0);
     intake_middle.move(0);
     ramp1.set_value(true);
-    chassis.moveToPoint(48,22,20000,{.forwards=false,.maxSpeed=30});
+    chassis.moveToPoint(48,13.5,20000,{.forwards=false,.maxSpeed=30});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
     intake_top.move(200);
-    pros::delay(3000);
+    pros::delay(3500);
+    intake_top.move(0);
+    little_will.extend();
+    chassis.turnToHeading(179,20000,{.maxSpeed=80});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(49,-12,20000,{.maxSpeed=25});
+}
+
+void awpauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(0,0,0);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-24,24,2000,{.maxSpeed=60});
+    chassis.turnToHeading(45,1000,{.maxSpeed=80});
+    chassis.moveToPoint(-14,32, 1500,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    pros::delay(1500);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-24,24,1500,{.forwards=false, .maxSpeed=80});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(90,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(4,8,2000,{.maxSpeed=80,.minSpeed=20,.earlyExitRange=4});
+    chassis.moveToPoint(26,32,2000,{.maxSpeed=40,.minSpeed=10});
+    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=60});
+    chassis.turnToHeading(135,1000,{.maxSpeed=60});
+    chassis.moveToPoint(13,30,2000,{.forwards=false,.maxSpeed=50});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(1500);
+    intake_top.move(0);
+    chassis.moveToPoint(47,0,2000,{.maxSpeed=80});
+    chassis.turnToHeading(178,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    little_will.extend();
+    pros::delay(500);
+    chassis.moveToPoint(47,-24,1000,{.maxSpeed=40,.minSpeed=10});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(47,-12,500,{.forwards=false,.maxSpeed=60,.minSpeed=30});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(47,-24,500,{.maxSpeed=60,.minSpeed=30});
+    pros::delay(2000);
+    chassis.moveToPoint(48,18,2000,{.forwards=false,.maxSpeed=50,.minSpeed=20});
+    ramp1.extend();
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(2000);
+
+
+
+
+
 }
 
 void autonomous() {
-	rightauto();
+	awpauto();
 }   
 
 
