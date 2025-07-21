@@ -213,6 +213,12 @@ void rightauto(){
     chassis.moveToPoint(49,-12,20000,{.maxSpeed=25});
 }
 
+
+
+
+
+
+
 void awpauto(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     chassis.setPose(0,0,0);
@@ -247,7 +253,7 @@ void awpauto(){
     chassis.waitUntilDone();
     little_will.extend();
     pros::delay(500);
-    chassis.moveToPoint(47,-24,1000,{.maxSpeed=40,.minSpeed=10});
+    chassis.moveToPoint(48,-24,1000,{.maxSpeed=40,.minSpeed=10});
     chassis.waitUntilDone();
     chassis.moveToPoint(47,-12,500,{.forwards=false,.maxSpeed=60,.minSpeed=30});
     chassis.waitUntilDone();
