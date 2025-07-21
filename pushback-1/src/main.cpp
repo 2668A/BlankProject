@@ -24,9 +24,11 @@ using namespace pros::c;
 inline pros::Motor intake_bottom(6,pros::v5::MotorGears::blue);
 inline pros::Motor intake_middle(-7,pros::v5::MotorGears::blue);
 inline pros::Motor intake_top(8,pros::v5::MotorGears::blue);
+pros::Optical intake_optical(4);
 //Robot system pneumatics
 pros::adi::Pneumatics ramp1('a', false);
 pros::adi::Pneumatics little_will('b', false);
+pros::adi::Pneumatics rake('c', false);
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 //Drive motor groups
 pros::MotorGroup leftMotors({-11, 12, -13}, pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
@@ -127,6 +129,7 @@ void initialize() {
     
 }
 
+
 void disabled() {}
 
 void competition_initialize() {}
@@ -134,25 +137,30 @@ void competition_initialize() {}
 void pidtestpath(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     chassis.setPose(0,0,0);
-
+    // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
     chassis.moveToPoint(24, 24, 10000, {.maxSpeed = 60, .minSpeed = 5});
     chassis.waitUntilDone();
-
     pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-    pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-    pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
     pros::delay(5000);
+    // Move to x: 0 and y: 0 and face heading 270, going backwards. Timeout set to 4000ms
 
     chassis.turnToHeading(-90,4000,{.maxSpeed = 60});
     chassis.waitUntilDone();
-
     chassis.moveToPoint(0, 0, 10000,{.maxSpeed = 60, .minSpeed = 5} );
+    
+    // cancel the movement after it has traveled 10 inches
     chassis.waitUntilDone();
-
     pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-    pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-    pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
     pros::delay(5000);
+    // Turn to face the point x:45, y:-45. Timeout set to 1000
+    // dont turn faster than 60 (out of a maximum of 127)
+   
+    
+
 }
 
 void pidtestpathpose(){
@@ -184,23 +192,23 @@ void pidtestpathpose(){
 
 }
 
-void rightauto(){
+void rightlongauto(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
-    chassis.setPose(6.75,0,0);
+    chassis.setPose(6.75,-1,0);
     intake_bottom.move(200);
     intake_middle.move(200);
-    chassis.moveToPoint(27,30,20000,{.maxSpeed=40});
+    chassis.moveToPoint(27,30,3000,{.maxSpeed=40});
     chassis.waitUntilDone();
-    chassis.turnToPoint(48,0,20000,{.maxSpeed=60});
+    chassis.turnToPoint(48,0,2000,{.maxSpeed=60});
     chassis.waitUntilDone();
-    chassis.moveToPoint(48,0,20000,{.maxSpeed=80});
+    chassis.moveToPoint(48,0,2000,{.maxSpeed=60});
     chassis.waitUntilDone();
-    chassis.turnToHeading(180,20000,{.maxSpeed=80});
+    chassis.turnToHeading(180,2000,{.maxSpeed=60});
     chassis.waitUntilDone();
     intake_bottom.move(0);
     intake_middle.move(0);
     ramp1.set_value(true);
-    chassis.moveToPoint(48,13.5,20000,{.forwards=false,.maxSpeed=30});
+    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
@@ -208,16 +216,89 @@ void rightauto(){
     pros::delay(3500);
     intake_top.move(0);
     little_will.extend();
-    chassis.turnToHeading(179,20000,{.maxSpeed=80});
+    chassis.moveToPoint(46.5,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
+    chassis.moveToPoint(46.5,-16,2000,{.maxSpeed=40,.minSpeed=10});
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    pros::delay(1500);
+    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
     chassis.waitUntilDone();
-    chassis.moveToPoint(49,-12,20000,{.maxSpeed=25});
+    intake_top.move(200);
+    pros::delay(3000);
+
+
 }
 
+void rightauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(6.75,-1,0);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(28,30,3000,{.maxSpeed=40});
+    chassis.waitUntilDone();
+    chassis.turnToPoint(48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(180,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(0);
+    intake_middle.move(0);
+    ramp1.set_value(true);
+    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(3500);
+    intake_top.move(0);
+    little_will.extend();
+    chassis.moveToPoint(46.5,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
+    chassis.moveToPoint(46.5,-16,2000,{.maxSpeed=40,.minSpeed=20});
+    pros::delay(1500);
+    ramp1.retract();
+    chassis.moveToPoint(13,29.5,3000,{.forwards=false,.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    little_will.retract();
+    pros::delay(1000);
+    int counter = 0;
+    while(counter<75){
+        intake_bottom.move(200);
+        intake_middle.move(200);
+        intake_top.move(200);
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 250){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 350 || intake_optical.get_hue() <3){
+            break;
+        }
+        else{
+            counter++;
+        }
+        pros::delay(20);
 
+    }
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    intake_top.move(-200);
+    pros::delay(5000);
 
+}
 
-
-
+void mintest() {
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(0,0,0);
+    // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
+    chassis.moveToPoint(0, 24, 10000, {.maxSpeed = 25});
+    chassis.waitUntilDone();
+    pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    pros::delay(5000);
+}
 
 void awpauto(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
@@ -241,7 +322,7 @@ void awpauto(){
     chassis.moveToPoint(26,32,2000,{.maxSpeed=40,.minSpeed=10});
     chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=60});
     chassis.turnToHeading(135,1000,{.maxSpeed=60});
-    chassis.moveToPoint(13,30,2000,{.forwards=false,.maxSpeed=50});
+    chassis.moveToPoint(13,28,2000,{.forwards=false,.maxSpeed=50});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
@@ -253,13 +334,13 @@ void awpauto(){
     chassis.waitUntilDone();
     little_will.extend();
     pros::delay(500);
-    chassis.moveToPoint(48,-24,1000,{.maxSpeed=40,.minSpeed=10});
+    chassis.moveToPoint(47,-24,1000,{.maxSpeed=40,.minSpeed=10});
     chassis.waitUntilDone();
     chassis.moveToPoint(47,-12,500,{.forwards=false,.maxSpeed=60,.minSpeed=30});
     chassis.waitUntilDone();
     chassis.moveToPoint(47,-24,500,{.maxSpeed=60,.minSpeed=30});
     pros::delay(2000);
-    chassis.moveToPoint(48,18,2000,{.forwards=false,.maxSpeed=50,.minSpeed=20});
+    chassis.moveToPoint(47,18,2000,{.forwards=false,.maxSpeed=50,.minSpeed=20});
     ramp1.extend();
     chassis.waitUntilDone();
     intake_bottom.move(200);
@@ -273,28 +354,13 @@ void awpauto(){
 
 }
 
+
 void autonomous() {
-	awpauto();
+	rightauto();
 }   
 
 
 
-void antijam(){
-
-  while(true){
-    
-    
-    if(intake_middle.get_target_velocity()>0 && intake_middle.get_actual_velocity()<50){
-		intake_middle.move_velocity(-200);
-		intake_bottom.move_velocity(-200);
-		pros::delay(750);
-		intake_middle.move_velocity(200);
-		intake_bottom.move_velocity(200);
-	}
-
-    pros::delay(20);
-  }
-}
 
 void opcontrol() {
 
@@ -305,6 +371,8 @@ void opcontrol() {
 	bool ramp_toggle = false;
 
 	bool little_will_toggle = false;
+
+    bool rake_toggle = false;
 
     int top_speed = 450;
 
@@ -390,7 +458,15 @@ void opcontrol() {
 			}
 			
         }
-
+        if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
+           	rake_toggle = !rake_toggle;
+			if(rake_toggle){
+				rake.extend();
+			}else{
+				rake.retract();
+			}
+			
+        }
 	
         
         
