@@ -253,11 +253,11 @@ void rightauto(){
     pros::delay(3500);
     intake_top.move(0);
     little_will.extend();
-    chassis.moveToPoint(46.5,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
-    chassis.moveToPoint(46.5,-16,2000,{.maxSpeed=40,.minSpeed=20});
+    chassis.moveToPoint(46.75,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
+    chassis.moveToPoint(46.75,-16,2000,{.maxSpeed=40,.minSpeed=20});
     pros::delay(1500);
     ramp1.retract();
-    chassis.moveToPoint(13,29.5,3000,{.forwards=false,.maxSpeed=60});
+    chassis.moveToPoint(12.5,30,3000,{.forwards=false,.maxSpeed=60});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
@@ -265,14 +265,14 @@ void rightauto(){
     little_will.retract();
     pros::delay(1000);
     int counter = 0;
-    while(counter<75){
+    while(counter<100){
         intake_bottom.move(200);
         intake_middle.move(200);
         intake_top.move(200);
-        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 250){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
             counter=0;
         }
-        else if (intake_optical.get_hue() > 350 || intake_optical.get_hue() <3){
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
             break;
         }
         else{
@@ -307,46 +307,63 @@ void awpauto(){
     intake_middle.move(200);
     chassis.moveToPoint(-24,24,2000,{.maxSpeed=60});
     chassis.turnToHeading(45,1000,{.maxSpeed=80});
-    chassis.moveToPoint(-14,32, 1500,{.maxSpeed=60});
+    chassis.moveToPoint(-14,32, 1500,{.maxSpeed=80});
     chassis.waitUntilDone();
     intake_bottom.move(-200);
     intake_middle.move(-200);
-    pros::delay(1500);
+    pros::delay(1000);
     intake_bottom.move(200);
     intake_middle.move(200);
     chassis.moveToPoint(-24,24,1500,{.forwards=false, .maxSpeed=80});
     chassis.waitUntilDone();
     chassis.turnToHeading(90,1000,{.maxSpeed=60});
     chassis.waitUntilDone();
-    chassis.moveToPoint(4,8,2000,{.maxSpeed=80,.minSpeed=20,.earlyExitRange=4});
-    chassis.moveToPoint(26,32,2000,{.maxSpeed=40,.minSpeed=10});
-    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=60});
-    chassis.turnToHeading(135,1000,{.maxSpeed=60});
-    chassis.moveToPoint(13,28,2000,{.forwards=false,.maxSpeed=50});
+    chassis.moveToPoint(4,8,2000,{.maxSpeed=80,.minSpeed=60,.earlyExitRange=4});
+    chassis.moveToPoint(28,36,2000,{.maxSpeed=60,.minSpeed=40});
+    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=80});
+    chassis.turnToHeading(135,1000,{.maxSpeed=80});
+    chassis.moveToPoint(12.5,28.5,2000,{.forwards=false,.maxSpeed=50});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
     intake_top.move(200);
     pros::delay(1500);
     intake_top.move(0);
-    chassis.moveToPoint(47,0,2000,{.maxSpeed=80});
-    chassis.turnToHeading(178,1000,{.maxSpeed=60});
+    chassis.moveToPoint(46,0,2000,{.maxSpeed=80});
+    chassis.turnToHeading(178,1000,{.maxSpeed=80});
     chassis.waitUntilDone();
     little_will.extend();
-    pros::delay(500);
-    chassis.moveToPoint(47,-24,1000,{.maxSpeed=40,.minSpeed=10});
+    pros::delay(250);
+    chassis.moveToPoint(45.5,-24,1000,{.maxSpeed=40,.minSpeed=20});
     chassis.waitUntilDone();
-    chassis.moveToPoint(47,-12,500,{.forwards=false,.maxSpeed=60,.minSpeed=30});
-    chassis.waitUntilDone();
-    chassis.moveToPoint(47,-24,500,{.maxSpeed=60,.minSpeed=30});
-    pros::delay(2000);
-    chassis.moveToPoint(47,18,2000,{.forwards=false,.maxSpeed=50,.minSpeed=20});
+    pros::delay(1000);
+    chassis.moveToPoint(45.,18,2000,{.forwards=false,.maxSpeed=60,.minSpeed=30});
     ramp1.extend();
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
     intake_top.move(200);
-    pros::delay(2000);
+    int counter = 0;
+    while(counter<100){
+        intake_bottom.move(200);
+        intake_middle.move(200);
+        intake_top.move(200);
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
+            break;
+        }
+        else{
+            counter++;
+        }
+        pros::delay(20);
+
+    }
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    intake_top.move(-200);
+    pros::delay(5000);
 
 
 
@@ -356,7 +373,7 @@ void awpauto(){
 
 
 void autonomous() {
-	rightauto();
+	awpauto();
 }   
 
 
@@ -426,11 +443,9 @@ void opcontrol() {
 			intake_middle.move(-260);
 			intake_top.move(-260);
 			
-        }else{
-			if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
-				intake_toggle = !intake_toggle;
-			}
-			if(intake_toggle){
+        }
+        else{
+			if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
 				intake_bottom.move(top_speed);
 				intake_middle.move(top_speed);
 			}else{
@@ -438,6 +453,21 @@ void opcontrol() {
 				intake_middle.move(0);
 			}
         }
+        
+        // else{
+		// 	if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+		// 		intake_toggle = !intake_toggle;
+		// 	}
+		// 	if(intake_toggle){
+		// 		intake_bottom.move(top_speed);
+		// 		intake_middle.move(top_speed);
+		// 	}else{
+		// 		intake_bottom.move(0);
+		// 		intake_middle.move(0);
+		// 	}
+        // }
+
+
 		//ramp
 		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
             ramp_toggle = !ramp_toggle;
