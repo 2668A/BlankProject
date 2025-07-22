@@ -80,13 +80,13 @@ lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
 );
 // input curve for throttle input during driver control
 lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127
-                                     10, // minimum output where drivetrain will move out of 127
-                                     1.019 // expo curve gain
+                                     5, // minimum output where drivetrain will move out of 127
+                                     1.00 // expo curve gain
 );
 // input curve for steer input during driver control
 lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
-                                  10, // minimum output where drivetrain will move out of 127
-                                  1.019 // expo curve gain
+                                  5, // minimum output where drivetrain will move out of 127
+                                  1.015 // expo curve gain
 );
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
@@ -224,7 +224,26 @@ void rightlongauto(){
     chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
     chassis.waitUntilDone();
     intake_top.move(200);
-    pros::delay(3000);
+    int counter = 0;
+    while(counter<100){
+        intake_bottom.move(200);
+        intake_middle.move(200);
+        intake_top.move(200);
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
+            break;
+        }
+        else{
+            counter++;
+        }
+        pros::delay(20);
+
+    }
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    intake_top.move(-200);
 
 
 }
@@ -391,8 +410,6 @@ void opcontrol() {
 
     bool rake_toggle = false;
 
-    int top_speed = 450;
-
 
 
 	while (true) {
@@ -412,8 +429,6 @@ void opcontrol() {
         pros::delay(50);
 
 
-        pros::lcd::print(5, "intake: %d", top_speed);
-
 		int leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         chassis.arcade(leftY, rightX);
@@ -422,18 +437,15 @@ void opcontrol() {
             autonomous();
         }	
 
-		/*
-        if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-            top_speed += 20;
-        }
-		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-            top_speed -= 20;
-        }
-		*/	
+		
 		//score
 		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
 			intake_top.move(127);
-		}else{
+		}
+        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+            intake_top.move(60);
+        }     
+        else{
 			intake_top.move(0);
 		}
 			
@@ -446,8 +458,8 @@ void opcontrol() {
         }
         else{
 			if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-				intake_bottom.move(top_speed);
-				intake_middle.move(top_speed);
+				intake_bottom.move(127);
+				intake_middle.move(127);
 			}else{
 				intake_bottom.move(0);
 				intake_middle.move(0);
