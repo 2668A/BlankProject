@@ -86,7 +86,7 @@ lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127
 // input curve for steer input during driver control
 lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
                                   5, // minimum output where drivetrain will move out of 127
-                                  1.015 // expo curve gain
+                                  1.017 // expo curve gain
 );
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
@@ -112,7 +112,19 @@ void screentask(){
         }
 }
 
+
+int autonvalue = 0;
+int autonnum = 7;
+std::string autonname[] = {"Right Auto", "Left Auto", "Right Long Auto", "Left Long Auto", "Mid Auto", "AWP Auto", "Test Auto"};
+
+
+
+
+
 void initialize() {
+
+    
+
 
     leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -124,6 +136,19 @@ void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
     
+    pros ::lcd::register_btn0_cb([]() {
+        autonvalue = (autonvalue + 1) % autonnum;    
+        pros::lcd::print(3, "Auton: %d", autonvalue);
+        pros::lcd::print(4, "Auton: %s", autonname[autonvalue]); // print the current auton value
+    });
+    pros ::lcd::register_btn2_cb([]() {
+        autonvalue = (autonvalue - 1);
+        if (autonvalue == -1){
+            autonvalue = autonnum - 1;  
+        }
+        pros::lcd::print(3, "Auton: %d", autonvalue);
+        pros::lcd::print(4, "Auton: %s", autonname[autonvalue]); // print the current auton value
+    });
 
     // thread to for brain screen and position logging
     
@@ -197,7 +222,7 @@ void rightlongauto(){
     chassis.setPose(6.75,-1,0);
     intake_bottom.move(200);
     intake_middle.move(200);
-    chassis.moveToPoint(27,30,3000,{.maxSpeed=40});
+    chassis.moveToPoint(27,30,3000,{.maxSpeed=60});
     chassis.waitUntilDone();
     chassis.turnToPoint(48,0,2000,{.maxSpeed=60});
     chassis.waitUntilDone();
@@ -208,24 +233,23 @@ void rightlongauto(){
     intake_bottom.move(0);
     intake_middle.move(0);
     ramp1.set_value(true);
-    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
+    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=60});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
     intake_top.move(200);
-    pros::delay(3500);
+    pros::delay(1500);
     intake_top.move(0);
     little_will.extend();
-    chassis.moveToPoint(46.5,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
     chassis.moveToPoint(46.5,-16,2000,{.maxSpeed=40,.minSpeed=10});
     intake_bottom.move(200);
     intake_middle.move(200);
     pros::delay(1500);
-    chassis.moveToPoint(47,13,2000,{.forwards=false,.maxSpeed=30});
+    chassis.moveToPoint(46.5,13,2000,{.forwards=false,.maxSpeed=60});
     chassis.waitUntilDone();
     intake_top.move(200);
     int counter = 0;
-    while(counter<100){
+    while(counter<150){
         intake_bottom.move(200);
         intake_middle.move(200);
         intake_top.move(200);
@@ -244,6 +268,63 @@ void rightlongauto(){
     intake_bottom.move(-200);
     intake_middle.move(-200);
     intake_top.move(-200);
+    pros::delay(3000);
+
+
+}
+
+void leftlongauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(-6.75,-1,0);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-27,30,3000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToPoint(-48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(-180,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(0);
+    intake_middle.move(0);
+    ramp1.set_value(true);
+    chassis.moveToPoint(-47,13,2000,{.forwards=false,.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(1500);
+    intake_top.move(0);
+    little_will.extend();
+    chassis.moveToPoint(-46.5,-16,2000,{.maxSpeed=40,.minSpeed=10});
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    pros::delay(1500);
+    chassis.moveToPoint(-46.5,13,2000,{.forwards=false,.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_top.move(200);
+    int counter = 0;
+    while(counter<150){
+        intake_bottom.move(200);
+        intake_middle.move(200);
+        intake_top.move(200);
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
+            break;
+        }
+        else{
+            counter++;
+        }
+        pros::delay(20);
+
+    }
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    intake_top.move(-200);
+    pros::delay(3000);
 
 
 }
@@ -277,6 +358,65 @@ void rightauto(){
     pros::delay(1500);
     ramp1.retract();
     chassis.moveToPoint(12.5,30,3000,{.forwards=false,.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    little_will.retract();
+    pros::delay(1000);
+    int counter = 0;
+    while(counter<100){
+        intake_bottom.move(200);
+        intake_middle.move(200);
+        intake_top.move(200);
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
+            break;
+        }
+        else{
+            counter++;
+        }
+        pros::delay(20);
+
+    }
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    intake_top.move(-200);
+    pros::delay(5000);
+
+}
+
+void leftauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(-6.75,-1,0);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-28,30,3000,{.maxSpeed=40});
+    chassis.waitUntilDone();
+    chassis.turnToPoint(-48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-48,0,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(-180,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(0);
+    intake_middle.move(0);
+    ramp1.set_value(true);
+    chassis.moveToPoint(-47,13,2000,{.forwards=false,.maxSpeed=30});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(3500);
+    intake_top.move(0);
+    little_will.extend();
+    chassis.moveToPoint(-46.75,-4,2000,{.maxSpeed=60, .minSpeed=20, .earlyExitRange=4});
+    chassis.moveToPoint(-46.75,-16,2000,{.maxSpeed=40,.minSpeed=20});
+    pros::delay(1500);
+    ramp1.retract();
+    chassis.moveToPoint(-12.5,30,3000,{.forwards=false,.maxSpeed=60});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
@@ -390,9 +530,64 @@ void awpauto(){
 
 }
 
+void midauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(0,0,0);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-24,24,2000,{.maxSpeed=60,.minSpeed=40});
+    chassis.turnToHeading(45,1000,{.maxSpeed=60});
+    chassis.moveToPoint(-14,32, 1500,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    pros::delay(1000);
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-24,24,1500,{.forwards=false, .maxSpeed=60, .minSpeed=40});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(90,1000,{.maxSpeed=60, .minSpeed=40});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(4,8,2000,{.maxSpeed=60,.minSpeed=60,.earlyExitRange=4});
+    chassis.moveToPoint(28,36,2000,{.maxSpeed=60,.minSpeed=40});
+    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=60,.minSpeed=40});
+    chassis.turnToHeading(135,1000,{.maxSpeed=60});
+    chassis.moveToPoint(13,29,2000,{.forwards=false,.maxSpeed=50});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(1000);
+    intake_top.move(0);
+}
 
 void autonomous() {
-	awpauto();
+    switch(autonvalue){
+        case 0:
+            rightauto();
+            break;
+        case 1:
+            leftauto();
+            break;
+        case 2:
+            rightlongauto();
+            break;
+        case 3:
+            leftlongauto();
+            break;
+        case 4:
+            midauto();
+            break;
+        case 5:
+            awpauto();
+            break;
+        case 6:
+            pidtestpath();
+            break;
+        default:
+            rightauto();
+    }
+	rightlongauto();
 }   
 
 
