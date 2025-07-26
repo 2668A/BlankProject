@@ -114,8 +114,8 @@ void screentask(){
 
 
 int autonvalue = 0;
-int autonnum = 7;
-std::string autonname[] = {"Right Auto", "Left Auto", "Right Long Auto", "Left Long Auto", "Mid Auto", "AWP Auto", "Test Auto"};
+int autonnum = 8;
+std::string autonname[] = {"Right Auto", "Left Auto", "Right Long Auto", "Left Long Auto", "Mid Auto", "AWP Auto", "Test Auto", "Skills"};
 
 
 
@@ -530,6 +530,106 @@ void awpauto(){
 
 }
 
+void skillsauto(){
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    chassis.moveToPoint(-28,28,5000,{.maxSpeed=60,.minSpeed=5});
+    chassis.waitUntilDone();
+    pros::delay(500);
+    chassis.moveToPoint(-23,23,5000,{.forwards=false, .maxSpeed=60, .minSpeed=40});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.turnToHeading(45,5000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.moveToPoint(-13.5,32, 2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    intake_bottom.move(-200);
+    intake_middle.move(-200);
+    pros::delay(1500);
+    intake_bottom.move(200);
+    intake_middle.move(200);  
+    chassis.moveToPoint(-23,23,2000,{.forwards=false, .maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(120,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(4,8,2000,{.maxSpeed=60});
+    chassis.moveToPoint(28,36,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(500);
+    chassis.moveToPoint(21.75,25,2000,{.forwards=false,.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.turnToHeading(135,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.moveToPoint(13.2,31,2000,{.forwards=false,.maxSpeed=50});
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(80);
+    pros::delay(2000);
+    intake_top.move(0);
+    chassis.moveToPoint(48,6,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.turnToHeading(178,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    little_will.extend();
+    pros::delay(250);
+    chassis.moveToPoint(48,-12,1000,{.maxSpeed=40});
+    chassis.waitUntilDone();
+    pros::delay(2000);
+    ramp1.extend();
+    chassis.moveToPoint(48,18,2000,{.forwards=false,.maxSpeed=60});
+    ramp1.extend();
+    chassis.waitUntilDone();
+    intake_bottom.move(200);
+    intake_middle.move(200);
+    intake_top.move(200);
+    pros::delay(2000);
+    intake_top.move(0);
+    little_will.retract();
+    chassis.moveToPoint(45,0,2000,{.maxSpeed=60});
+    ramp1.retract();
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.turnToHeading(-90,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.moveToPoint(-46.25,0,5000,{.maxSpeed=100});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    chassis.turnToHeading(180,2000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+    pros::delay(100);
+    // little_will.extend();
+    // pros::delay(250);
+    // chassis.moveToPoint(-48,-12,1000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(2000);
+    // chassis.moveToPoint(-48,18,2000,{.forwards=false,.maxSpeed=60});
+    // ramp1.extend();
+    // chassis.waitUntilDone();
+    // intake_bottom.move(200);
+    // intake_middle.move(200);
+    // intake_top.move(200);
+    // pros::delay(2000);
+    // intake_top.move(0);
+    // chassis.moveToPoint(-24,24,2000,{.maxSpeed=60});
+    // ramp1.retract();
+    // chassis.waitUntilDone();
+    // chassis.moveToPoint(-24,80,2000,{.maxSpeed=60});
+    // chassis.turnToHeading(135,2000,{.maxSpeed=60});
+    
+
+
+
+
+
+
+}
+
 void midauto(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     chassis.setPose(0,0,0);
@@ -562,6 +662,8 @@ void midauto(){
 }
 
 void autonomous() {
+    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+    chassis.setPose(0,0,0);
     switch(autonvalue){
         case 0:
             rightauto();
@@ -584,10 +686,13 @@ void autonomous() {
         case 6:
             pidtestpath();
             break;
+        case 7:
+            skillsauto();
+            break;
         default:
             rightauto();
+            break;
     }
-	rightlongauto();
 }   
 
 
@@ -685,9 +790,14 @@ void opcontrol() {
 			}
         }
 
+
 		//will
 		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
            	little_will_toggle = !little_will_toggle;
+            if(rake_toggle){
+                rake_toggle=false;
+                rake.retract();
+            }
 			if(little_will_toggle){
 				little_will.extend();
 			}else{
@@ -697,6 +807,10 @@ void opcontrol() {
         }
         if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
            	rake_toggle = !rake_toggle;
+            if(little_will_toggle){
+                little_will_toggle=false;
+                little_will.retract();
+            }
 			if(rake_toggle){
 				rake.extend();
 			}else{
