@@ -39,27 +39,28 @@ pros::Imu imu(5);
 pros::Rotation horizontalEnc(-15);
 pros::Rotation verticalEnc(-2);
 //tracking wheels
-lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -5);
-lemlib::TrackingWheel vertical(&verticalEnc, 2, -1.5);
+lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -5); //-5
+lemlib::TrackingWheel vertical(&verticalEnc, 2*1.030, -1.5); //-1.5
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
                               11.5, // 10 inch track width
-                              lemlib::Omniwheel::NEW_325, // using new 4" omnis
+                              3.25/1.021, // using new 4" omnis
                               450, // drivetrain rpm is 360
                               2 // horizontal drift is 2. If we had traction wheels, it would have been 8
 );
 // lateral motion controller
 lemlib::ControllerSettings linearController(20, // proportional gain (kP)
                                             0, // integral gain (kI)
-                                            100, // derivative gain (kD)
+                                            140, // derivative gain (kD)
                                             0.5, // anti windup
                                             0.25, // small error range, in inches
-                                            100, // small error range timeout, in milliseconds
+                                            50, // small error range timeout, in milliseconds
                                             0.5, // large error range, in inches
-                                            200, // large error range timeout, in milliseconds
+                                            100, // large error range timeout, in milliseconds
                                             20 // maximum acceleration (slew)
 );
+
 // angular motion controller
 lemlib::ControllerSettings angularController(2, // proportional gain (kP)
                                              0, // integral gain (kI)
@@ -72,7 +73,7 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
                                              0 // maximum acceleration (slew)
 );
 // sensors for odometry
-lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
+lemlib::OdomSensors sensors(&vertical, // &vertical, // vertical tracking wheel
                             nullptr, // vertical tracking wheel 2, set to nullptr as we don't have a second one
                             &horizontal, // horizontal tracking wheel
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
@@ -135,6 +136,8 @@ void initialize() {
 
 	pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
+
+    pros::delay(1000);
     
     pros ::lcd::register_btn0_cb([]() {
         autonvalue = (autonvalue + 1) % autonnum;    
@@ -163,7 +166,7 @@ void pidtestpath(){
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
     chassis.setPose(0,0,0);
     // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
-    chassis.moveToPoint(24, 24, 10000, {.maxSpeed = 60, .minSpeed = 5});
+    chassis.moveToPoint(0, 72, 10000, {.maxSpeed = 60});
     chassis.waitUntilDone();
     pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
         pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
@@ -171,18 +174,19 @@ void pidtestpath(){
     pros::delay(5000);
     // Move to x: 0 and y: 0 and face heading 270, going backwards. Timeout set to 4000ms
 
-    chassis.turnToHeading(-90,4000,{.maxSpeed = 60});
-    chassis.waitUntilDone();
-    chassis.moveToPoint(0, 0, 10000,{.maxSpeed = 60, .minSpeed = 5} );
-    
-    // cancel the movement after it has traveled 10 inches
-    chassis.waitUntilDone();
-    pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-        pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-        pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-    pros::delay(5000);
-    // Turn to face the point x:45, y:-45. Timeout set to 1000
-    // dont turn faster than 60 (out of a maximum of 127)
+    // chassis.turnToHeading(90,4000,{.maxSpeed = 60});
+    // chassis.waitUntilDone();
+    // pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+    //     pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+    //     pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    // pros::delay(5000);
+
+    // chassis.moveToPoint(48, 72, 10000,{.maxSpeed = 60, .minSpeed = 5} );  
+    // chassis.waitUntilDone();
+    // pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+    //     pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+    //     pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    // pros::delay(5000);
    
     
 
@@ -473,23 +477,23 @@ void awpauto(){
     pros::delay(500);
     intake_bottom.move(200);
     intake_middle.move(200);
-    chassis.moveToPoint(-24,24,1500,{.forwards=false, .maxSpeed=80, .minSpeed=40});
+    chassis.moveToPoint(-24,24,1500,{.forwards=false, .maxSpeed=80});
     chassis.waitUntilDone();
-    chassis.turnToHeading(90,1000,{.maxSpeed=60, .minSpeed=40});
+    chassis.turnToHeading(90,1000,{.maxSpeed=60});
     chassis.waitUntilDone();
     chassis.moveToPoint(4,8,2000,{.maxSpeed=80,.minSpeed=60,.earlyExitRange=4});
     chassis.moveToPoint(28,36,2000,{.maxSpeed=60,.minSpeed=40});
-    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=80,.minSpeed=40});
+    chassis.moveToPoint(24,20,2000,{.forwards=false,.maxSpeed=80});
     chassis.turnToHeading(135,1000,{.maxSpeed=80});
-    chassis.moveToPoint(13,29,2000,{.forwards=false,.maxSpeed=50});
+    chassis.moveToPoint(10,29,2000,{.forwards=false,.maxSpeed=50});
     chassis.waitUntilDone();
     intake_bottom.move(200);
     intake_middle.move(200);
     intake_top.move(200);
     pros::delay(500);
     intake_top.move(0);
-    chassis.moveToPoint(46,0,2000,{.maxSpeed=80, .minSpeed=40});
-    chassis.turnToHeading(178,1000,{.maxSpeed=80, .minSpeed=40});
+    chassis.moveToPoint(46,0,2000,{.maxSpeed=80});
+    chassis.turnToHeading(178,1000,{.maxSpeed=80});
     chassis.waitUntilDone();
     little_will.extend();
     pros::delay(250);
@@ -531,78 +535,101 @@ void awpauto(){
 }
 
 void skillsauto(){
+    chassis.setBrakeMode(MOTOR_BRAKE_HOLD);
+    chassis.setPose(-48,0,90);
+    pros::delay(1500);
     intake_bottom.move(200);
     intake_middle.move(200);
-    chassis.moveToPoint(-28,28,5000,{.maxSpeed=60,.minSpeed=5});
+    chassis.moveToPoint(-20,28,5000,{.maxSpeed=60});
     chassis.waitUntilDone();
     pros::delay(500);
-    chassis.moveToPoint(-23,23,5000,{.forwards=false, .maxSpeed=60, .minSpeed=40});
+
+    chassis.moveToPoint(-26,24,5000,{.forwards=false, .maxSpeed=60, .minSpeed=40});
     chassis.waitUntilDone();
     pros::delay(100);
-    chassis.turnToHeading(45,5000,{.maxSpeed=60});
+
+    chassis.turnToHeading(135,5000,{.maxSpeed=60});
     chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.moveToPoint(-13.5,32, 2000,{.maxSpeed=60});
+    pros::delay(100);    
+
+    chassis.moveToPoint(-17.5,13.5, 2000,{.maxSpeed=60});
     chassis.waitUntilDone();
     intake_bottom.move(-200);
     intake_middle.move(-200);
     pros::delay(1500);
+    intake_bottom.move(0);
+    intake_middle.move(0);
+    intake_top.move(0);  
+
+    chassis.moveToPoint(-24,24,2000,{.forwards=false, .maxSpeed=60});
+    chassis.waitUntilDone();
+    chassis.turnToHeading(120+90,1000,{.maxSpeed=60});
+    chassis.waitUntilDone();
+
+    chassis.moveToPoint(-40,-4,2000,{.maxSpeed=60});
     intake_bottom.move(200);
-    intake_middle.move(200);  
-    chassis.moveToPoint(-23,23,2000,{.forwards=false, .maxSpeed=60});
-    chassis.waitUntilDone();
-    chassis.turnToHeading(120,1000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    chassis.moveToPoint(4,8,2000,{.maxSpeed=60});
-    chassis.moveToPoint(28,36,2000,{.maxSpeed=60});
+    intake_middle.move(200);
+
+    chassis.moveToPoint(-12,-28,2000,{.maxSpeed=60});
     chassis.waitUntilDone();
     pros::delay(500);
-    chassis.moveToPoint(21.75,25,2000,{.forwards=false,.maxSpeed=60});
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.turnToHeading(135,1000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.moveToPoint(13.2,31,2000,{.forwards=false,.maxSpeed=50});
-    chassis.waitUntilDone();
-    intake_bottom.move(200);
-    intake_middle.move(200);
-    intake_top.move(80);
-    pros::delay(2000);
-    intake_top.move(0);
-    chassis.moveToPoint(48,6,2000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.turnToHeading(178,1000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    little_will.extend();
-    pros::delay(250);
-    chassis.moveToPoint(48,-12,1000,{.maxSpeed=40});
-    chassis.waitUntilDone();
-    pros::delay(2000);
-    ramp1.extend();
-    chassis.moveToPoint(48,18,2000,{.forwards=false,.maxSpeed=60});
-    ramp1.extend();
-    chassis.waitUntilDone();
-    intake_bottom.move(200);
-    intake_middle.move(200);
-    intake_top.move(200);
-    pros::delay(2000);
-    intake_top.move(0);
-    little_will.retract();
-    chassis.moveToPoint(45,0,2000,{.maxSpeed=60});
-    ramp1.retract();
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.turnToHeading(-90,2000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.moveToPoint(-46.25,0,5000,{.maxSpeed=100});
-    chassis.waitUntilDone();
-    pros::delay(100);
-    chassis.turnToHeading(180,2000,{.maxSpeed=60});
-    chassis.waitUntilDone();
-    pros::delay(100);
+
+    // chassis.moveToPoint(-31,-17,2000,{.forwards=false,.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+
+    // chassis.turnToHeading(225,1000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+
+    // chassis.moveToPoint(-23,-8,2000,{.forwards=false,.maxSpeed=50});
+    // chassis.waitUntilDone();
+    // intake_bottom.move(200);
+    // intake_middle.move(200);
+    // intake_top.move(80);
+    // pros::delay(2000);
+    // intake_bottom.move(0);
+    // intake_middle.move(0);
+    // intake_top.move(0);
+
+    // chassis.moveToPoint(47,-4,2000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+    // chassis.turnToHeading(178,1000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // little_will.extend();
+    // pros::delay(500);
+    // intake_bottom.move(200);
+    // intake_middle.move(200);
+    // intake_top.move(0);
+    // chassis.moveToPoint(46,-12,1000,{.maxSpeed=30,.minSpeed=10});
+    // chassis.waitUntilDone();
+    // pros::delay(2000);
+    // ramp1.extend();
+    // chassis.moveToPoint(47,18,2000,{.forwards=false,.maxSpeed=60});
+    // ramp1.extend();
+    // chassis.waitUntilDone();
+    // intake_top.move(200);
+    // pros::delay(2000);
+    // intake_bottom.move(0);
+    // intake_middle.move(0);
+    // intake_top.move(0);
+    // little_will.retract();
+    // chassis.moveToPoint(45,0,2000,{.maxSpeed=60});
+    // ramp1.retract();
+    // chassis.waitUntilDone();
+
+    // pros::delay(100);
+    // chassis.turnToHeading(-90,2000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+    // chassis.moveToPoint(-46.25,0,5000,{.maxSpeed=100});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+    // chassis.turnToHeading(180,2000,{.maxSpeed=60});
+    // chassis.waitUntilDone();
+    // pros::delay(100);
+
     // little_will.extend();
     // pros::delay(250);
     // chassis.moveToPoint(-48,-12,1000,{.maxSpeed=60});
