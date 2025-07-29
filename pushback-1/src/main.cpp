@@ -40,7 +40,7 @@ pros::Rotation horizontalEnc(-15);
 pros::Rotation verticalEnc(-2);
 //tracking wheels
 lemlib::TrackingWheel horizontal(&horizontalEnc, 2, -5); //-5
-lemlib::TrackingWheel vertical(&verticalEnc, 2*1.030, -1.5); //-1.5
+lemlib::TrackingWheel vertical(&verticalEnc, 2.80, -0.8); //2*1.030, -1.5
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group

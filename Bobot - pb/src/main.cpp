@@ -29,9 +29,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(-15, 1.95, 5);  // This tracking wheel is parallel lefgt to the drive wheels
-ez::tracking_wheel vert_tracker(-2, 1.95, 1.5);   // This tracking wheel is parallel right to the drive wheels
-
+ez::tracking_wheel horiz_tracker(-15, 2.0, -3.6 );  // This tracking wheel is parallel lefgt to the drive wheels
+ez::tracking_wheel vert_tracker(-2, 2.81, -0.9);   // This tracking wheel is parallel right to the drive wheels
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -47,7 +46,7 @@ void initialize() {
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
   //  - change `back` to `front` if the tracking wheel is in front of the midline
   //  - ignore this if you aren't using a horizontal tracker
-  chassis.odom_tracker_back_set(&horiz_tracker);
+  chassis.odom_tracker_front_set(&horiz_tracker);
   // Look at your vertical tracking wheel and decide if it's to the left or right of the center of the robot
   //  - change `left` to `right` if the tracking wheel is to the right of the centerline
   //  - ignore this if you aren't using a vertical tracker
@@ -59,9 +58,9 @@ void initialize() {
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
-  chassis.opcontrol_curve_default_set(0.0, 0.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
+  chassis.opcontrol_curve_default_set(0.0, 1.017);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
-  // Set the drive to your own constants from autons.cpp!
+  // Set the drive to your own constants fµµrom autons.cpp!
   default_constants();
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -70,7 +69,15 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"MEASURE OFFSETS",measure_offsets}
+      {"RIGHT AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_auton},
+      {"LEFT AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_auton},
+      {"RIGHT LONG AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_long_auton},
+      {"LEFT LONG AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_long_auton},
+      {"AWP AUTON \nset up on left side of zone \nfacing left \nleft wheel contacting black corner ",awp_auton},
+      {"MEASURE OFFSETS",measure_offsets},
+      {"TURN TUNING",turn_test},
+      {"DRIVE TUNING",drive_test},
+      {"ODOM TUNING",odom_test}
   });
 
   // Initialize chassis and auton selector  
@@ -125,7 +132,9 @@ void competition_initialize() {
 void autonomous() {
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
-  chassis.drive_sensor_reset();               // Reset drive sensors to 0  // Set motors to hold.  This helps autonomous consistency
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+   // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);  // Set motors to hold.  This helps autonomous consistency
 
   /*
   Odometry and Pure Pursuit are not magic
@@ -259,7 +268,7 @@ void ez_template_extras() {
  */
 void opcontrol() {
   // This is preference to what you like to drive on
-  chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+  
 
   bool intake_toggle = false;
 	
@@ -273,6 +282,7 @@ void opcontrol() {
   ez::as::initialize();
 
   while (true) {
+    chassis.drive_brake_set(MOTOR_BRAKE_COAST);
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 

@@ -15,6 +15,6 @@ inline pros::Optical intake_optical(4);
 inline pros::adi::DigitalOut ramp1('a', false);
 inline pros::adi::DigitalOut little_will('b', false);
 inline pros::adi::DigitalOut rake('c', false);
-pros::Rotation horizontalEnc(-15);
-pros::Rotation verticalEnc(-2);
+inline pros::Rotation horizontalEnc(-15);
+inline pros::Rotation verticalEnc(-2);
 
