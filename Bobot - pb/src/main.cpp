@@ -74,6 +74,7 @@ void initialize() {
       {"RIGHT LONG AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_long_auton},
       {"LEFT LONG AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_long_auton},
       {"AWP AUTON \nset up on left side of zone \nfacing left \nleft wheel contacting black corner ",awp_auton},
+      {"MID AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",mid_auton},
       {"MEASURE OFFSETS",measure_offsets},
       {"TURN TUNING",turn_test},
       {"DRIVE TUNING",drive_test},
