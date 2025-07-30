@@ -255,10 +255,46 @@ void odom_test(){
 }   
 
 
+void colorsorttest(){
+  int counter = 0;
+  while(counter<1000){
+      intake_bottom.move(200);
+      intake_middle.move(200);
+      intake_top.move(200);
+      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+          counter=0;
+      }
+      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+          break;
+      }
+      else{
+          counter++;
+      }
+      pros::delay(20);
+
+  }
+  intake_bottom.move(-200);
+  intake_middle.move(-200);
+  intake_top.move(-200);
+  pros::delay(5000);
+}
+
 
 
 
 void right_auton(){
+
+  int colorcode = 0; //1 red, -1 blue
+
+  if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+    colorcode = -1;
+  }
+  else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+    colorcode = 1;
+  }
+  else{
+    colorcode = 0;
+  }
   //set up on right side of zone, facing other side, left wheel contacting black corner
 
 
@@ -316,14 +352,27 @@ void right_auton(){
       intake_bottom.move(200);
       intake_middle.move(200);
       intake_top.move(200);
-      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
-          counter=0;
+      if (colorcode==-1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            break;
+        }
+        else{
+            counter++;
+        }
       }
-      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
-          break;
-      }
-      else{
-          counter++;
+      else if (colorcode==1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            break;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            counter=0;
+        }
+        else{
+            counter++;
+        }
       }
       pros::delay(20);
 
@@ -335,6 +384,19 @@ void right_auton(){
 }
 
 void left_auton(){
+
+  int colorcode = 0; //1 red, -1 blue
+
+  if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+    colorcode = -1;
+  }
+  else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+    colorcode = 1;
+  }
+  else{
+    colorcode = 0;
+  }
+
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();    
@@ -354,23 +416,17 @@ void left_auton(){
   chassis.pid_wait();
   chassis.pid_odom_set({{-10,24},rev,80});
   chassis.pid_wait();
-  chassis.pid_turn_set(47,50);
+  chassis.pid_turn_set(-132,50);
   chassis.pid_wait();
   pros::delay(500);
-  chassis.pid_odom_set(15,60);
+  chassis.pid_odom_set(-18,60);
   chassis.pid_wait();
-  intake_bottom.move(-127);
-  intake_middle.move(-127);
+  intake_top.move(127);
   pros::delay(1000);
-  intake_bottom.move(127);
-  intake_middle.move(127);
-  chassis.pid_odom_set(-15,60);
+  intake_top.move(0);
+  chassis.pid_odom_set({{-33,0},fwd,80});
   chassis.pid_wait();
-  chassis.pid_turn_set(-135,80);
-  chassis.pid_wait();
-  chassis.pid_odom_set({{-32.5,0},fwd,80});
-  chassis.pid_wait();
-  chassis.pid_turn_set(-178,60);
+  chassis.pid_turn_set(-180,60);
   chassis.pid_wait();
   little_will.set_value(true);
   pros::delay(500);
@@ -382,27 +438,40 @@ void left_auton(){
   intake_bottom.move(0);
   intake_middle.move(0);
   ramp1.set_value(true);
-  chassis.pid_odom_set({{-32.5,18},rev,80});
+  chassis.pid_odom_set({{-32.5,19},rev,80});
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
   intake_top.move(200);
-  
-  
+
+
   pros::delay(750);
   int counter = 0;
   while(counter<100){
       intake_bottom.move(200);
       intake_middle.move(200);
       intake_top.move(200);
-      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
-          counter=0;
+      if (colorcode==-1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            break;
+        }
+        else{
+            counter++;
+        }
       }
-      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
-          break;
-      }
-      else{
-          counter++;
+      else if (colorcode==1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            break;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            counter=0;
+        }
+        else{
+            counter++;
+        }
       }
       pros::delay(20);
 
@@ -415,6 +484,18 @@ void left_auton(){
 
 void right_long_auton(){
   //set up on right side of zone, facing other side, left wheel contacting black corner
+
+  int colorcode = 0; //1 red, -1 blue
+
+  if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+    colorcode = -1;
+  }
+  else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+    colorcode = 1;
+  }
+  else{
+    colorcode = 0;
+  }
 
 
   chassis.pid_targets_reset();                // Resets PID targets to 0
@@ -438,7 +519,7 @@ void right_long_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(130,50);
   chassis.pid_wait();
-  chassis.pid_odom_set({{34,0},fwd,80});
+  chassis.pid_odom_set({{35,0},fwd,80});
   chassis.pid_wait();
   chassis.pid_turn_set(178,60);
   chassis.pid_wait();
@@ -455,7 +536,7 @@ void right_long_auton(){
   intake_bottom.move(0);
   intake_middle.move(0);
   ramp1.set_value(true);
-  chassis.pid_odom_set({{34,18},rev,80});
+  chassis.pid_odom_set({{34.5,18},rev,80});
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
@@ -468,14 +549,27 @@ void right_long_auton(){
       intake_bottom.move(200);
       intake_middle.move(200);
       intake_top.move(200);
-      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
-          counter=0;
+      if (colorcode==-1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            break;
+        }
+        else{
+            counter++;
+        }
       }
-      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
-          break;
-      }
-      else{
-          counter++;
+      else if (colorcode==1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            break;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            counter=0;
+        }
+        else{
+            counter++;
+        }
       }
       pros::delay(20);
 
@@ -489,6 +583,18 @@ void right_long_auton(){
 void left_long_auton(){
   //set up on right side of zone, facing other side, left wheel contacting black corner
 
+
+  int colorcode = 0; //1 red, -1 blue
+
+  if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+    colorcode = -1;
+  }
+  else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+    colorcode = 1;
+  }
+  else{
+    colorcode = 0;
+  }
 
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
@@ -541,14 +647,27 @@ void left_long_auton(){
       intake_bottom.move(200);
       intake_middle.move(200);
       intake_top.move(200);
-      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
-          counter=0;
+      if (colorcode==-1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            break;
+        }
+        else{
+            counter++;
+        }
       }
-      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
-          break;
-      }
-      else{
-          counter++;
+      else if (colorcode==1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            break;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            counter=0;
+        }
+        else{
+            counter++;
+        }
       }
       pros::delay(20);
 
@@ -560,9 +679,22 @@ void left_long_auton(){
 }
 
 void awp_auton(){
+
+  int colorcode = 0; //1 red, -1 blue
+
+  if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+    colorcode = -1;
+  }
+  else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+    colorcode = 1;
+  }
+  else{
+    colorcode = 0;
+  }
+
   chassis.pid_odom_set(30,80);
   chassis.pid_wait();
-  chassis.pid_turn_set(-90,80);
+  chassis.pid_turn_set(-88,80);
   chassis.pid_wait();
   pros::delay(100);
   little_will.set_value(true);
@@ -571,27 +703,40 @@ void awp_auton(){
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
-  pros::delay(1000);
   ramp1.set_value(true);
-  chassis.pid_odom_set({{20,31.5},rev,60});
+  pros::delay(1000);
+  chassis.pid_odom_set({{20,31},rev,60});
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
   intake_top.move(127);
   pros::delay(500);
   int counter = 0;
-  while(counter<100){
+  while(counter<50){
       intake_bottom.move(200);
       intake_middle.move(200);
       intake_top.move(200);
-      if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
-          counter=0;
+      if (colorcode==-1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            counter=0;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            break;
+        }
+        else{
+            counter++;
+        }
       }
-      else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 20){
-          break;
-      }
-      else{
-          counter++;
+      else if (colorcode==1){
+        if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
+            break;
+        }
+        else if (intake_optical.get_hue() > 0 && intake_optical.get_hue() < 30){
+            counter=0;
+        }
+        else{
+            counter++;
+        }
       }
       pros::delay(20);
 
@@ -617,18 +762,18 @@ void awp_auton(){
   intake_middle.move(127);
   chassis.pid_turn_set(180,80);
   chassis.pid_wait();
-  chassis.pid_odom_set(50,80);
+  chassis.pid_odom_set({{25,-44},fwd,90});
   chassis.pid_wait();
   chassis.pid_turn_set(180+40,80);
   chassis.pid_wait();
-  chassis.pid_odom_set({{36,-28},rev,80});
+  chassis.pid_odom_set({{35,-30},rev,80});
   chassis.pid_wait();
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
   intake_bottom.move(100);
   intake_middle.move(100);
   intake_top.move(127); 
-  pros::delay(1000);
+  pros::delay(2000);
 
 
 
@@ -657,11 +802,11 @@ void mid_auton(){
   chassis.pid_wait();
   chassis.pid_odom_set({{-18,32},fwd,90});
   chassis.pid_wait();
-  chassis.pid_turn_set(-45,60);
+  chassis.pid_turn_set(-45,80);
   chassis.pid_wait();
   chassis.pid_odom_set({{-10,24},rev,80});
   chassis.pid_wait();
-  chassis.pid_turn_set(47,50);
+  chassis.pid_turn_set(45,50);
   chassis.pid_wait();
   chassis.pid_odom_set(15,60);
   chassis.pid_wait();
@@ -670,7 +815,7 @@ void mid_auton(){
   pros::delay(1000);
   intake_bottom.move(127);
   intake_middle.move(127);
-  chassis.pid_odom_set(-15,60);
+  chassis.pid_odom_set(-15,80);
   chassis.pid_wait();
   chassis.pid_turn_set(90,80);
   chassis.pid_wait();
@@ -678,9 +823,11 @@ void mid_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(135,80);
   chassis.pid_wait();
-  chassis.pid_odom_set({{26,33},rev,80});
+  chassis.pid_odom_set({{26,34},rev,80});
   chassis.pid_wait();
-  intake_top.move(127);
+  chassis.pid_turn_set(140,100);
+  chassis.pid_wait();
+  intake_top.move(100);
   pros::delay(2000);
 }
 
@@ -688,7 +835,7 @@ void mid_auton(){
 void skills_auton(){
   chassis.pid_odom_set(30,80);
   chassis.pid_wait();
-  chassis.pid_turn_set(-90,80);
+  chassis.pid_turn_set(-88,80);
   chassis.pid_wait();
   pros::delay(100);
   little_will.set_value(true);
@@ -697,18 +844,16 @@ void skills_auton(){
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
-  pros::delay(1000);
   ramp1.set_value(true);
-  chassis.pid_odom_set({{20,31.5},rev,60});
+  pros::delay(1000);
+  chassis.pid_odom_set({{20,31},rev,60});
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
   intake_top.move(127);
-  pros::delay(200);
+  pros::delay(2500);
   little_will.set_value(false);
-  intake_bottom.move(-200);
-  intake_middle.move(-200);
-  intake_top.move(-200);
+  intake_top.move(0);
   chassis.pid_odom_set(12,80);
   chassis.pid_wait();
   ramp1.set_value(false);
@@ -719,34 +864,69 @@ void skills_auton(){
   chassis.pid_wait();
   intake_bottom.move(-127);
   intake_middle.move(-127);
-  pros::delay(1000);
+  pros::delay(1250);
   chassis.pid_odom_set(-12,80);
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
   chassis.pid_turn_set(180,80);
   chassis.pid_wait();
-  chassis.pid_odom_set(50,80);
+  chassis.pid_odom_set({{25,-44},fwd,90});
   chassis.pid_wait();
   chassis.pid_turn_set(180+40,80);
   chassis.pid_wait();
-  chassis.pid_odom_set({{36,-28},rev,80});
+  chassis.pid_odom_set({{35,-30},rev,80});
   chassis.pid_wait();
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
-  intake_bottom.move(100);
-  intake_middle.move(100);
-  intake_top.move(127); 
-  pros::delay(1000);
+  intake_bottom.move(127);
+  intake_middle.move(127);
+  intake_top.move(100); 
+  pros::delay(2000);
+  intake_top.move(0); 
   chassis.pid_odom_set({{0,-66},fwd,80});
   chassis.pid_wait();
   chassis.pid_turn_set(-90,80);
   chassis.pid_wait();
-  little_will.set_value(1);
+  little_will.set_value(true);
   pros::delay(500);
-  chassis.pid_drive_set(8,80);
+  chassis.pid_odom_set(8,100);
+  chassis.pid_wait();
+  pros::delay(1500);
+  chassis.pid_odom_set({{20,-66},fwd,80});
+  chassis.pid_wait();
+  intake_bottom.move(127);
+  intake_middle.move(127);
+  intake_top.move(127);
+  pros::delay(2500);
+  little_will.set_value(false);
+  intake_top.move(0);
+  chassis.pid_odom_set(12,80);
+  chassis.pid_wait();
+  chassis.pid_odom_set({{24,-42},fwd,80});
+  chassis.pid_wait();
+  chassis.pid_turn_set(90,80);
+  chassis.pid_wait();
+  chassis.pid_odom_set(50,80);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-45,80);
+  chassis.pid_wait();
+  chassis.pid_odom_set(16,80);
+  chassis.pid_wait();
+  intake_bottom.move(-127);
+  intake_middle.move(-127);
+  intake_top.move(-127);
+  pros::delay(1000);
+  intake_bottom.move(127);
+  intake_middle.move(127);
+  intake_top.move(0);
+  chassis.pid_odom_set({{72,-42},fwd,80});
   chassis.pid_wait();
   
+  
+
+
+
 
   
 
