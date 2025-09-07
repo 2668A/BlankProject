@@ -17,10 +17,10 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-11,12,-13},     // Left Chassis Ports (negative port will reverse it!)
-    {17,-18,19},  // Right Chassis Ports (negative port will reverse it!)
+    {-18,-19,20},     // Left Chassis Ports (negative port will reverse it!)
+    {15,16,-17},  // Right Chassis Ports (negative port will reverse it!)
 
-    5,      // IMU Port
+    11,      // IMU Port
     3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
@@ -29,8 +29,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(-15, 2.0, -3.6 );  // This tracking wheel is parallel lefgt to the drive wheels
-ez::tracking_wheel vert_tracker(-2, 2.81, -0.9);   // This tracking wheel is parallel right to the drive wheels
+ez::tracking_wheel horiz_tracker(5, 2.025, -5 );  // This tracking wheel is parallel lefgt to the drive wheels
+ez::tracking_wheel vert_tracker(-4, 2.75, -0.15);   // This tracking wheel is parallel right to the drive wheels
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -247,9 +247,25 @@ void ez_template_extras() {
   }
 }
 
+void colorsorttaskblue(){
+  while(true){
+    if(intake_top.get_actual_velocity()>0 && intake_optical.get_hue()>100 && intake_optical.get_hue()<350){
+      intake_top.move(-127);
+      pros::delay(250);
+      intake_top.move(127);
+    }
+  }
+}
 
-
-
+void colorsorttaskred(){
+  while(true){
+    if(intake_top.get_actual_velocity()>0 && intake_optical.get_hue()<25){
+      intake_top.move(-127);
+      pros::delay(250);
+      intake_top.move(127);
+    }
+  }
+}
 
 
 
@@ -273,13 +289,14 @@ void opcontrol() {
   // This is preference to what you like to drive on
   
 
+	bool will_toggle = false;
+
+  bool descore_toggle = false;
   bool intake_toggle = false;
-	
-	bool ramp_toggle = false;
 
-	bool little_will_toggle = false;
+  bool lock_toggle = false;
 
-  bool rake_toggle = false;
+  bool lift_toggle = false;
 
   chassis.pid_tuner_disable();
   ez::as::initialize();
@@ -289,46 +306,100 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
-  
+
     //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     
     
-    
-    
-    // Intake Control
-    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
-            autonomous();
-        }	
+    // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+    //   intake_toggle = !intake_toggle;
+    // }
+    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+    //   intake_bottom.move(-260);
+    //   intake_middle.move(-260);
+    //   intake_top.move(-260);
+      
+    //     }
+    //     else{
+    //   if(intake_toggle){
 
-		
-		//score
-		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+    //     intake_bottom.move(127);
+    //     intake_middle.move(127);
+    //   }else{
+    //     intake_bottom.move(0);
+    //     intake_middle.move(0);
+    //   }
+    // }
+
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+      intake_bottom.move(127);
+      intake_middle.move(127);
+    }
+    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+      intake_bottom.move(-260);
+      intake_middle.move(-260);
+
+        
+    }
+    else{
+      intake_bottom.move(0);
+      intake_middle.move(0);
+    }
+    
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)||master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
 			intake_top.move(127);
 		}
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-        intake_top.move(60);
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+      intake_top.move(-127);
     }     
     else{
 			intake_top.move(0);
 		}
+    
+    // chassis.opcontrol_arcade_standard(ez::SINGLE);
+
+    // intake_bottom.move(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
+    // intake_middle.move(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
+
+    
+    
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+      lock_toggle=!lock_toggle;
+    }
+
+    if (lock_toggle){
+      balllock.set_value(true);
+    }
+    else{
+      balllock.set_value(false);
+    }
+
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+            autonomous();
+    }	
+    else if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+      lift_toggle=!lift_toggle;
+    }
+
+    if (lift_toggle){
+      odomlift.set_value(true);
+    }
+    else{
+      odomlift.set_value(false);
+    }
+    
+    
+    // Intake Control
+    
+
+		
+		//score
+		
+    
+
 			
     //intake    
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-      intake_bottom.move(-260);
-      intake_middle.move(-260);
-      intake_top.move(-260);
-      
-        }
-        else{
-      if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-        intake_bottom.move(127);
-        intake_middle.move(127);
-      }else{
-        intake_bottom.move(0);
-        intake_middle.move(0);
-      }
-    }
+    
         
         // else{
 		// 	if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
@@ -345,43 +416,22 @@ void opcontrol() {
 
 
 		//ramp
-		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
-      ramp_toggle = !ramp_toggle;
-			if(ramp_toggle){
-				ramp1.set_value(true);
-			}else{
-				ramp1.set_value(false);
-			}
-    }
 
 
-		//will
-		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
-      little_will_toggle = !little_will_toggle;
-      if(rake_toggle){
-          rake_toggle=false;
-          rake.set_value(false);
-      }
-			if(little_will_toggle){
+		//wil
+
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+      will_toggle = !will_toggle;
+			if(will_toggle){
 				little_will.set_value(true);
 			}else{
 				little_will.set_value(false);
 			}
   
     }
-    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
-      rake_toggle = !rake_toggle;
-      if(little_will_toggle){
-          little_will_toggle=false;
-          little_will.set_value(false);
-      }
-      if(rake_toggle){
-        rake.set_value(true);
-      }else{
-        rake.set_value(false);
-      }
+
   
-    }
+
 	
         
         

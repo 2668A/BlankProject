@@ -8,13 +8,13 @@
 
 //Robot system motors
 inline pros::Motor intake_bottom(6);
-inline pros::Motor intake_middle(-7);
+inline pros::Motor intake_middle(7);
 inline pros::Motor intake_top(-8);
-inline pros::Optical intake_optical(4);
+inline pros::Optical intake_optical(1);
 //Robot system pneumatics
-inline pros::adi::DigitalOut ramp1('a', false);
-inline pros::adi::DigitalOut little_will('b', false);
-inline pros::adi::DigitalOut rake('c', false);
-inline pros::Rotation horizontalEnc(-15);
-inline pros::Rotation verticalEnc(-2);
+inline pros::adi::DigitalOut balllock('g');
+inline pros::adi::DigitalOut little_will('h');
+inline pros::adi::DigitalOut odomlift('f');
+inline pros::Rotation horizontalEnc(-5);
+inline pros::Rotation verticalEnc(-4);
 
