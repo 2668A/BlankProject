@@ -15,6 +15,7 @@ inline pros::Optical intake_optical(1);
 inline pros::adi::DigitalOut balllock('g');
 inline pros::adi::DigitalOut little_will('h');
 inline pros::adi::DigitalOut odomlift('f');
+inline pros::adi::DigitalOut brake('e');
 inline pros::Rotation horizontalEnc(-5);
 inline pros::Rotation verticalEnc(-4);
 

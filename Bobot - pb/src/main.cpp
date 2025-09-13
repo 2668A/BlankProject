@@ -298,6 +298,8 @@ void opcontrol() {
 
   bool lift_toggle = false;
 
+  bool brake_toggle = false;
+
   chassis.pid_tuner_disable();
   ez::as::initialize();
 
@@ -346,7 +348,7 @@ void opcontrol() {
       intake_middle.move(0);
     }
     
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)||master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
 			intake_top.move(127);
 		}
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
@@ -372,6 +374,17 @@ void opcontrol() {
     }
     else{
       balllock.set_value(false);
+    }
+
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+      brake_toggle=!brake_toggle;
+    }
+
+    if (brake_toggle){
+      brake.set_value(true);
+    }
+    else{
+      brake.set_value(false);
     }
 
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
