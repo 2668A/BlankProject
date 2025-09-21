@@ -87,6 +87,7 @@ void initialize() {
   chassis.initialize();
   ez::as::initialize();
   master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
+  intake_optical.set_led_pwm(50);
 } 
 
 
@@ -247,25 +248,6 @@ void ez_template_extras() {
   }
 }
 
-void colorsorttaskblue(){
-  while(true){
-    if(intake_top.get_actual_velocity()>0 && intake_optical.get_hue()>100 && intake_optical.get_hue()<350){
-      intake_top.move(-127);
-      pros::delay(250);
-      intake_top.move(127);
-    }
-  }
-}
-
-void colorsorttaskred(){
-  while(true){
-    if(intake_top.get_actual_velocity()>0 && intake_optical.get_hue()<25){
-      intake_top.move(-127);
-      pros::delay(250);
-      intake_top.move(127);
-    }
-  }
-}
 
 
 
