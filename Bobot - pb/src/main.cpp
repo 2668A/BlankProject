@@ -250,7 +250,6 @@ void ez_template_extras() {
 
 
 
-
 // DRIVER SECTION
 
 
@@ -269,12 +268,12 @@ void ez_template_extras() {
  */
 void opcontrol() {
   // This is preference to what you like to drive on
-  
 
 	bool will_toggle = false;
 
   bool descore_toggle = false;
   bool intake_toggle = false;
+  bool intake_toggle2 = false;
 
   bool lock_toggle = false;
 
@@ -282,11 +281,13 @@ void opcontrol() {
 
   bool brake_toggle = false;
 
+  bool scoring = false;
+
   chassis.pid_tuner_disable();
   ez::as::initialize();
 
   while (true) {
-    chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+    chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
@@ -295,25 +296,7 @@ void opcontrol() {
     chassis.opcontrol_arcade_standard(ez::SPLIT);
     
     
-    // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
-    //   intake_toggle = !intake_toggle;
-    // }
-    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-    //   intake_bottom.move(-260);
-    //   intake_middle.move(-260);
-    //   intake_top.move(-260);
-      
-    //     }
-    //     else{
-    //   if(intake_toggle){
-
-    //     intake_bottom.move(127);
-    //     intake_middle.move(127);
-    //   }else{
-    //     intake_bottom.move(0);
-    //     intake_middle.move(0);
-    //   }
-    // }
+    
 
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
       intake_bottom.move(127);
@@ -325,27 +308,107 @@ void opcontrol() {
 
         
     }
+    else if (intake_toggle || intake_toggle2){
+      intake_bottom.move(127);
+      intake_middle.move(127);
+    }
     else{
       intake_bottom.move(0);
       intake_middle.move(0);
     }
     
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-			intake_top.move(127);
-		}
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-      intake_top.move(-127);
-    }     
+
+
+    // TOGGLE TECH 2
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+      if (intake_toggle==false){
+        lock_toggle=true;
+        intake_bottom.move(-127);
+        intake_middle.move(-127);
+        pros::delay(100);
+        intake_bottom.move(0);
+        intake_middle.move(0);
+        intake_toggle = !intake_toggle;
+      }
+      else{
+        intake_toggle = !intake_toggle;
+      }
+    }
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+      if (intake_toggle2==false){
+        intake_bottom.move(-127);
+        intake_middle.move(-127);
+        pros::delay(100);
+        intake_bottom.move(0);
+        intake_middle.move(0);
+        intake_toggle2 = !intake_toggle2;
+      }
+      else{
+        intake_toggle2 = !intake_toggle2;
+      }
+    }
+    if(intake_toggle){
+      intake_top.move(127);
+    }
+    else if(intake_toggle2){
+      intake_top.move(-100);
+    }
     else{
-			intake_top.move(0);
-		}
+      intake_top.move(0);
+    }
     
-    // chassis.opcontrol_arcade_standard(ez::SINGLE);
 
-    // intake_bottom.move(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
-    // intake_middle.move(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
+    // TOGGLE TECH 1
+    // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+    //   if (intake_toggle==false){
+    //     intake_bottom.move(-127);
+    //     intake_middle.move(-127);
+    //     pros::delay(100);
+    //     intake_bottom.move(0);
+    //     intake_middle.move(0);
+    //     intake_toggle = !intake_toggle;
+    //   }
+    //   else if (intake_toggle==true && intake_middle.get_target_velocity()>0){
+    //     intake_bottom.move(-127);
+    //     intake_middle.move(-127);
+    //     pros::delay(100);
+    //     intake_bottom.move(127);
+    //     intake_middle.move(127);
+    //   }
+    //   else if (intake_toggle==true){
+    //     intake_toggle = !intake_toggle;
+    //   }
+    // }
+    // if (intake_toggle==true && intake_middle.get_target_velocity()>0){
+    //     scoring=true;
+    // }
+    // if (intake_toggle==true && intake_middle.get_target_velocity()==0 && scoring==true){
+    //   intake_toggle = !intake_toggle;
+    //   scoring=false;
+    // }
+    // else{
+    //   if(intake_toggle){
+    //     intake_top.move(127);
+    //   }else{
+    //     intake_top.move(0);
+    //   }
+    // }
 
-    
+    //DEFAULT
+    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+    //   intake_top.move(-260);  
+    // }
+  
+    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+    //   intake_top.move(127);
+		// }
+    // else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+    //   intake_top.move(-127);
+    // }     
+    // else{
+		// 	intake_top.move(0);
+		// }
     
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
       lock_toggle=!lock_toggle;
@@ -370,9 +433,9 @@ void opcontrol() {
     }
 
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
-            autonomous();
+      autonomous();
     }	
-    else if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
       lift_toggle=!lift_toggle;
     }
 

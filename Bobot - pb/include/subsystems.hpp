@@ -9,7 +9,7 @@
 //Robot system motors
 inline pros::Motor intake_bottom(6);
 inline pros::Motor intake_middle(7);
-inline pros::Motor intake_top(-8);
+inline pros::Motor intake_top(8);
 inline pros::Optical intake_optical(12);
 //Robot system pneumatics
 inline pros::adi::DigitalOut balllock('g');
