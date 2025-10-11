@@ -287,7 +287,7 @@ void opcontrol() {
   ez::as::initialize();
 
   while (true) {
-    chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
+    chassis.drive_brake_set(MOTOR_BRAKE_COAST);
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
