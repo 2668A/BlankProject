@@ -57,7 +57,7 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_drive_activebrake_set(0.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
+  chassis.opcontrol_drive_activebrake_set(0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.0, 1.017);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
   // Set the drive to your own constants fµµrom autons.cpp!
@@ -69,11 +69,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"RIGHT AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_auton},
+      {"RIGHT AUTON \nalign crossbar with tile edge ",right_auton},
       {"LEFT AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_auton},
       {"RIGHT LONG AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_long_auton},
       {"LEFT LONG AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_long_auton},
-      {"AWP AUTON \nset up on left side of zone \nfacing left \nleft wheel contacting black corner ",awp_auton},
+      {"AWP AUTON \nalign wall riders with tile edge ",awp_auton},
       {"MID AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",mid_auton},
       {"SKILLS AUTON \nset up on left side of zone \nfacing left \nleft wheel contacting black corner ",skills_auton},
       {"COLOR SORT TEST",colorsorttest},
@@ -287,7 +287,7 @@ void opcontrol() {
   ez::as::initialize();
 
   while (true) {
-    chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+    
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
@@ -427,9 +427,11 @@ void opcontrol() {
 
     if (brake_toggle){
       brake.set_value(true);
+      chassis.drive_brake_set(MOTOR_BRAKE_HOLD);
     }
     else{
       brake.set_value(false);
+      chassis.drive_brake_set(MOTOR_BRAKE_COAST);
     }
 
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
