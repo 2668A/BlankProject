@@ -13,6 +13,5 @@ void left_auton();
 void right_long_auton();
 void left_long_auton();
 void awp_auton();
-void mid_auton();
 void skills_auton();
 void colorsorttest();

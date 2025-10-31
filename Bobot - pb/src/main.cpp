@@ -29,8 +29,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(5, 2.025, -5 );  // This tracking wheel is parallel lefgt to the drive wheels
-ez::tracking_wheel vert_tracker(-4, 2.75, -0.15);   // This tracking wheel is parallel right to the drive wheels
+ez::tracking_wheel horiz_tracker(5, 2.025*24.0/24.3, -4.8 );  // -5 This tracking wheel is parallel lefgt to the drive wheels
+ez::tracking_wheel vert_tracker(-4, 2.75*24.0/23.6, -0.35);   // -0.15 This tracking wheel is parallel right to the drive wheels
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -58,7 +58,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
-  chassis.opcontrol_curve_default_set(0.0, 1.017);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
+  chassis.opcontrol_curve_default_set(1.1, 1.017);  //0 1.017 Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
   // Set the drive to your own constants fµµrom autons.cpp!
   default_constants();
@@ -74,7 +74,6 @@ void initialize() {
       {"RIGHT LONG AUTON \nset up on right side of zone \nfacing other side \nleft wheel contacting black corner ",right_long_auton},
       {"LEFT LONG AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",left_long_auton},
       {"AWP AUTON \nalign wall riders with tile edge ",awp_auton},
-      {"MID AUTON \nset up on left side of zone \nfacing other side \nright wheel contacting black corner ",mid_auton},
       {"SKILLS AUTON \nset up on left side of zone \nfacing left \nleft wheel contacting black corner ",skills_auton},
       {"COLOR SORT TEST",colorsorttest},
       {"MEASURE OFFSETS",measure_offsets},
@@ -259,7 +258,7 @@ void ez_template_extras() {
  * the Field Management System or the VEX Competition Switch in the operator
  * control mode.
  *
- * If no competition control is connected, this function will run immediately
+ * If no competition control is connected, this function w7ill run immediately
  * following initialize().
  *
  * If the robot is disabled or communications is lost, the
@@ -359,56 +358,6 @@ void opcontrol() {
     }
     
 
-    // TOGGLE TECH 1
-    // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
-    //   if (intake_toggle==false){
-    //     intake_bottom.move(-127);
-    //     intake_middle.move(-127);
-    //     pros::delay(100);
-    //     intake_bottom.move(0);
-    //     intake_middle.move(0);
-    //     intake_toggle = !intake_toggle;
-    //   }
-    //   else if (intake_toggle==true && intake_middle.get_target_velocity()>0){
-    //     intake_bottom.move(-127);
-    //     intake_middle.move(-127);
-    //     pros::delay(100);
-    //     intake_bottom.move(127);
-    //     intake_middle.move(127);
-    //   }
-    //   else if (intake_toggle==true){
-    //     intake_toggle = !intake_toggle;
-    //   }
-    // }
-    // if (intake_toggle==true && intake_middle.get_target_velocity()>0){
-    //     scoring=true;
-    // }
-    // if (intake_toggle==true && intake_middle.get_target_velocity()==0 && scoring==true){
-    //   intake_toggle = !intake_toggle;
-    //   scoring=false;
-    // }
-    // else{
-    //   if(intake_toggle){
-    //     intake_top.move(127);
-    //   }else{
-    //     intake_top.move(0);
-    //   }
-    // }
-
-    //DEFAULT
-    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-    //   intake_top.move(-260);  
-    // }
-  
-    // if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-    //   intake_top.move(127);
-		// }
-    // else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-    //   intake_top.move(-127);
-    // }     
-    // else{
-		// 	intake_top.move(0);
-		// }
     
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
       lock_toggle=!lock_toggle;
@@ -449,37 +398,7 @@ void opcontrol() {
     }
     
     
-    // Intake Control
-    
-
-		
-		//score
-		
-    
-
-			
-    //intake    
-    
-        
-        // else{
-		// 	if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
-		// 		intake_toggle = !intake_toggle;
-		// 	}
-		// 	if(intake_toggle){
-		// 		intake_bottom.move(top_speed);
-		// 		intake_middle.move(top_speed);
-		// 	}else{
-		// 		intake_bottom.move(0);
-		// 		intake_middle.move(0);
-		// 	}
-        // }
-
-
-		//ramp
-
-
-		//wil
-
+  
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
       will_toggle = !will_toggle;
 			if(will_toggle){

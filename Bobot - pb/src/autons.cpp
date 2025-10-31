@@ -20,13 +20,16 @@ const int SWING_SPEED = 110;
 
 
 void default_constants() {
+  //IMU SCALING, DO NOT CHANGE
+  chassis.drive_imu_scaler_set(1.05);
+
   // P, I, D, and Start I
-  chassis.pid_heading_constants_set(1, 0, 0);
-  chassis.pid_drive_constants_set(20, 0, 140);
-  chassis.pid_turn_constants_set(1.5, 0, 8, 15);
+  chassis.pid_heading_constants_set(0.5, 0, 0);
+  chassis.pid_drive_constants_set(15, 0, 90); //20 0 140
+  chassis.pid_turn_constants_set(2.2, 0, 13, 15); //1.5 0 12 15
   chassis.pid_swing_constants_forward_set(5, 0, 20);
   chassis.pid_swing_constants_backward_set(4,0,20);
-  chassis.pid_odom_angular_constants_set(1.5, 0, 4);    // Angular control for odom motions
+  chassis.pid_odom_angular_constants_set(1.6, 0, 10);    // Angular control for odom motions
   chassis.pid_odom_boomerang_constants_set(1.5, 0.0, 4 );  // Angular control for boomerang motions
 
   // Exit conditions
@@ -61,13 +64,12 @@ void default_constants() {
 
 
 
-// TESTING SECTION
 
 
 
-///
-// Calculate the offsets of your tracking wheels
-///
+
+
+
 void measure_offsets() {
   // Number of times to test
   int iterations = 20;
@@ -127,9 +129,14 @@ void measure_offsets() {
 
 
 
-// . . .
-// Make your own autonomous functions here!
-// . . .
+
+
+
+
+
+
+
+
 
 
 void turn_test(){
@@ -161,7 +168,6 @@ void turn_test(){
 }
 
 
-
 void drive_test(){
   default_constants();
 
@@ -170,36 +176,19 @@ void drive_test(){
 
   chassis.pid_drive_set(24_in, 100);
   chassis.pid_wait();
-  pros::delay(100);
+  pros::delay(3000);
 
   chassis.pid_drive_set(-18,100);
   chassis.pid_wait();
-  pros::delay(100);
+  pros::delay(3000);
 
   chassis.pid_drive_set(-6,100);
   chassis.pid_wait();
-  pros::delay(100);
+  pros::delay(3000);
 
-  pros::delay(1000);
   master.set_text(0,0,to_string(chassis.drive_sensor_right()));
 
-  // chassis.pid_drive_set(-24_in, 80,true);
-  // chassis.pid_wait();
-  // master.set_text(0,0,to_string(chassis.drive_sensor_right()));
 
-  // pros::delay(1000);
-
-  // chassis.pid_drive_set(-12_in, 80,true);
-  // chassis.pid_wait();
-  // master.set_text(0,0,to_string(chassis.drive_sensor_right()));
-
-  // pros::delay(1000);
-
-  // chassis.pid_drive_set(-12_in, 80,true);
-  // chassis.pid_wait();
-  // master.set_text(0,0,to_string(chassis.drive_sensor_right()));
-
-  // pros::delay(1000);
 }
 
 void odom_test(){
@@ -210,31 +199,50 @@ void odom_test(){
   chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
   chassis.odom_enable(true);
 
-  // chassis.pid_odom_set({{{0,24}, fwd, 60}});
-  // chassis.pid_wait();
-  // pros::delay(3000);
-  // chassis.pid_odom_set({{{24,24}, fwd, 60}});
-  // chassis.pid_wait();
-  // pros::delay(3000);
-  // chassis.pid_odom_set({{{0,0}, fwd, 60}});
-  // chassis.pid_wait();
-  // pros::delay(3000);
-  
+  chassis.pid_odom_set(24,90);
+  chassis.pid_wait(); 
+  master.set_text(0,0,to_string(chassis.odom_x_get())+" "+to_string(chassis.odom_y_get()));
+  pros::delay(3000);
 
-
-
-
-
-  // chassis.pid_odom_set(24,60);
-  // chassis.pid_wait();
-
-
-
-  chassis.pid_odom_set( {{{24,24}, fwd, 60}} , true);
+  chassis.pid_odom_set( {{{24,24}, fwd, 90}});
   chassis.pid_wait();
+  master.set_text(0,0,to_string(chassis.odom_x_get())+" "+to_string(chassis.odom_y_get()));
+  pros::delay(3000);
 
-  // pros::delay(100);
+  chassis.pid_odom_set({{{0,0}, rev, 90}});
+  chassis.pid_wait();
+  master.set_text(0,0,to_string(chassis.odom_x_get())+" "+to_string(chassis.odom_y_get()));
+  pros::delay(3000);
+
 }   
+
+void odom_advanced_test(){
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();    
+  default_constants();
+  chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
+  chassis.odom_enable(true);
+
+  chassis.pid_odom_set( {{{24,24}, fwd, 90},{{0,24}, fwd, 90}});
+  chassis.pid_wait();
+  pros::delay(3000);
+
+  chassis.pid_odom_set( {{{24,0}, rev, 90},{{0,0}, rev, 90}});
+  chassis.pid_wait();
+  pros::delay(3000);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 void colorsorttaskblue(){
   while(true){
@@ -258,8 +266,6 @@ void colorsorttaskred(){
   }
 }
 
-
-
 void colorsorttest(){
 
   if(intake_optical.get_hue() > 100 && intake_optical.get_hue() < 300){
@@ -269,6 +275,17 @@ void colorsorttest(){
     pros::Task colorsort(colorsorttaskred);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -360,6 +377,19 @@ void right_auton(){
   chassis.pid_wait();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 void left_auton(){
 
   int colorcode = 0; //1 red, -1 blue
@@ -449,6 +479,23 @@ void left_auton(){
   chassis.pid_wait();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void right_long_auton(){
   //set up on right side of zone, facing other side, left wheel contacting black corner
 
@@ -527,9 +574,23 @@ void right_long_auton(){
   balllock.set_value(0);
   chassis.pid_drive_set(-16,127);
   chassis.pid_wait();
-
-  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void left_long_auton(){
   //set up on right side of zone, facing other side, left wheel contacting black corner
@@ -559,6 +620,22 @@ void left_long_auton(){
   chassis.odom_theta_flip();
   right_auton();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void awp_auton(){
 
@@ -614,15 +691,6 @@ void awp_auton(){
   chassis.pid_wait();
   chassis.pid_drive_set(13,80);
   chassis.pid_wait();
-
-  // chassis.pid_drive_set(20,100);
-  // chassis.pid_wait();
-  // chassis.pid_turn_set(-135,90);
-  // chassis.pid_wait();
-  // intake_top.move(0);
-  // chassis.pid_odom_set({{{-21,7},fwd,50}, {{-28,2},fwd,50}, {{-32,-3},fwd,50}});
-  // chassis.pid_wait();
-
   intake_bottom.move(-127);
   intake_middle.move(-127);
   pros::delay(750);
@@ -641,25 +709,24 @@ void awp_auton(){
   intake_top.move(-90);
   pros::delay(2000);
 
-
-  
-
-
-  
-
 }
 
-void mid_auton(){
-  chassis.pid_targets_reset();                // Resets PID targets to 0
-  chassis.drive_imu_reset();                  // Reset gyro position to 0
-  chassis.drive_sensor_reset();    
-  default_constants();
-  chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
-  chassis.odom_enable(true);
-  chassis.odom_xyt_set(0,0,0);
 
-  
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void antijam(){
   while(true){
@@ -670,6 +737,22 @@ void antijam(){
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void skills_auton(){
   // pros::Task antijamtask(antijam,"antijam");
@@ -686,12 +769,6 @@ void skills_auton(){
   intake_bottom.move(127);
   intake_middle.move(127);
   balllock.set_value(1);
-  // chassis.pid_odom_set({{{-6,14.0},fwd,80}});
-  // chassis.pid_wait();
-  // chassis.pid_drive_set(-6,70);
-  // chassis.pid_wait();
-  // chassis.pid_turn_set(-135,80);
-  // chassis.pid_wait();
   little_will.set_value(1);
   chassis.pid_odom_set({{-32.5,-2},fwd, 85});
   chassis.pid_wait();
@@ -750,10 +827,6 @@ void skills_auton(){
   pros::delay(750);
   little_will.set_value(0);
   pros::delay(1000);
-  // chassis.pid_odom_set(-8,70);  // chassis.pid_wait();
-  // chassis.pid_odom_set(8,70);
-  // chassis.pid_wait();
-  // pros::delay(750);
   chassis.pid_odom_set({{-29,70},rev,90});
   chassis.pid_wait();
   balllock.set_value(1);
@@ -785,14 +858,6 @@ void skills_auton(){
   intake_middle.move(127);
   intake_top.move(127);
   pros::delay(2000);
-  
-
-
-
-
-
-
-
 
   
 }
