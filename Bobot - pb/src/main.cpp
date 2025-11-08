@@ -29,8 +29,8 @@ ez::Drive chassis(
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(5, 2.025*24.0/24.3, -4.8 );  // -5 This tracking wheel is parallel lefgt to the drive wheels
-ez::tracking_wheel vert_tracker(-4, 2.75*24.0/23.6, -0.35);   // -0.15 This tracking wheel is parallel right to the drive wheels
+ez::tracking_wheel horiz_tracker(5, 2.025, -3.5 );  // -4.95  -4.8   -5 This tracking wheel is parallel lefgt to the drive wheels
+ez::tracking_wheel vert_tracker(-4, 2.75*24.0/23.3, -2.75);   // -0.38  -0.35   -0.15 This tracking wheel is parallel right to the drive wheels
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -38,7 +38,7 @@ ez::tracking_wheel vert_tracker(-4, 2.75*24.0/23.6, -0.35);   // -0.15 This trac
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  // Print our branding over your terminal :D
+  // Print our branding over your terminal :D8
   ez::ez_template_print();
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
