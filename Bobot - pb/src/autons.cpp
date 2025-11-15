@@ -20,8 +20,8 @@ const int SWING_SPEED = 110;
 
 
 void default_constants() {
-  //IMU SCALING, DO NOT CHANGE
-   chassis.drive_imu_scaler_set(1.01);
+  //IMU SCALING
+  chassis.drive_imu_scaler_set(1.00);
 
   // P, I, D, and Start I
   chassis.pid_heading_constants_set(0.5, 0, 0);
@@ -29,15 +29,15 @@ void default_constants() {
   chassis.pid_turn_constants_set(2.2, 0, 13, 15); //1.5 0 12 15
   chassis.pid_swing_constants_forward_set(5, 0, 20);
   chassis.pid_swing_constants_backward_set(4,0,20);
-  chassis.pid_odom_angular_constants_set(1.6, 0, 10);    // Angular control for odom motions
+  chassis.pid_odom_angular_constants_set(1.4, 0, 20);    // Angular control for odom motions
   chassis.pid_odom_boomerang_constants_set(1.8, 0.0, 4 );  // Angular control for boomerang motions
 
   // Exit conditions
   chassis.pid_turn_exit_condition_set(150_ms, 3_deg, 400_ms, 7_deg, 100_ms, 500_ms);
   chassis.pid_swing_exit_condition_set(100_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
-  chassis.pid_drive_exit_condition_set(100_ms, 1_in, 500_ms, 3_in, 100_ms, 500_ms);
+  chassis.pid_drive_exit_condition_set(100_ms, 2_in, 500_ms, 4_in, 100_ms, 500_ms);
   chassis.pid_odom_turn_exit_condition_set(100_ms, 3_deg, 250_ms, 7_deg, 500_ms, 750_ms);
-  chassis.pid_odom_drive_exit_condition_set(100_ms, 2_in, 200_ms, 4_in, 500_ms, 250_ms);
+  chassis.pid_odom_drive_exit_condition_set(100_ms, 3_in, 200_ms, 5_in, 500_ms, 250_ms);
   chassis.pid_turn_chain_constant_set(3_deg);
   chassis.pid_swing_chain_constant_set(5_deg);
   chassis.pid_drive_chain_constant_set(3_in);
@@ -51,7 +51,7 @@ void default_constants() {
   // - if you have tracking wheels, you can run this higher.  1.0 is the max
   chassis.odom_turn_bias_set(0.8);
 
-  chassis.odom_look_ahead_set(7_in);           // This is how far ahead in the path the robot looks at
+  chassis.odom_look_ahead_set(10_in);           // This is how far ahead in the path the robot looks at
   chassis.odom_boomerang_distance_set(4_in);  // This sets the maximum distance away from target that the carrot point can be
   chassis.odom_boomerang_dlead_set(0.65);     // This handles how aggressive the end of boomerang motions are
 
@@ -206,11 +206,11 @@ void odom_test(){
 
   chassis.pid_odom_set( {{{24,24}, fwd, 90}});
   chassis.pid_wait();
-  
-
   chassis.pid_turn_set(0,90);
   chassis.pid_wait();
   pros::delay(100);
+
+
   master.set_text(0,0,to_string(chassis.odom_x_get())+" "+to_string(chassis.odom_y_get()));
   pros::delay(3000);
 
@@ -346,7 +346,7 @@ void right_auton(){
   intake_bottom.move(127); 
   intake_middle.move(127);  
   little_will.set_value(true);
-  chassis.pid_odom_set({{33, 6}, rev, 110}); 
+  chassis.pid_odom_set({{32, 8}, rev, 110}); 
   chassis.pid_wait();
   chassis.pid_turn_set(180,90);
   chassis.pid_wait();
@@ -355,7 +355,7 @@ void right_auton(){
   chassis.pid_drive_set(18,90);
   chassis.pid_wait();
   pros::delay(1000);
-  chassis.pid_odom_set({{34, 20}, rev, 90}); 
+  chassis.pid_odom_set({{33, 22}, rev, 90}); 
   chassis.pid_wait();
   intake_bottom.move(-127); 
   intake_middle.move(-127);
@@ -438,7 +438,7 @@ void left_auton(){
   intake_middle.move(0);
   intake_top.move(0); 
   little_will.set_value(true);
-  chassis.pid_odom_set({{-32, 6}, fwd, 110}); 
+  chassis.pid_odom_set({{-30, 8}, fwd, 110}); 
   chassis.pid_wait();
   chassis.pid_turn_set(180,90);
   chassis.pid_wait();
@@ -447,7 +447,7 @@ void left_auton(){
   chassis.pid_drive_set(18,90);
   chassis.pid_wait();
   pros::delay(1000);
-  chassis.pid_odom_set({{-33, 20}, rev, 90}); 
+  chassis.pid_odom_set({{-32, 23}, rev, 90}); 
   chassis.pid_wait();
   intake_bottom.move(-127); 
   intake_middle.move(-127);
@@ -657,7 +657,7 @@ void awp_auton(){
   intake_bottom.move(127);
   intake_middle.move(127);
   pros::delay(750);
-  chassis.pid_odom_set({{-18,29},rev,90});
+  chassis.pid_odom_set({{-18,31},rev,90});
   chassis.pid_wait();
   balllock.set_value(1);
   intake_top.move(127);
@@ -672,7 +672,7 @@ void awp_auton(){
   chassis.pid_wait();
   intake_bottom.move(0);
   intake_middle.move(0);
-  chassis.pid_odom_set({{-25,6},rev,90});
+  chassis.pid_odom_set({{-27,8},rev,90});
   chassis.pid_wait();
   intake_bottom.move(0);
   intake_middle.move(0);
@@ -689,7 +689,7 @@ void awp_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(-180,90);
   chassis.pid_wait();
-  chassis.pid_odom_set(50,100);
+  chassis.pid_odom_set(47,100);
   chassis.pid_wait();
   chassis.pid_turn_set(135,100);
   chassis.pid_wait();
@@ -766,7 +766,7 @@ void skills_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(90,90);
   chassis.pid_wait();
-  chassis.pid_drive_set(16,90);
+  chassis.pid_drive_set(16,70);
   chassis.pid_wait();
   intake_bottom.move(127);
   intake_middle.move(127);
@@ -777,31 +777,42 @@ void skills_auton(){
   chassis.pid_wait();
   little_will.set_value(0);
   pros::delay(500);
-  chassis.pid_odom_set({{-16,43},fwd,100});
+  chassis.pid_odom_set({{-16,42},fwd,100});
   chassis.pid_wait();
   chassis.pid_turn_set(-88,100);
   chassis.pid_wait();
   chassis.pid_odom_set({{-84,43},fwd,120});
   chassis.pid_wait();
-  chassis.pid_odom_set({{-94,32},fwd,100});
+  chassis.pid_odom_set({{-94,32.25},fwd,100});
   chassis.pid_wait();
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
   chassis.pid_odom_set(-26,80);
   chassis.pid_wait();
+  pros::delay(100);
+  //double resetpos = chassis.drive_imu_get();
+  chassis.odom_enable(false);
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_sensor_reset();    
+  chassis.odom_enable(true);
+  chassis.odom_xyt_set(0,0,0);
+  chassis.pid_odom_set({{0,2},fwd,100});
+  chassis.pid_targets_reset();
+  chassis.pid_odom_set(-1,70);
+  chassis.pid_wait();
   intake_bottom.move(-127);
   intake_middle.move(-127);
   pros::delay(200);
   intake_bottom.move(127);
   intake_middle.move(127);
-  intake_top.move(127);
-  pros::delay(2000);
-  intake_top.move(0);
   little_will.set_value(1);
-  chassis.pid_odom_set({{-100,32},fwd,100});
+  intake_top.move(127);
+  pros::delay(2000);
+  intake_top.move(0);
+  chassis.pid_odom_set(30,70);
   chassis.pid_wait();
   pros::delay(2000);
-  chassis.pid_odom_set({{-68,32},rev,100});
+  chassis.pid_odom_set({{0,0},rev,100});
   chassis.pid_wait();
   intake_bottom.move(-127);
   intake_middle.move(-127);
@@ -811,7 +822,17 @@ void skills_auton(){
   intake_top.move(127);
   pros::delay(2000);
   intake_top.move(0);
-
-
+  chassis.pid_drive_set(12,90);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-90,90);
+  chassis.pid_wait();
+  chassis.pid_drive_set(14,90);
+  chassis.pid_wait();
+  chassis.pid_turn_set(0,90);
+  chassis.pid_wait();
+  chassis.pid_drive_set(90,120);
+  chassis.pid_wait();
+  chassis.pid_turn_set(90,90);
+  chassis.pid_wait();
   
 }
