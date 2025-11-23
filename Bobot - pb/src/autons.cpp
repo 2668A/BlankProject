@@ -774,32 +774,29 @@ void skills_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(-135,100);
   chassis.pid_wait();
-  chassis.pid_odom_set(18,100);
+  chassis.pid_odom_set(16,80);
   chassis.pid_wait();
-  chassis.pid_turn_set(-88,100);
+  chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
   chassis.pid_odom_set(-26,80);
   chassis.pid_wait();
   pros::delay(100);
   //double resetpos = chassis.drive_imu_get();
   // -75, 36
-  intake_bottom.move(-127);
-  intake_middle.move(-127);
-  pros::delay(200);
   intake_bottom.move(127);
   intake_middle.move(127);
   intake_top.move(127);
   pros::delay(2000);
   intake_top.move(127);
   little_will.set_value(1);
+  intake_top.move(0);
   chassis.pid_turn_set(-90,100);
   chassis.pid_wait();
-  chassis.pid_odom_set({{-105,32},fwd,90});
+  chassis.pid_odom_set({{-105,33},fwd,90});
   chassis.pid_wait();
-  intake_top.move(127);
   pros::delay(2000);
   intake_top.move(0);
-  chassis.pid_odom_set({{-75,32},rev,100});
+  chassis.pid_odom_set({{-74,35},rev,100});
   chassis.pid_wait();
   intake_bottom.move(-127);
   intake_middle.move(-127);
@@ -815,14 +812,16 @@ void skills_auton(){
   little_will.set_value(1);
   chassis.pid_turn_set(-150,100);
   chassis.pid_wait();
-  chassis.pid_odom_set(28,100);
+  chassis.pid_odom_set(29,100);
   chassis.pid_wait();
   intake_top.move(0);
   chassis.pid_turn_set(-90,90);
   chassis.pid_wait();
-  chassis.pid_drive_set(16,90);
+  chassis.pid_drive_set(22,90);
   chassis.pid_wait();
   pros::delay(2000);
+  chassis.pid_turn_set(-90,100);
+  chassis.pid_wait();
   chassis.pid_odom_set(-30,90);
   chassis.pid_wait();
   intake_top.move(127);
@@ -831,18 +830,20 @@ void skills_auton(){
   chassis.pid_wait();
   chassis.pid_turn_set(0,90);
   chassis.pid_wait();
-  chassis.pid_drive_set(14,90);
+  chassis.pid_drive_set(14,80);
   chassis.pid_wait();
-  chassis.pid_turn_set(-110,90);
+  chassis.pid_turn_set(-95,90);
   chassis.pid_wait();
-  chassis.pid_drive_set(-90,120);
+  chassis.pid_drive_set(-105,120);
   chassis.pid_wait();
+  little_will.set_value(0);
   chassis.pid_turn_set(-180,90);
   chassis.pid_wait();
   odomlift.set_value(1);
+  pros::delay(1000);
   chassis.pid_drive_set(-24,100);
   chassis.pid_wait();
 
-  
+  //oneworld finals 1 sync
   
 }
