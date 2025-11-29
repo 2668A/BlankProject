@@ -249,6 +249,51 @@ void ez_template_extras() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // DRIVER SECTION
 
 
@@ -285,15 +330,31 @@ void opcontrol() {
   chassis.pid_tuner_disable();
   ez::as::initialize();
 
+
   while (true) {
     
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
 
+
+
+
+
+
+
     //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
-    
+    // chassis.opcontrol_tank();
+
+    if (brake_toggle){
+      brake.set_value(true);
+      chassis.drive_brake_set(MOTOR_BRAKE_HOLD);
+    }
+    else{
+      brake.set_value(false);
+      chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+    }
     
     
 
@@ -301,7 +362,7 @@ void opcontrol() {
       intake_bottom.move(127);
       intake_middle.move(127);
     }
-    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
       intake_bottom.move(-260);
       intake_middle.move(-260);
 
@@ -363,6 +424,10 @@ void opcontrol() {
       lock_toggle=!lock_toggle;
     }
 
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+      lock_toggle=!lock_toggle;
+    }
+
     if (lock_toggle){
       balllock.set_value(true);
     }
@@ -374,14 +439,7 @@ void opcontrol() {
       brake_toggle=!brake_toggle;
     }
 
-    if (brake_toggle){
-      brake.set_value(true);
-      chassis.drive_brake_set(MOTOR_BRAKE_HOLD);
-    }
-    else{
-      brake.set_value(false);
-      chassis.drive_brake_set(MOTOR_BRAKE_COAST);
-    }
+
 
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)&&master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
       autonomous();
