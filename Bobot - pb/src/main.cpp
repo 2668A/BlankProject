@@ -288,12 +288,6 @@ void ez_template_extras() {
 
 
 
-
-
-
-
-
-
 // DRIVER SECTION
 
 
@@ -336,16 +330,8 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     //ez_template_extras();
 
-
-
-
-
-
-
-
     //driving
     chassis.opcontrol_arcade_standard(ez::SPLIT);
-    // chassis.opcontrol_tank();
 
     if (brake_toggle){
       brake.set_value(true);
@@ -353,7 +339,7 @@ void opcontrol() {
     }
     else{
       brake.set_value(false);
-      chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+      chassis.drive_brake_set(MOTOR_BRAKE_BRAKE);
     }
     
     
