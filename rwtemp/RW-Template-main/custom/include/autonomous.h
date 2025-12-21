@@ -2,4 +2,8 @@
 
 void exampleAuton();
 void exampleAuton2();
-void redGoalRush();
+void rightauto();
+void leftauto();
+void awpauto();
+void skillsauto();
+void testauto();

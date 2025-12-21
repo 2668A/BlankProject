@@ -15,22 +15,17 @@ extern motor right_chassis2;
 extern motor right_chassis3;
 extern motor_group right_chassis;
 extern inertial inertial_sensor;
-extern optical example_optical_sensor;
-extern distance example_distance_sensor;
-extern digital_out example_piston;
+
 extern rotation horizontal_tracker;
 extern rotation vertical_tracker;
 
-extern motor arm_motor1;
-extern motor arm_motor2;
-extern motor_group arm_motor;
-extern motor intake_motor;
-extern digital_out claw;
-extern digital_out rush_arm;
-extern optical optical_sensor;
-extern distance intake_distance;
-extern distance clamp_distance;
-extern digital_out mogo_mech;
+extern motor intake;
+extern motor lever;
+
+extern digital_out lifter;
+extern digital_out loader;
+extern digital_out hood;
+extern digital_out wing;
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)
 extern double distance_between_wheels;
