@@ -52,7 +52,7 @@ digital_out wing = digital_out(Brain.ThreeWirePort.D);
 // ============================================================================
 
 // Distance between the middles of the left and right wheels of the drive (in inches)
-double distance_between_wheels = 10.7;
+double distance_between_wheels = 10.6;
 
 // motor to wheel gear ratio * wheel diameter (in inches) * pi
 double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
@@ -62,7 +62,7 @@ double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
 double distance_kp = 1.1, distance_ki = 0.1, distance_kd = 7;
-double turn_kp = 0.3, turn_ki = 0, turn_kd = 2.5;
+double turn_kp = 0.32, turn_ki = 0, turn_kd = 2.5;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
@@ -74,11 +74,11 @@ bool using_vertical_tracker = true;   // Set to true if a vertical tracking whee
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
 // These comments are in the perspective of a top down view of the robot when the robot is facing vertical
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
-double horizontal_tracker_dist_from_center = -3.4;
+double horizontal_tracker_dist_from_center = 3.5;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
-double vertical_tracker_dist_from_center = -0.3;
-double horizontal_tracker_diameter = 1.975; // Diameter of the horizontal tracker wheel (in inches)
-double vertical_tracker_diameter = 2.75; // Diameter of the vertical tracker wheel (in inches)
+double vertical_tracker_dist_from_center = -0.6;
+double horizontal_tracker_diameter = 1.98; // Diameter of the horizontal tracker wheel (in inches)
+double vertical_tracker_diameter = 2.73; // Diameter of the vertical tracker wheel (in inches)
 
 
 
@@ -93,13 +93,13 @@ bool heading_correction = true; // Use heading correction when the bot is statio
 bool dir_change_start = true;   // Less accel/decel due to expecting direction change at start of movement
 bool dir_change_end = true;     // Less accel/decel due to expecting direction change at end of movement
 
-double min_output = 10; // Minimum output voltage to motors while chaining movements
+double min_output = 6; // Minimum output voltage to motors while chaining movements
 
 // Maximum allowed change in voltage output per 10 msec during movement
-double max_slew_accel_fwd = 24;
-double max_slew_decel_fwd = 24;
-double max_slew_accel_rev = 24;
-double max_slew_decel_rev = 24;
+double max_slew_accel_fwd = 16;
+double max_slew_decel_fwd = 14;
+double max_slew_accel_rev = 16;
+double max_slew_decel_rev = 10;
 
 // Prevents too much slipping during boomerang movements
 // Decrease if there is too much drifting and inconsistency during boomerang
@@ -117,13 +117,32 @@ double chase_power = 2;
 
 
 
-// ============================================================================
+// ====================================+
 // DO NOT CHANGE ANYTHING BELOW
 // ============================================================================
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
 bool RemoteControlCodeEnabled = true;
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

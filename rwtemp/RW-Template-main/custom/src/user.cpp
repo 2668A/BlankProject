@@ -3,13 +3,14 @@
 #include "../custom/include/autonomous.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 
 
 // Modify autonomous, driver, or pre-auton code below
+int auton_selected = 1;
+
 
 void runAutonomous() {
-  int auton_selected = 5;
   switch(auton_selected) {
     case 1:
       rightauto();
@@ -44,7 +45,7 @@ bool button_a, button_b, button_x, button_y;
 bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
 int lever_toggle;
-
+int leverspeed;
 
 
 
@@ -54,19 +55,17 @@ void togglebottom(){
   if (lever.position(degrees)>130){
     lever_toggle = 0;
     hood.set(false);
-    controller_1.rumble(".");
-    lever.spinToPosition(0,degrees,200,rpm,false);
+    lever.spinToPosition(0,degrees,leverspeed,rpm,false);
   }
   else if (lever.position(degrees)<15){
     lever_toggle = 1;
     hood.set(true);
-    controller_1.rumble("-");
-    lever.spinToPosition(150,degrees,200,rpm,false);
+    lever.spinToPosition(150,degrees,leverspeed,rpm,false);
   }
   else{
     hood.set(false);
     lever_toggle = 0;
-    lever.spinToPosition(0,degrees,200,rpm,false);
+    lever.spinToPosition(0,degrees,leverspeed,rpm,false);
   }
 }
 
@@ -97,21 +96,91 @@ void loadswitch(){
   }
 }
 
+void speedtoggle(){
+  if(leverspeed==200){
+    leverspeed=50;
+    controller_1.rumble("-");
+  }
+  else if(leverspeed==50){
+    leverspeed=200;
+
+  }
+}
+
+void autonswitch(){
+  double screenx = Brain.Screen.xPosition();
+  double screeny = Brain.Screen.yPosition();
+  if (screenx>2 && screenx<92 && screeny>90 && screeny<160){
+    auton_selected-=1;
+  }
+  else if (screenx>97 && screenx<187 && screeny>90 && screeny<160){
+    auton_selected+=1;
+  }
+  screenx=0;
+  screeny=0;
+}
+
+
+void printautos(){
+  controller_1.Screen.setCursor(1,1);
+  controller_1.Screen.print("Auton: %d - ",auton_selected);
+  switch(auton_selected) {
+    case 1:
+      controller_1.Screen.print("right auto        ");
+      break;
+    case 2:
+      controller_1.Screen.print("left auto            ");
+      break;  
+    case 3:
+      controller_1.Screen.print("awp auto          ");
+      break;
+    case 4:
+      controller_1.Screen.print("skills auto             ");
+      break; 
+    case 5:
+      controller_1.Screen.print("test auto              ");
+      break;
+    case 6:
+      controller_1.Screen.print("                     ");
+      break;
+    case 7:
+      controller_1.Screen.print("                     ");
+      break;
+    case 8:
+      controller_1.Screen.print("                     ");
+      break;
+    case 9:
+      controller_1.Screen.print("                     ");
+      break;
+    default:
+      controller_1.Screen.print("                     ");
+      break;
+  }
+}
+
 void runDriver() {
+  resetChassis();
   std::string xposstr;
   std::string yposstr;
   lever_toggle = 0;
   stopChassis(coast);
   heading_correction = false;
+  leverspeed=200;
+  // Brain.Screen.drawRectangle(2, 90, 90, 70);
+  // Brain.Screen.drawRectangle(2+90+5, 90, 90, 70);
   while (true) {
+    stopChassis(coast);
     // [-100, 100] for controller stick axis values)
 
 
-    // Brain.Screen.print(xpos);
-    // Brain.Screen.print(", ");
-    // Brain.Screen.print(ypos);
-    // Brain.Screen.print("            ");
-
+    Brain.Screen.printAt(2, 30, "x: %.2f", x_pos);
+    Brain.Screen.printAt(2, 50, "y: %.2f", y_pos);
+    Brain.Screen.printAt(2, 70, "heading: %.2f", normalizeTarget(getInertialHeading()));
+    // //Brain.Screen.printAt(2+90+5+90+15, 100, "Auton: %d       ", auton_selected );
+    //printautos();
+    
+    // Brain.Screen.released(autonswitch);
+    
 
     ch1 = controller_1.Axis1.value();
     ch2 = controller_1.Axis2.value();
@@ -122,23 +191,41 @@ void runDriver() {
     r1 = controller_1.ButtonR1.pressing();
     button_b = controller_1.ButtonB.pressing();
     button_a = controller_1.ButtonA.pressing();
+    button_y = controller_1.ButtonY.pressing();
     button_up_arrow = controller_1.ButtonUp.pressing();
     button_down_arrow = controller_1.ButtonDown.pressing();
     button_left_arrow = controller_1.ButtonLeft.pressing();
     button_right_arrow = controller_1.ButtonRight.pressing();
 
-    // default tank drive or replace it with your preferred driver code here: 
-    driveChassis((ch3+ch1) * 0.12, (ch3-ch1) * 0.12);
+    // default tank drive or replace it with your preferred driver code here:
+    driveChassis((ch3+ch1*0.90)*0.12, (ch3-ch1*0.90)*0.12);
+    driveChassis((ch3+ch1*0.90)*0.12, (ch3-ch1*0.90)*0.12);
 
     
+    
 
+    
+    if (button_down_arrow){
+      intake.stop();
+      lever.stop();
+      if(button_right_arrow){
+        auton_selected++;
+        controller_1.rumble(".");
+      }
+      else if(button_left_arrow){
+        auton_selected--;
+        controller_1.rumble(".");
+      }
+      printautos();
+      wait(100,msec);
+    }
 
 
     if (r1 || lever_toggle>0){
       intake.spin(forward, 200, rpm);
     }
     else if (button_a){
-      intake.spin(reverse, 200, rpm);
+      intake.spin(reverse, leverspeed*2.0, rpm);
     }
     else{
       intake.stop();
@@ -147,11 +234,21 @@ void runDriver() {
     if(button_down_arrow && button_b){
       runAutonomous();
     }
-    
+  
+
     controller_1.ButtonL1.pressed(togglebottom);
     controller_1.ButtonL2.pressed(liftswitch);
     controller_1.ButtonR2.pressed(wingswitch);
     controller_1.ButtonX.pressed(loadswitch);
+    
+    if(button_y){
+      leverspeed=50;
+      controller_1.rumble(".");
+    }
+    if(button_b){
+      leverspeed=200;
+      controller_1.rumble("..");
+    }
 
 
     wait(10, msec);
@@ -174,7 +271,6 @@ void runPreAutonomous() {
   controller_1.rumble(".");
 
   double current_heading = inertial_sensor.heading();
-  Brain.Screen.print(current_heading);
   
   // odom tracking
   resetChassis();
@@ -187,4 +283,6 @@ void runPreAutonomous() {
   } else {
     thread odom = thread(trackNoOdomWheel);
   }
+  resetChassis();
+  resetOdom();
 }

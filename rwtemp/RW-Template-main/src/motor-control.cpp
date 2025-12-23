@@ -1279,3 +1279,18 @@ void boomerang(double x, double y, int dir, double a, double dlead, double time_
 // All functions and variables use clear, consistent naming conventions.
 // Comments are concise and explain the intent of each section.
 // Teams can adapt PID values, drive base geometry, and logic as needed for their robot.
+
+
+
+
+
+
+void resetOdom(){
+  stopChassis();
+  resetChassis();
+  is_turning = false;
+  prev_left_output = 0, prev_right_output = 0;
+  x_pos = 0, y_pos = 0;
+  correct_angle = 0;
+  
+}
