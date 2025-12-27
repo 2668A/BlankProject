@@ -1294,3 +1294,9 @@ void resetOdom(){
   correct_angle = 0;
   
 }
+
+
+void driveUntil(double distance, double timeout, vex::distance dsensor, bool exit, double maxvoltage, double direction){
+  double currentdist = dsensor.objectDistance(mm);
+  driveTo(direction*(currentdist-distance)*12.0/304.8,timeout, exit, maxvoltage);
+}

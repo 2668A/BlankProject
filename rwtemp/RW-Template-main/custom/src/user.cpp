@@ -1,10 +1,16 @@
 #include "vex.h"
 #include "motor-control.h"
 #include "../custom/include/autonomous.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 
+// template<typename T>
+// auto to_string(T to_convert) -> std::string {
+//   std::ostringstream converter;
+//   converter << to_convert;
+//   return converter.str();
+// }
 
 // Modify autonomous, driver, or pre-auton code below
 int auton_selected = 1;
@@ -168,6 +174,9 @@ void runDriver() {
   leverspeed=200;
   // Brain.Screen.drawRectangle(2, 90, 90, 70);
   // Brain.Screen.drawRectangle(2+90+5, 90, 90, 70);
+  lever.spinToPosition(0,degrees,200,rpm,false);
+  lever.setStopping(coast);
+  
   while (true) {
     stopChassis(coast);
     // [-100, 100] for controller stick axis values)
@@ -179,6 +188,8 @@ void runDriver() {
     // //Brain.Screen.printAt(2+90+5+90+15, 100, "Auton: %d       ", auton_selected );
     //printautos();
     
+    //Brain.Screen.print(std::to_string(x_pos));
+    //Brain.Screen.print(to_string(x_pos));
     // Brain.Screen.released(autonswitch);
     
 
@@ -211,10 +222,12 @@ void runDriver() {
       if(button_right_arrow){
         auton_selected++;
         controller_1.rumble(".");
+        printautos();
       }
       else if(button_left_arrow){
         auton_selected--;
         controller_1.rumble(".");
+        printautos();
       }
       printautos();
       wait(100,msec);
@@ -248,6 +261,9 @@ void runDriver() {
     if(button_b){
       leverspeed=200;
       controller_1.rumble("..");
+    }
+    if(button_up_arrow && button_right_arrow){
+      odomlift.set(true);
     }
 
 

@@ -41,6 +41,10 @@ digital_out lifter = digital_out(Brain.ThreeWirePort.A);
 digital_out loader = digital_out(Brain.ThreeWirePort.B);
 digital_out hood = digital_out(Brain.ThreeWirePort.C);
 digital_out wing = digital_out(Brain.ThreeWirePort.D);
+digital_out odomlift = digital_out(Brain.ThreeWirePort.E);
+
+distance front = distance(PORT12);
+distance rear = distance(PORT13);
 
 
 

@@ -26,6 +26,10 @@ extern digital_out lifter;
 extern digital_out loader;
 extern digital_out hood;
 extern digital_out wing;
+extern digital_out odomlift;
+
+extern distance front;
+extern distance rear;
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)
 extern double distance_between_wheels;
