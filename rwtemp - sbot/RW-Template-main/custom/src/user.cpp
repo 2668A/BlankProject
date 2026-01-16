@@ -56,62 +56,6 @@ int leverspeed;
 
 
 
-void togglebottom(){
-  
-  if (lever.position(degrees)>130){
-    lever_toggle = 0;
-    hood.set(false);
-    lever.spinToPosition(0,degrees,leverspeed,rpm,false);
-  }
-  else if (lever.position(degrees)<15){
-    lever_toggle = 1;
-    hood.set(true);
-    lever.spinToPosition(150,degrees,leverspeed,rpm,false);
-  }
-  else{
-    hood.set(false);
-    lever_toggle = 0;
-    lever.spinToPosition(0,degrees,leverspeed,rpm,false);
-  }
-}
-
-void liftswitch(){
-  if (lifter.value()){
-    lifter.set(false);
-  }
-  else{
-    lifter.set(true);
-  }
-}
-
-void wingswitch(){
-  if (wing.value()){
-    wing.set(false);
-  }
-  else{
-    wing.set(true);
-  }
-}
-
-void loadswitch(){
-  if (loader.value()){
-    loader.set(false);
-  }
-  else{
-    loader.set(true);
-  }
-}
-
-void speedtoggle(){
-  if(leverspeed==200){
-    leverspeed=50;
-    controller_1.rumble("-");
-  }
-  else if(leverspeed==50){
-    leverspeed=200;
-
-  }
-}
 
 void autonswitch(){
   double screenx = Brain.Screen.xPosition();
@@ -164,24 +108,29 @@ void printautos(){
   }
 }
 
+void hoodtoggle(){
+  if(hood.value() == true){
+    hood.set(false);
+  }
+  else{
+    hood.set(true);
+  }
+}
+
 void runDriver() {
   resetChassis();
   std::string xposstr;
   std::string yposstr;
-  lever_toggle = 0;
-  stopChassis(brake);
+  stopChassis(coast);
   heading_correction = false;
-  leverspeed=200;
   // Brain.Screen.drawRectangle(2, 90, 90, 70);
   // Brain.Screen.drawRectangle(2+90+5, 90, 90, 70);
-  lever.spinToPosition(0,degrees,200,rpm,false);
-  lever.setStopping(coast);
-  double drivesens = 1.5;
-  double turnsens = 1.3;
+
+  double drivesens = 1.1;
+  double turnsens = 1.2;
   
   while (true) {
     stopChassis(coast);
-    lever.setStopping(coast);
     // [-100, 100] for controller stick axis values)
 
 
@@ -203,6 +152,8 @@ void runDriver() {
 
     // true/false for controller button presses
     r1 = controller_1.ButtonR1.pressing();
+    l1 = controller_1.ButtonL1.pressing(); 
+    l2 = controller_1.ButtonL2.pressing(); 
     button_b = controller_1.ButtonB.pressing();
     button_a = controller_1.ButtonA.pressing();
     button_y = controller_1.ButtonY.pressing();
@@ -221,7 +172,7 @@ void runDriver() {
     
     if (button_down_arrow){
       intake.stop();
-      lever.stop();
+      outtake.stop();
       if(button_right_arrow){
         auton_selected++;
         controller_1.rumble(".");
@@ -236,40 +187,33 @@ void runDriver() {
       wait(100,msec);
     }
 
+    controller_1.ButtonR2.pressed(hoodtoggle);
 
-    if (r1 || lever_toggle>0){
-      intake.spin(forward, 200, rpm);
+    if (r1){
+      intake.spin(forward, 600, rpm);
     }
     else if (button_a){
-      intake.spin(reverse, leverspeed*2.0, rpm);
+      intake.spin(reverse, 200, rpm);
     }
     else{
       intake.stop();
     }
 
+    if (l1){
+      outtake.spin(forward, 600, rpm);
+\
+    }
+    else if (l2){
+      outtake.spin(reverse, 600, rpm);
+    }
+    else{
+      outtake.stop();
+    }
+
     if(button_down_arrow && button_b){
       runAutonomous();
     }
-
-    
   
-
-    controller_1.ButtonL1.pressed(togglebottom);
-    controller_1.ButtonL2.pressed(liftswitch);
-    controller_1.ButtonR2.pressed(wingswitch);
-    controller_1.ButtonX.pressed(loadswitch);
-    
-    if(button_y){
-      leverspeed=30;
-      controller_1.rumble(".");
-    }
-    if(button_b){
-      leverspeed=200;
-      controller_1.rumble("..");
-    }
-    if(button_up_arrow){
-      odomlift.set(true);
-    }
 
 
     wait(10, msec);

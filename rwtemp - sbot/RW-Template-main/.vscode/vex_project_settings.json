@@ -1,10 +1,10 @@
 {
 	"project": {
-		"name": "RW-rodeo",
+		"name": "RW-sbot",
 		"slot": 1,
 		"description": "Empty V5 C++ Project",
 		"platform": "V5",
-		"creationDate": "Fri, 16 Jan 2026 02:44:47 GMT",
+		"creationDate": "Thu, 15 Jan 2026 03:37:08 GMT",
 		"language": "cpp",
 		"sdkVersion": "V5_20240802_15_00_00",
 		"cpp": {
@@ -12,7 +12,7 @@
 		}
 	},
 	"extension": {
-		"version": "0.8.2026011200",
+		"version": "0.7.2025041600",
 		"json": 1
 	}
 }
