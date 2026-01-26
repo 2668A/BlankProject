@@ -22,9 +22,10 @@ extern rotation vertical_tracker;
 extern motor intake;
 extern motor outtake;
 
+extern distance front;
 
 extern digital_out hood;
-
+extern digital_out loader;
 
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)

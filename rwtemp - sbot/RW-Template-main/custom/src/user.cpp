@@ -52,6 +52,7 @@ bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
 int lever_toggle;
 int leverspeed;
+int intake_toggle = 0;
 
 
 
@@ -114,6 +115,24 @@ void hoodtoggle(){
   }
   else{
     hood.set(true);
+  }
+}
+
+void loadertoggle(){
+  if(loader.value() == true){
+    loader.set(false);
+  }
+  else{
+    loader.set(true);
+  }
+}
+
+void intaketoggle(){
+  if(intake_toggle==0){
+    intake_toggle=2;
+  }
+  else{
+    intake_toggle=0;
   }
 }
 
@@ -188,18 +207,30 @@ void runDriver() {
     }
 
     controller_1.ButtonR2.pressed(hoodtoggle);
+    controller_1.ButtonL1.pressed(intaketoggle);
+    controller_1.ButtonX.pressed(loadertoggle);
+    
 
-    if (r1){
-      intake.spin(forward, 600, rpm);
-    }
-    else if (button_a){
+    if (button_a && intake_toggle==0){
       intake.spin(reverse, 200, rpm);
+    }
+    else if (button_a && intake_toggle==1){
+      intake.spin(reverse, 600, rpm);
+    }
+    else if(intake_toggle==2){
+      intake.spin(reverse,600,rpm);
+      wait(100,msec);
+      intake.spin(forward,600,rpm);
+      intake_toggle=1;
+    }
+    else if(r1 ||intake_toggle==1){
+      intake.spin(forward,600,rpm);
     }
     else{
       intake.stop();
     }
 
-    if (l1){
+    if ( intake_toggle==1){
       outtake.spin(forward, 600, rpm);
 \
     }

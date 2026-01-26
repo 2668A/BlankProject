@@ -176,8 +176,8 @@ void runDriver() {
   // Brain.Screen.drawRectangle(2+90+5, 90, 90, 70);
   lever.spinToPosition(0,degrees,200,rpm,false);
   lever.setStopping(coast);
-  double drivesens = 1.5;
-  double turnsens = 1.3;
+  double drivesens = 1;
+  double turnsens = 0.8;
   
   while (true) {
     stopChassis(coast);
@@ -212,10 +212,10 @@ void runDriver() {
     button_right_arrow = controller_1.ButtonRight.pressing();
 
     // default tank drive or replace it with your preferred driver code here:
-    driveChassis((ch3*drivesens+ch1*turnsens)*0.125, (ch3*drivesens-ch1*turnsens)*0.125);
+    // driveChassis((ch3*drivesens+ch1*turnsens)*0.125, (ch3*drivesens-ch1*turnsens)*0.125);
     driveChassis((ch3*drivesens+ch1*turnsens)*0.125, (ch3*drivesens-ch1*turnsens)*0.125);
 
-    
+    // driveChassis(0.12*(drivesens*ch3+0.50*ch1+turnsens*ch1*abs(ch3)/100.0),0.12*(drivesens*ch3-0.50*ch1+turnsens*ch1*abs(ch3)/100.0));
     
 
     

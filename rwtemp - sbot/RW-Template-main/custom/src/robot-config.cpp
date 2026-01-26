@@ -25,19 +25,22 @@ motor right_chassis2 = motor(PORT19, ratio6_1, false);
 motor right_chassis3 = motor(PORT20, ratio6_1, true);
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2, right_chassis3);
 
-inertial inertial_sensor = inertial(PORT10);
+inertial inertial_sensor = inertial(PORT6);
 
 
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
-rotation horizontal_tracker = rotation(PORT19, false);
-rotation vertical_tracker = rotation(PORT20, true);
+rotation horizontal_tracker = rotation(PORT7, true);
+rotation vertical_tracker = rotation(PORT8, false);
 
 // game specific devices for high stakes
 motor intake = motor(PORT1, ratio6_1, true);
-motor outtake = motor(PORT2, ratio18_1, false);
+motor outtake = motor(PORT2, ratio18_1, true);
 
 digital_out hood = digital_out(Brain.ThreeWirePort.A);
+digital_out loader = digital_out(Brain.ThreeWirePort.B);
+
+distance front = distance(PORT4);
 
 
 
@@ -51,7 +54,7 @@ digital_out hood = digital_out(Brain.ThreeWirePort.A);
 // ============================================================================
 
 // Distance between the middles of the left and right wheels of the drive (in inches)
-double distance_between_wheels = 10.6;
+double distance_between_wheels = 9.9;
 
 // motor to wheel gear ratio * wheel diameter (in inches) * pi
 double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
@@ -60,8 +63,8 @@ double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 1.1, distance_ki = 0.1, distance_kd = 7;
-double turn_kp = 0.32, turn_ki = 0, turn_kd = 2.5;
+double distance_kp = 1.1, distance_ki = 0.1, distance_kd = 15;
+double turn_kp = 0.33, turn_ki = 0, turn_kd = 2.8;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
@@ -73,10 +76,10 @@ bool using_vertical_tracker = true;   // Set to true if a vertical tracking whee
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
 // These comments are in the perspective of a top down view of the robot when the robot is facing vertical
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
-double horizontal_tracker_dist_from_center = 3.5;
+double horizontal_tracker_dist_from_center = 4.3;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
-double vertical_tracker_dist_from_center = -0.6;
-double horizontal_tracker_diameter = 1.98; // Diameter of the horizontal tracker wheel (in inches)
+double vertical_tracker_dist_from_center = 0.2;
+double horizontal_tracker_diameter = 2.74; // Diameter of the horizontal tracker wheel (in inches)
 double vertical_tracker_diameter = 2.73; // Diameter of the vertical tracker wheel (in inches)
 
 
@@ -96,7 +99,7 @@ double min_output = 6; // Minimum output voltage to motors while chaining moveme
 
 // Maximum allowed change in voltage output per 10 msec during movement
 double max_slew_accel_fwd = 16;
-double max_slew_decel_fwd = 14;
+double max_slew_decel_fwd = 12;
 double max_slew_accel_rev = 16;
 double max_slew_decel_rev = 10;
 
