@@ -39,8 +39,10 @@ motor outtake = motor(PORT2, ratio18_1, true);
 
 digital_out hood = digital_out(Brain.ThreeWirePort.A);
 digital_out loader = digital_out(Brain.ThreeWirePort.B);
+digital_out lifter = digital_out(Brain.ThreeWirePort.C);
 
 distance front = distance(PORT4);
+distance rear = distance(PORT5);
 
 
 

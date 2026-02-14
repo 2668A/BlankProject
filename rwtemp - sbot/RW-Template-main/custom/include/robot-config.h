@@ -23,9 +23,11 @@ extern motor intake;
 extern motor outtake;
 
 extern distance front;
+extern distance rear;
 
 extern digital_out hood;
 extern digital_out loader;
+extern digital_out lifter;
 
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)

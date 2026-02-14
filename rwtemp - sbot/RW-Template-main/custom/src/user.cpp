@@ -109,6 +109,8 @@ void printautos(){
   }
 }
 
+int spinspeed = 600;
+
 void hoodtoggle(){
   if(hood.value() == true){
     hood.set(false);
@@ -133,6 +135,15 @@ void intaketoggle(){
   }
   else{
     intake_toggle=0;
+  }
+}
+
+void speedtoggle(){
+  if (spinspeed==600){
+    spinspeed=120;
+  }
+  else{
+    spinspeed=600;
   }
 }
 
@@ -209,13 +220,14 @@ void runDriver() {
     controller_1.ButtonR2.pressed(hoodtoggle);
     controller_1.ButtonL1.pressed(intaketoggle);
     controller_1.ButtonX.pressed(loadertoggle);
+    //controller_1.ButtonA.pressed(speedtoggle);
     
 
-    if (button_a && intake_toggle==0){
-      intake.spin(reverse, 200, rpm);
+    if (l2 && intake_toggle==0){
+      intake.spin(reverse, spinspeed, rpm);
     }
-    else if (button_a && intake_toggle==1){
-      intake.spin(reverse, 600, rpm);
+    else if (l2 && intake_toggle==1){
+      intake.spin(reverse, spinspeed, rpm);
     }
     else if(intake_toggle==2){
       intake.spin(reverse,600,rpm);
@@ -223,7 +235,7 @@ void runDriver() {
       intake.spin(forward,600,rpm);
       intake_toggle=1;
     }
-    else if(r1 ||intake_toggle==1){
+    else if(r1 || intake_toggle==1){
       intake.spin(forward,600,rpm);
     }
     else{
@@ -232,10 +244,9 @@ void runDriver() {
 
     if ( intake_toggle==1){
       outtake.spin(forward, 600, rpm);
-\
     }
     else if (l2){
-      outtake.spin(reverse, 600, rpm);
+      outtake.spin(reverse, spinspeed, rpm);
     }
     else{
       outtake.stop();
@@ -244,7 +255,12 @@ void runDriver() {
     if(button_down_arrow && button_b){
       runAutonomous();
     }
-  
+
+    if (button_up_arrow){
+      lifter.set(true);
+      wait(150,msec);
+    }
+
 
 
     wait(10, msec);
