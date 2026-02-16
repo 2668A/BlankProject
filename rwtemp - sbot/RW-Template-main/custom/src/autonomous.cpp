@@ -137,6 +137,7 @@ void rightauto(){
   resetOdom();
   stopChassis(hold);
   hood.set(true);
+  wing.set(true);
   
   intake.spin(forward,600,rpm);
   moveToPoint(-1.5,2,1,3000,false,7);
@@ -168,7 +169,7 @@ void rightauto(){
   turnToAngle(140,700);
   driveTo(13,1000,true);
   turnToAngle(-180,500);
-  hood.set(false);
+  wing.set(false);
   driveTo(-28,3000,true,10);
 }
 
@@ -179,6 +180,7 @@ void leftauto(){
   resetOdom();
   stopChassis(hold);
   hood.set(false);
+  wing.set(true);
   
   intake.spin(forward,600,rpm);
   moveToPoint(1.5,8,1,3000,false,7);
@@ -207,7 +209,7 @@ void leftauto(){
   turnToAngle(140,700);
   driveTo(13,1000,true);
   turnToAngle(180,500);
-  hood.set(false);
+  wing.set(false);
   driveTo(-28,3000,true,10);
 }
 
@@ -217,6 +219,7 @@ void awpauto(){
   resetOdom();
   stopChassis(hold);
   hood.set(true);
+  wing.set(true);
   loader.set(true);
   intake.spin(forward,600,rpm);
   driveUntil(455,3000,front,true);

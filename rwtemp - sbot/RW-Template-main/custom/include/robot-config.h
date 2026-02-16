@@ -28,6 +28,7 @@ extern distance rear;
 extern digital_out hood;
 extern digital_out loader;
 extern digital_out lifter;
+extern digital_out wing;
 
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)

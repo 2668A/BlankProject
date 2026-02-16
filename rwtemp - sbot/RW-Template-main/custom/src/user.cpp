@@ -120,6 +120,15 @@ void hoodtoggle(){
   }
 }
 
+void wingtoggle(){
+  if(wing.value() == true){
+    wing.set(false);
+  }
+  else{
+    wing.set(true);
+  }
+}
+
 void loadertoggle(){
   if(loader.value() == true){
     loader.set(false);
@@ -130,10 +139,12 @@ void loadertoggle(){
 }
 
 void intaketoggle(){
+  wait(100,msec);
   if(intake_toggle==0){
     intake_toggle=2;
   }
   else{
+    controller_1.rumble(".");
     intake_toggle=0;
   }
 }
@@ -217,10 +228,10 @@ void runDriver() {
       wait(100,msec);
     }
 
-    controller_1.ButtonR2.pressed(hoodtoggle);
+    controller_1.ButtonR2.pressed(wingtoggle);
     controller_1.ButtonL1.pressed(intaketoggle);
     controller_1.ButtonX.pressed(loadertoggle);
-    //controller_1.ButtonA.pressed(speedtoggle);
+    controller_1.ButtonA.pressed(hoodtoggle);
     
 
     if (l2 && intake_toggle==0){

@@ -37,9 +37,10 @@ rotation vertical_tracker = rotation(PORT8, false);
 motor intake = motor(PORT1, ratio6_1, true);
 motor outtake = motor(PORT2, ratio18_1, true);
 
-digital_out hood = digital_out(Brain.ThreeWirePort.A);
+digital_out wing = digital_out(Brain.ThreeWirePort.A);
 digital_out loader = digital_out(Brain.ThreeWirePort.B);
 digital_out lifter = digital_out(Brain.ThreeWirePort.C);
+digital_out hood = digital_out(Brain.ThreeWirePort.D);
 
 distance front = distance(PORT4);
 distance rear = distance(PORT5);
