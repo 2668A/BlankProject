@@ -139,12 +139,10 @@ void loadertoggle(){
 }
 
 void intaketoggle(){
-  wait(100,msec);
   if(intake_toggle==0){
     intake_toggle=2;
   }
   else{
-    controller_1.rumble(".");
     intake_toggle=0;
   }
 }
@@ -174,7 +172,7 @@ void runDriver() {
     stopChassis(coast);
     // [-100, 100] for controller stick axis values)
 
-
+    outtake.setStopping(hold);      
     Brain.Screen.printAt(2, 30, "x: %.2f", x_pos);
     Brain.Screen.printAt(2, 50, "y: %.2f", y_pos);
     Brain.Screen.printAt(2, 70, "heading: %.2f", normalizeTarget(getInertialHeading()));
@@ -232,36 +230,63 @@ void runDriver() {
     controller_1.ButtonL1.pressed(intaketoggle);
     controller_1.ButtonX.pressed(loadertoggle);
     controller_1.ButtonA.pressed(hoodtoggle);
-    
 
-    if (l2 && intake_toggle==0){
-      intake.spin(reverse, spinspeed, rpm);
-    }
-    else if (l2 && intake_toggle==1){
-      intake.spin(reverse, spinspeed, rpm);
-    }
-    else if(intake_toggle==2){
+
+
+
+    // if (l2 && intake_toggle==0){
+    //   intake.spin(reverse, spinspeed, rpm);
+    // }
+    // else if (l2 && intake_toggle==1){
+    //   intake.spin(reverse, spinspeed, rpm);
+    // }
+    // else if(intake_toggle==2){
+    //   intake.spin(reverse,600,rpm);
+    //   wait(100,msec);
+    //   intake.spin(forward,600,rpm);
+    //   intake_toggle=1;
+    // }
+    // else if(r1 || intake_toggle==1){
+    //   intake.spin(forward,600,rpm);
+    // }
+    // else{
+    //   intake.stop();
+    // }
+
+
+
+    // if ( intake_toggle==1){
+    //   outtake.spin(forward, 600, rpm);
+    // }
+    // else if (l2){
+    //   outtake.spin(reverse, spinspeed, rpm);
+    // }
+    // else{
+    //   outtake.stop();
+    // }
+
+
+    if (l2){
       intake.spin(reverse,600,rpm);
-      wait(100,msec);
-      intake.spin(forward,600,rpm);
-      intake_toggle=1;
     }
-    else if(r1 || intake_toggle==1){
+    else if (l1 || r1){
       intake.spin(forward,600,rpm);
     }
     else{
       intake.stop();
     }
 
-    if ( intake_toggle==1){
-      outtake.spin(forward, 600, rpm);
+    if(l1){
+      outtake.spin(forward,600,rpm);
     }
     else if (l2){
-      outtake.spin(reverse, spinspeed, rpm);
+      outtake.spin(reverse,600,rpm);
     }
     else{
       outtake.stop();
     }
+
+
 
     if(button_down_arrow && button_b){
       runAutonomous();

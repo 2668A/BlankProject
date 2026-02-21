@@ -111,7 +111,7 @@ void scoreshort(){
   wait(100,msec);
   intake.spin(forward,600,rpm);
   outtake.spin(forward,70,rpm);
-  wait(700,msec);
+  wait(400,msec);
   outtake.spin(reverse,20,rpm);
   intake.spin(reverse,50,rpm);
   wait(100,msec);
@@ -142,32 +142,34 @@ void rightauto(){
   intake.spin(forward,600,rpm);
   moveToPoint(-1.5,2,1,3000,false,7);
   moveToPoint(12,28,1,3000,false,7);
-  moveToPoint(26,39,1,3000,true,7);
+  moveToPoint(16,36,1,3000,false,7);
+  turnToAngle(80,500,true);
+  driveTo(10,1000);
   wait(100,msec);
   moveToPoint(12,23,-1,3000);
   intake.stop();
   wait(100,msec);
-  turnToAngle(-45,3000,true);
-  driveTo(18,3000,true);
+  turnToAngle(-45,700,true);
   intake.spin(reverse,600,rpm);
-  wait(700,msec);
+  driveTo(16,3000,true);
+  wait(200,msec);
   intake.spin(forward,600,rpm);
   loader.set(true);
   hood.set(true);
   intake.spin(forward,600,rpm);
   moveToPoint(25,8,-1,3000,false);  //35
-  turnToAngle(90,3000,true);
-  driveUntil(460,2000,front,true);
+  turnToAngle(90,700,true);
+  driveUntil(470,2000,front,true);
   turnToAngle(-180,3000);
   driveUntil(160,2000,front,true);
   wait(500,msec);
-  turnToAngle(181.5,5000);
+  turnToAngle(180,5000);
   driveTo(-29,1000);
   hood.set(true);
   loader.set(false);
-  scorelong();
-  turnToAngle(140,700);
-  driveTo(13,1000,true);
+  scoremid();
+  turnToAngle(140,500);
+  driveTo(13,1000,true); 
   turnToAngle(-180,500);
   wing.set(false);
   driveTo(-28,3000,true,10);
@@ -190,7 +192,7 @@ void leftauto(){
   moveToPoint(-9,26,-1,3000);
   wait(100,msec);
   turnToAngle(-135,700,true);
-  driveTo(-18,3000,true);
+  driveTo(-17,1000,true);
   scoreshort();
   loader.set(true);
   hood.set(true);
@@ -210,7 +212,7 @@ void leftauto(){
   driveTo(13,1000,true);
   turnToAngle(180,500);
   wing.set(false);
-  driveTo(-28,3000,true,10);
+  driveTo(-20,3000,true,10);
 }
 
 
@@ -223,41 +225,39 @@ void awpauto(){
   loader.set(true);
   intake.spin(forward,600,rpm);
   driveUntil(455,3000,front,true);
-  turnToAngle(90,3000);
+  turnToAngle(90,700);
   driveUntil(160,3000,front,true);
-  wait(200,msec);
-  turnToAngle(91.5,5000);
+  turnToAngle(91.5,500);
   driveTo(-29,1000);
-  scorelong();
-  outtake.spin(reverse,600,rpm);
+  scoremid();
   intake.spin(forward,600,rpm);
   loader.set(false);
   outtake.stop();
   driveTo(6,3000);
   outtake.stop();
   turnToAngle(-145,2000);
-  driveTo(35,3000,true,8);
-  turnToAngle(175,3000);
-  driveTo(54,3000,true);
-  driveTo(-10,3000);
-  turnToAngle(130,700);
+  driveTo(35,3000,true);
   hood.set(false);
-  driveTo(-18,3000,true,8);
-  scoremid();
-  outtake.spin(reverse,600,rpm);
+  turnToAngle(175,700);
+  driveTo(56,3000,true);
+  driveTo(-15,3000);
+  turnToAngle(135,700);
+  driveTo(-18,800,true);
+  scoreshort();
   turnToAngle(120,600);
   hood.set(true);
   loader.set(true);
-  driveTo(20,1500,true);
+  driveTo(35,1500,true);
   outtake.stop();
   intake.spin(forward,600,rpm);
   turnToAngle(180,700);
   driveUntil(455,3000,front,true);
   turnToAngle(90,700);
-  driveUntil(160,3000,front,true);
-  wait(500,msec);
-  turnToAngle(88.5,700);
-  driveTo(-29,1000);
+  // driveUntil(160,3000,front,true);
+  // wait(500,msec);
+  // turnToAngle(88.5,700);
+  // driveTo(-29,1000);
+  driveTo(-16,1000);
   outtake.spin(forward,600,rpm);
   wait(900,msec);
   
@@ -281,10 +281,12 @@ void skillsauto(){
   driveTo(20,3000);
   loader.set(true);
   intake.spin(forward,600,rpm);
-  driveUntil(455,3000,front,true);
+  driveUntil(410,3000,front,true);
   turnToAngle(90,3000);
-  driveUntil(160,3000,front,true);
+  stopChassis(brake);
+  driveUntil(170,3000,front,true);
   wait(2300,msec);
+  stopChassis(hold);
   driveTo(-8,3000,true);
   turnToAngle(180,3000);
   intake.stop();
@@ -299,23 +301,27 @@ void skillsauto(){
   scoreskills();
 
   intake.spin(forward,600,rpm);
-  turnToAngle(-91.5,7000,true,12);
+  turnToAngle(-92,7000,true,12);
   driveTo(24,3000);
-  driveUntil(160,3000,front,true);
+  stopChassis(brake);
+  driveUntil(170,3000,front,true);
   wait(2300,msec);
+  stopChassis(hold);
   driveTo(-24,3000,true);
   driveTo(-7,1200,true,5);
   scoreskills();
 
   driveTo(8,3000);
-  turnToAngle(-175,3000);
+  turnToAngle(-178,3000);
   driveTo(100,3000);
   wait(200,msec);
-  driveUntil(410,3000,front,true);
+  driveUntil(420,3000,front,true);
   turnToAngle(-90,3000);
   driveTo(10,3000);
   intake.spin(forward,600,rpm);
-  driveUntil(155,3000,front,true);
+  stopChassis(brake);
+  driveUntil(170,3000,front,true);
+  stopChassis(hold);
   wait(2300,msec);
   driveTo(-8,3000,true);
   turnToAngle(0,3000);
@@ -325,18 +331,20 @@ void skillsauto(){
   turnToAngle(88,3000);
   driveTo(90,5000);
   turnToAngle(0,3000);
-  driveUntil(400,3000,rear,true,12,-1);
-  turnToAngle(92,3000);
+  driveUntil(420,3000,rear,true,12,-1);
+  turnToAngle(90,3000);
   driveTo(-12,1000,true,5);
   scoreskills();
 
   intake.spin(forward,600,rpm);
-  turnToAngle(85,7000,true,12);
+  turnToAngle(88,700,true,12);
   driveTo(24,3000);
+  stopChassis(brake);
   driveUntil(160,3000,front,true);
+  stopChassis(hold);
   wait(2300,msec);
-  driveTo(-24,3000,true);
-  driveTo(-7,1200,true,5);
+  driveTo(-24,2000,true);
+  driveTo(-7,1000,true,5);
   scoreskills();
 
   loader.set(false);
@@ -347,7 +355,7 @@ void skillsauto(){
   driveTo(14,2000,true,10);
   intake.spin(forward,600,rpm);
   outtake.spin(forward,600,rpm);
-  driveUntil(1300,5000,front,true,8,1);
+  driveUntil(1300,5000,front,true,8,1); 
 
 
 
