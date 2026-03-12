@@ -1288,7 +1288,6 @@ void boomerang(double x, double y, int dir, double a, double dlead, double time_
 void resetOdom(){
   stopChassis();
   resetChassis();
-  inertial_sensor.resetHeading();
   is_turning = false;
   prev_left_output = 0, prev_right_output = 0;
   x_pos = 0, y_pos = 0;
@@ -1300,58 +1299,4 @@ void resetOdom(){
 void driveUntil(double distance, double timeout, vex::distance dsensor, bool exit, double maxvoltage, double direction){
   double currentdist = dsensor.objectDistance(mm);
   driveTo(direction*(currentdist-distance)*12.0/304.8,timeout, exit, maxvoltage);
-}
-
-
-
-void swingpower(double leftpower, double rightpower, double heading, double timeout){
-  double start_time = Brain.timer(msec);
-  double start_heading = inertial_sensor.heading();
-
-  double current_heading;
-  double output;
-
-  double threshold = 1;
-  PID pid = PID(turn_kp*0.2, turn_ki, turn_kd);
-
-  // Normalize and set PID target
-  start_heading = normalizeTarget(heading);
-  pid.setTarget(heading);
-  pid.setIntegralMax(0);  
-  pid.setIntegralRange(3);
-  pid.setSmallBigErrorTolerance(threshold, threshold * 3);
-  pid.setSmallBigErrorDuration(50, 250);
-  pid.setDerivativeTolerance(threshold * 4.5);
-  double previous_heading = 0;
-  double realheading=getInertialHeading();;
-
-  //((Brain.timer(msec)-start_time)<timeout)
-
-  while(abs(realheading-start_heading)>5){
-    realheading = getInertialHeading();
-    driveChassis(leftpower,rightpower);
-    // controller_1.Screen.setCursor(1,1);
-    // controller_1.Screen.print(realheading);
-    // controller_1.Screen.print("             ");
-  }
-  stopChassis(hold);
-  driveChassis(0,0);
-  wait(500,msec);
-}
-
-void driveWhile(double motorpower, double distance, vex::distance dsensor){
-  if(dsensor.objectDistance(mm)>distance){
-    driveChassis(motorpower,motorpower);
-    while(!(dsensor.objectDistance(mm)<distance+20 && dsensor.objectDistance(mm)>distance-20)){
-      wait(5,msec);
-    }
-    driveChassis(0,0);
-  }
-  else if(!(dsensor.objectDistance(mm)<distance+20 && dsensor.objectDistance(mm)>distance-20)){
-    driveChassis(-motorpower,-motorpower);
-    while(dsensor.objectDistance(mm)<distance){
-      wait(5,msec);
-    }
-    driveChassis(0,0);
-  }
 }

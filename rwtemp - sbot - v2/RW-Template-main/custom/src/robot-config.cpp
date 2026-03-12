@@ -63,7 +63,7 @@ double distance_between_wheels = 9.9;
 double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
 
 // PID Constants for movement
-// distance_* : Linear PID for strai ght driving
+// distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
 double distance_kp = 1.1, distance_ki = 0.1, distance_kd = 15;
@@ -101,7 +101,7 @@ bool dir_change_end = true;     // Less accel/decel due to expecting direction c
 double min_output = 4; // Minimum output voltage to motors while chaining movements
 
 // Maximum allowed change in voltage output per 10 msec during movement
-double max_slew_accel_fwd = 20;
+double max_slew_accel_fwd = 16;
 double max_slew_decel_fwd = 12;
 double max_slew_accel_rev = 16;
 double max_slew_decel_rev = 10;
