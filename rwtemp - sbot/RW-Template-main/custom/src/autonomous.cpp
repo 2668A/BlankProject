@@ -229,29 +229,46 @@ void awpauto(){
   loader.set(false);
   outtake.stop();
   intake.spin(forward,600,rpm);
-  driveChassis(6,-6);
-  wait(800,msec);
+  driveChassis(7,-12);
+  wait(600,msec);
   turnToAngle(180,100); 
   hood.set(false);
-  driveTo(78,3000,true);
-  driveTo(-22,3000);
+  driveTo(76,3000,true);
+
+  driveTo(-19,3000);
   turnToAngle(120,700);
   driveTo(-8,800,false);
   intake.spin(forward,600,rpm);
-  outtake.spin(forward,160,rpm);
+  outtake.spin(forward,140,rpm);
   driveTo(-6,700,true);
-  outtake.spin(forward,160,rpm);
-  wait(400,msec);
+  outtake.spin(forward,120,rpm);
+  wait(300,msec);
   outtake.stop();
   wait(100,msec);
   hood.set(true);
   loader.set(true);
+
+  // stopChassis(hold);
+  // driveChassis(-9,-4);
+  // wait(600,msec);
+  // wait(100,msec);
+  // driveChassis(-4,-4);
+  // wait(100,msec);
+  // driveTo(-1,100);
+  // outtake.spin(forward,160,rpm);
+  // wait(400,msec);
+  // outtake.stop();
+  // wait(100,msec);
+  // hood.set(true);
+  // loader.set(true);
+  // turnToAngle(120,100);
+
   driveTo(35,1500,true);
   outtake.stop();
   intake.spin(forward,600,rpm);
   turnToAngle(180,700);
   driveUntil(470,3000,front,true);
-  turnToAngle(90,700);
+  turnToAngle(88,700);
   intake.spin(forward,600,rpm);
   driveUntil(160,3000,front,true);
   
@@ -426,14 +443,14 @@ void skills2(){
   wait(200,msec);
   driveChassis(2,2);
   wait(200,msec);
+  driveChassis(-3,-3);
+  wait(200,msec);
+  driveChassis(4,4);
+  wait(200,msec);
   driveChassis(-2,-2);
-  wait(200,msec);
-  driveChassis(2,2);
-  wait(200,msec);
-  driveChassis(-2,-2);
-  wait(200,msec);
-  driveChassis(3,3);
-  wait(200,msec);
+  wait(400,msec);
+  driveChassis(4,4);
+  wait(400,msec);
   driveChassis(-3,-3);
   wait(200,msec);
   driveChassis(4,4);
@@ -458,21 +475,39 @@ void skills2(){
   resetChassis();
   resetOdom();
   stopChassis(hold);
-  wait(500,msec);
 
-  swing(45,-1,7000,true);
-  driveTo(-29,2000);
-  turnToAngle(135,800);
-  driveTo(15,2000);
+  intake.spin(forward,600,rpm);
+  driveTo(-24,2000);
+  turnToAngle(-102,800);
+  driveTo(20,2000,true,6);
+  intake.stop();
+  wait(200,msec);
+  //moveToPoint(-20,-17,-1,800);
+  intake.stop();
+  turnToAngle(135,900);
+  driveChassis(4,4);
+  wait(1300,msec);
 
+
+  // outtake.spin(reverse,120,rpm);
+  // intake.spin(reverse,120,rpm);
+  // wait(4500,msec);
+  // driveTo(-1,500);
+  // wait(500,msec);
+  // driveTo(-2,700);
+  // intake.spin(reverse,80,rpm);
+  // wait(1500,msec);
+
+
+  driveTo(-3,500);
   outtake.spin(reverse,120,rpm);
   intake.spin(reverse,120,rpm);
   wait(4500,msec);
-  driveTo(-1,500);
   wait(500,msec);
-  driveTo(-2,700);
-  intake.spin(reverse,80,rpm);
   wait(1500,msec);
+  driveTo(-6,800);
+
+
   swing(180,-1,800);
   outtake.stop();
   intake.stop();
