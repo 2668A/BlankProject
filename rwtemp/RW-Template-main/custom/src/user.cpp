@@ -176,8 +176,8 @@ void runDriver() {
   // Brain.Screen.drawRectangle(2+90+5, 90, 90, 70);
   lever.spinToPosition(0,degrees,200,rpm,false);
   lever.setStopping(coast);
-  double drivesens = 1;
-  double turnsens = 0.8;
+  double drivesens = 0.6;
+  double turnsens = 0.5;
   
   while (true) {
     stopChassis(coast);

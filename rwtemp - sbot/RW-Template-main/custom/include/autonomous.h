@@ -8,3 +8,5 @@ void awpauto();
 void skillsauto();
 void testauto();
 void skills2();
+void rightrush();
+void leftrush();

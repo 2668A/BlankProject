@@ -41,10 +41,12 @@ digital_out wing = digital_out(Brain.ThreeWirePort.A);
 digital_out loader = digital_out(Brain.ThreeWirePort.B);
 digital_out lifter = digital_out(Brain.ThreeWirePort.C);
 digital_out hood = digital_out(Brain.ThreeWirePort.D);
+digital_out blocker = digital_out(Brain.ThreeWirePort.E);
 
 distance front = distance(PORT4);
 distance rear = distance(PORT5);
 
+optical wingsensor = optical(PORT14);
 
 
 
@@ -109,7 +111,7 @@ double max_slew_decel_rev = 10;
 // Prevents too much slipping during boomerang movements
 // Decrease if there is too much drifting and inconsistency during boomerang
 // Increase for more speed during boomerang
-double chase_power = 2;
+double chase_power = 1;
 
 
 

@@ -1346,12 +1346,24 @@ void driveWhile(double motorpower, double distance, vex::distance dsensor){
       wait(5,msec);
     }
     driveChassis(0,0);
-  }
+  }   
   else if(!(dsensor.objectDistance(mm)<distance+20 && dsensor.objectDistance(mm)>distance-20)){
     driveChassis(-motorpower,-motorpower);
     while(dsensor.objectDistance(mm)<distance){
       wait(5,msec);
     }
     driveChassis(0,0);
+  }
+}
+
+void holdPosition(double timeout){
+  double starttime=Brain.timer(msec);
+  double lefttorque;
+  double righttorque;
+  while((Brain.timer(msec)-timeout)>starttime){
+    lefttorque = left_chassis2.torque(Nm);
+    righttorque = right_chassis2.torque(Nm);
+    
+
   }
 }

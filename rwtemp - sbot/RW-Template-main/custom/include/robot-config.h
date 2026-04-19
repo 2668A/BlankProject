@@ -29,6 +29,9 @@ extern digital_out hood;
 extern digital_out loader;
 extern digital_out lifter;
 extern digital_out wing;
+extern digital_out blocker;
+
+extern optical wingsensor;
 
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)
