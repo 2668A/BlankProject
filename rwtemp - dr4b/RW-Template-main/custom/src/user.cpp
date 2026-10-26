@@ -217,7 +217,10 @@ void runDriver() {
     controller_1.ButtonR1.pressed(clawtoggle);
 
 
-
+    if (button_down_arrow && button_a){
+      //runPreAutonomous();
+      runAutonomous();
+    }
     if (l1){
       lift.spin(forward,80,rpm);
     }
@@ -267,6 +270,9 @@ void runPreAutonomous() {
   } else {
     thread odom = thread(trackNoOdomWheel);
   }
+  tray.set(true);
+  claw.set(true);
+  tilter.set(false);
   resetChassis();
   resetOdom();
 }

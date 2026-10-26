@@ -70,8 +70,8 @@ double wheel_distance_in = (36.0 / 48.0) * 3.25 * M_PI;
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
 double distance_kp = 1.1, distance_ki = 0.1, distance_kd = 15;
-double turn_kp = 0.33, turn_ki = 0, turn_kd = 2.8;
-double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
+double turn_kp = 0.32, turn_ki = 0.02, turn_kd = 2.8;
+double heading_correction_kp = 0.55, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
 
@@ -82,7 +82,7 @@ bool using_vertical_tracker = false;   // Set to true if a vertical tracking whe
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
 // These comments are in the perspective of a top down view of the robot when the robot is facing vertical
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
-double horizontal_tracker_dist_from_center = 4.75;
+double horizontal_tracker_dist_from_center = 4.5;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
 double vertical_tracker_dist_from_center = 0.2;
 double horizontal_tracker_diameter = 2.74; // Diameter of the horizontal tracker wheel (in inches)
