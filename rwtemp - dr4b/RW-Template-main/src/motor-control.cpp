@@ -1296,6 +1296,12 @@ void resetOdom(){
   
 }
 
+void setPose(double x, double y, double heading){
+  x_pos = x;
+  y_pos = y;
+  correct_angle = heading;
+  inertial_sensor.setHeading(heading, degrees);
+}
 
 void driveUntil(double distance, double timeout, vex::distance dsensor, bool exit, double maxvoltage, double direction){
   double currentdist = dsensor.objectDistance(mm);

@@ -13,15 +13,17 @@
 // }
 
 // Modify autonomous, driver, or pre-auton code below
-int auton_selected = 1;
+int auton_selected = 2;
 
 
 void runAutonomous() {
   switch(auton_selected) {
     case 1:
+    //side side, far pin, flat against toggle.
       awpauto();
       break;
     case 2:
+    //Side side, near pin, 45 degree turn.
       rightauto();
       break;  
     case 3:
@@ -72,10 +74,10 @@ void printautos(){
   controller_1.Screen.print("Auton: %d - ",auton_selected);
   switch(auton_selected) {
     case 1:
-      controller_1.Screen.print("awp auto        ");
+      controller_1.Screen.print("close auto        ");
       break;
     case 2:
-      controller_1.Screen.print("right auto            ");
+      controller_1.Screen.print("far auto            ");
       break;  
     case 3:
       controller_1.Screen.print("left auto          ");
@@ -233,6 +235,9 @@ void runDriver() {
 
     if(r2){
       intake.spin(forward,80,percent);
+    }
+    else if(button_y){
+      intake.spin(reverse, 80, percent);
     }
     else{
       intake.stop();
