@@ -28,21 +28,21 @@ void testauto(){
   swingpower(4,6,180,3000);
 }
 
-void rightauto(){
+void rightauto2(){
   lift.spinFor(forward, 180, degrees, false);
     wait(500, msec);
     driveTo(-10,3000);
     //driveTo(1.7,3000);
     lift.spin(reverse, 10, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     driveTo(6.5,3000);
     turnToAngle(90,1000);
     driveTo(-7.2,3000, true, 3);
     
-    claw.set(true);
+    //claw.set(true);
     wait(500, msec);
     lift.spinFor(forward, 280, degrees, false);
     turnToAngle(-30,1000);
@@ -51,7 +51,7 @@ void rightauto(){
     driveTo(-8,3000, true, 5);
     lift.spin(reverse, 8, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     driveTo(8,3000, true, 5);
@@ -83,14 +83,14 @@ void leftauto(){
     //driveTo(1.7,3000);
     lift.spin(reverse, 10, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     driveTo(6.5,3000);
     turnToAngle(90,1000);
     driveTo(-7.2,3000, true, 3);
     
-    claw.set(true);
+    //claw.set(true);
     wait(500, msec);
     lift.spinFor(forward, 280, degrees, false);
     turnToAngle(-30,1000);
@@ -99,7 +99,7 @@ void leftauto(){
     driveTo(-8,3000, true, 5);
     lift.spin(reverse, 8, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     
@@ -110,7 +110,7 @@ void leftauto(){
     turnToAngle(0,2000);
     driveTo(-34,3000, true, 4);
     driveTo(-4,3000, true, 2);
-    claw.set(true);
+    //claw.set(true);
     // Toggle
     lift.spin(forward,8,volt);
     wait(700,msec);
@@ -121,7 +121,7 @@ void leftauto(){
     lift.spin(reverse,4,volt);
     wait(500,msec);
     lift.stop();
-    claw.set(false);
+    //claw.set(false);
     turnToAngle(-45,2000);
     driveTo(6,3000,true,6);
     turnToAngle(-100,1500);
@@ -155,7 +155,7 @@ void awpauto(){
     driveTo(1.7,3000);
     lift.spin(reverse, 12, volt);
     wait(1100, msec);
-    claw.set(false); 
+    //claw.set(false); 
     lift.stop();
     wait(500, msec);
     //
@@ -172,7 +172,7 @@ void awpauto(){
     // driveTo(-26.7,3000, true, 3);
     // // moveToPoint(-26.3,15,-1,3000,true,5);
     // wait(500,msec);
-    // claw.set(true);
+    // //claw.set(true);
     // lift.spinFor(forward, 240, degrees);
     // turnToAngle(160,1000);
     // driveTo(-15,2000);
@@ -180,7 +180,7 @@ void awpauto(){
     // driveTo(1.5,3000);
     // lift.spin(reverse, 8, volt);
     // wait(1000, msec);
-    // claw.set(false);
+    // //claw.set(false);
     // lift.stop();
     // // Picking up third pin
     // driveTo(5,3000);
@@ -191,14 +191,14 @@ void awpauto(){
     // //driveTo(-24-15,3000);
     // // turnToAngle(180,1000);
     // // driveTo(-4,3000);
-    // claw.set(true);
+    // //claw.set(true);
     // driveTo(4,3000);
     // lift.spin(forward, 8, volt);
     // turnToAngle(0,1000);
     // // // Scoring Third Pin
     // driveTo(-4,3000);
     // lift.spin(reverse, 8, volt);
-    // claw.set(false);
+    // //claw.set(false);
     // lift.stop();
 }
 
@@ -211,14 +211,14 @@ void rightauto(){
     //driveTo(1.7,3000);
     lift.spin(reverse, 10, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     driveTo(6.5,3000);
     turnToAngle(85,1000);
     driveTo(-7,3000, true, 2.5);
     
-    claw.set(true);
+    //claw.set(true);
     wait(500, msec);
     lift.spinFor(forward, 280, degrees, false);
     turnToAngle(-25,1000);
@@ -227,7 +227,7 @@ void rightauto(){
     driveTo(-8.2,3000, true, 5);
     lift.spin(reverse, 8, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     
     wait(500, msec);
     lift.stop();
@@ -251,14 +251,14 @@ void rightauto(){
     // turnToAngle(-45,1000);
     // driveTo(-10,3000, true, 5);
     // swingpower(-12,3,180,3000);
-    // claw.set(true);
+    // //claw.set(true);
     // driveTo(4,3000);
     // lift.spin(forward, 8, volt);
     // turnToAngle(0,1000);
     // // Scoring Third Pin
     // driveTo(-4,3000);
     // lift.spin(reverse, 8, volt);
-    // claw.set(false);
+    // //claw.set(false);
     // lift.stop();
 }
 
@@ -277,13 +277,13 @@ void skillsauto(){
     driveTo(3,3000);
     lift.spin(reverse, 12, volt);
     wait(1100, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     //wait(50, msec);
     driveTo(26.25,3000,true, 6);
     turnToAngle(180, 1000);
-    claw.set(true);
+    //claw.set(true);
     driveTo(-15, 1000, true,5);
     lift.spinFor(forward, 160, degrees, true);
     //wait(500, msec);
@@ -294,14 +294,14 @@ void skillsauto(){
     driveTo(-25.25,1000,true,8);
     lift.spin(reverse, 12, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
 
     //Iteration 2
     driveTo(24.75,3000,true, 6);
     turnToAngle(180, 1000);
-    claw.set(true);
+    //claw.set(true);
     driveTo(-15, 1000, true, 5);
     lift.spinFor(forward, 160, degrees, true);
     //wait(500, msec);
@@ -312,14 +312,14 @@ void skillsauto(){
     driveTo(-25.25,1000,true,8);
     lift.spin(reverse, 12, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     lift.stop();
     wait(500, msec);
     
     //Iteration 3
     driveTo(24.75,3000,true, 6);
     turnToAngle(180, 1000);
-    claw.set(true);
+    //claw.set(true);
     driveTo(-15, 1000, true,5);
     lift.spinFor(forward, 160, degrees, true);
     //wait(500, msec);
@@ -330,7 +330,7 @@ void skillsauto(){
     driveTo(-25.25,1000,true,8);
     lift.spin(reverse, 12, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     wait(200, msec);
     lift.stop();
     wait(500, msec);
@@ -338,7 +338,7 @@ void skillsauto(){
     //Iteration 4
     driveTo(24.75,3000,true, 6);
     turnToAngle(180, 1000);
-    claw.set(true);
+    //claw.set(true);
     driveTo(-15, 1000, true,5);
     lift.spinFor(forward, 160, degrees, true);
     //wait(500, msec);
@@ -349,7 +349,7 @@ void skillsauto(){
     driveTo(-25.25,1000,true,8);
     lift.spin(reverse, 12, volt);
     wait(500, msec);
-    claw.set(false);
+    //claw.set(false);
     wait(300, msec);
     lift.stop();
     wait(500, msec);

@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "pid.h"
 
 using namespace vex;
 using signature = vision::signature;
@@ -32,7 +33,7 @@ rotation horizontal_tracker = rotation(PORT16, false);
 rotation vertical_tracker = rotation(PORT20, false);
 
 // game specific devices for high stakes
-motor rightroller = motor(PORT6, ratio18_1, true);
+motor rightroller = motor(PORT3, ratio18_1, true);
 motor leftroller= motor(PORT5, ratio18_1, false);  
 motor_group roller = motor_group(rightroller,leftroller);
 
@@ -40,7 +41,11 @@ motor leftlift = motor(PORT1, ratio36_1, false);
 motor rightlift = motor(PORT2, ratio36_1, true);
 motor_group lift = motor_group(leftlift,rightlift);
 
+PID liftPID = PID(0.5, 0.0001, 0.1);
+
 motor claw = motor(PORT4, ratio18_1, false);
+
+optical ToggleSensor = optical(PORT6);
 
 
 //distance front = distance(PORT4);

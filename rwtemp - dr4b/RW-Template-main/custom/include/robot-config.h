@@ -27,6 +27,8 @@ extern motor_group lift;
 
 extern motor claw;
 
+extern optical ToggleSensor;
+
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)
 extern double distance_between_wheels;
 extern double wheel_distance_in;

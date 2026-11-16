@@ -1,5 +1,6 @@
 #include "vex.h"
 #include "motor-control.h"
+#include "../custom/include/subsystems.h"
 #include "../custom/include/autonomous.h"
 #include <cstdio>
 #include <cstdlib>
@@ -243,15 +244,7 @@ void runDriver() {
       claw.stop();
     }
 
-    if(r2){
-      roller.spin(forward,100,percent);
-    }
-    else if(button_y){
-      intake.spin(reverse, 80, percent);
-    }
-    else{
-      roller.stop();
-    }
+    toggleLoop(r2, button_y, button_a);
 
     wait(5, msec);
     
