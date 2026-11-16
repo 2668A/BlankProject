@@ -31,6 +31,7 @@ void turnToPoint(double x, double y, int dir, double time_limit_msec);
 void moveToPoint(double x, double y, int dir, double time_limit_msec, bool exit = true, double max_output = 12, bool overturn = false);
 void boomerang(double x, double y, int dir, double a, double dlead, double time_limit_msec, bool exit = true, double max_output = 12, bool overturn = false);
 void resetOdom();
+void setPose(double x, double y, double heading);
 void driveUntil(double distance, double timeout, vex::distance dsensor, bool exit = true, double maxvoltage = 12, double direction = 1.0);
 void swingpower(double leftpower, double rightpower, double heading, double timeout);
 void driveWhile(double motorpower, double distance, vex::distance dsensor);
