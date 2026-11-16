@@ -15,6 +15,35 @@
 // Modify autonomous, driver, or pre-auton code below
 int auton_selected = 2;
 
+void runPreAutonomous() {
+    // Initializing Robot Configuration. DO NOT REMOVE!
+  vexcodeInit();
+  
+  // Calibrate inertial sensor
+  inertial_sensor.calibrate();
+
+  // Wait for the Inertial Sensor to calibrate
+  while (inertial_sensor.isCalibrating()) {
+    wait(10, msec);
+  }
+  controller_1.rumble(".");
+
+  double current_heading = inertial_sensor.heading();
+  
+  // odom tracking
+  resetChassis();
+  if(using_horizontal_tracker && using_vertical_tracker) {
+    thread odom = thread(trackXYOdomWheel);
+  } else if (using_horizontal_tracker) {
+    thread odom = thread(trackXOdomWheel);
+  } else if (using_vertical_tracker) {
+    thread odom = thread(trackYOdomWheel);
+  } else {
+    thread odom = thread(trackNoOdomWheel);
+  }
+  resetChassis();
+  resetOdom();
+}
 
 void runAutonomous() {
   switch(auton_selected) {
@@ -106,32 +135,6 @@ void printautos(){
   }
 }
 
-void traytoggle(){
-  if(tray.value() == true){
-    tray.set(false);
-  }
-  else{
-    tray.set(true);
-  }
-}
-
-void clawtoggle(){
-  if(claw.value() == true){
-    claw.set(false);
-  }
-  else{
-    claw.set(true);
-  }
-}
-
-void tiltertoggle(){
-  if(tilter.value() == true){
-    tilter.set(false);
-  }
-  else{
-    tilter.set(true);
-  }
-}
 
 
 bool autonrunning = false;
@@ -151,9 +154,9 @@ void runDriver() {
 
   double xcompute;
   double ycompute;
-
-  intake.setStopping(brake);
-  lift.setStopping(hold);
+  
+  claw.setStopping(brake);
+  lift.setStopping(brake);
       
   while (true) {
 
@@ -189,6 +192,7 @@ void runDriver() {
     button_b = controller_1.ButtonB.pressing();
     button_a = controller_1.ButtonA.pressing();
     button_y = controller_1.ButtonY.pressing();
+    button_x = controller_1.ButtonX.pressing();
     button_up_arrow = controller_1.ButtonUp.pressing();
     button_down_arrow = controller_1.ButtonDown.pressing();
     button_left_arrow = controller_1.ButtonLeft.pressing();
@@ -214,15 +218,11 @@ void runDriver() {
       wait(100,msec);
     }
 
-    controller_1.ButtonX.pressed(traytoggle);
-    controller_1.ButtonB.pressed(tiltertoggle);
-    controller_1.ButtonR1.pressed(clawtoggle);
-
-
-    if (button_down_arrow && button_a){
-      //runPreAutonomous();
+    if(button_down_arrow && button_b){
+      runPreAutonomous();
       runAutonomous();
     }
+
     if (l1){
       lift.spin(forward,80,rpm);
     }
@@ -233,14 +233,24 @@ void runDriver() {
       lift.stop();
     }
 
+    if(r1){
+      claw.spin(forward,100,percent);
+    }
+    else if(button_x){
+      claw.spin(reverse,100,percent);
+    }
+    else{
+      claw.stop();
+    }
+
     if(r2){
-      intake.spin(forward,80,percent);
+      roller.spin(forward,100,percent);
     }
     else if(button_y){
       intake.spin(reverse, 80, percent);
     }
     else{
-      intake.stop();
+      roller.stop();
     }
 
     wait(5, msec);
@@ -249,35 +259,3 @@ void runDriver() {
   }
 }
 
-void runPreAutonomous() {
-    // Initializing Robot Configuration. DO NOT REMOVE!
-  vexcodeInit();
-  
-  // Calibrate inertial sensor
-  inertial_sensor.calibrate();
-
-  // Wait for the Inertial Sensor to calibrate
-  while (inertial_sensor.isCalibrating()) {
-    wait(10, msec);
-  }
-  controller_1.rumble(".");
-
-  double current_heading = inertial_sensor.heading();
-  
-  // odom tracking
-  resetChassis();
-  if(using_horizontal_tracker && using_vertical_tracker) {
-    thread odom = thread(trackXYOdomWheel);
-  } else if (using_horizontal_tracker) {
-    thread odom = thread(trackXOdomWheel);
-  } else if (using_vertical_tracker) {
-    thread odom = thread(trackYOdomWheel);
-  } else {
-    thread odom = thread(trackNoOdomWheel);
-  }
-  tray.set(true);
-  claw.set(true);
-  tilter.set(false);
-  resetChassis();
-  resetOdom();
-}
