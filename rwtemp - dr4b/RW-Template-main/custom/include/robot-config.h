@@ -17,23 +17,15 @@ extern inertial inertial_sensor;
 extern rotation horizontal_tracker;
 extern rotation vertical_tracker;
 
-extern motor intaketop;
-extern motor intakebottom;
-extern motor_group intake;
+extern motor rightroller;
+extern motor leftroller;
+extern motor_group roller;
 
 extern motor leftlift;
 extern motor rightlift;
 extern motor_group lift;
 
-extern distance front;
-extern distance rear;
-
-extern digital_out tray;
-extern digital_out claw;
-extern digital_out tilter;
-
-extern optical wingsensor;
-
+extern motor claw;
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)
 extern double distance_between_wheels;

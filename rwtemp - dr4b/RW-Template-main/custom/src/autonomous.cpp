@@ -22,9 +22,11 @@ void exampleAuton2() {
 
 
 void testauto(){
-  
+  moveToPoint(12,24,3000,true,8);
+  turnToAngle(-90,3000,true);
+  driveTo(12,3000,true,8);
+  swingpower(4,6,180,3000);
 }
-
 
 void rightauto(){
   
@@ -44,9 +46,7 @@ void leftrush(){
 
 void awpauto(){
  
-};
-
-
+}
 
 void awpauto2(){
   
