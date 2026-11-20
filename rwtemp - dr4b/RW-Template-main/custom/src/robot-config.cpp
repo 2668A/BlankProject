@@ -16,14 +16,15 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT13, ratio6_1, false);
-motor left_chassis2 = motor(PORT14, ratio6_1, false);
-motor_group right_chassis = motor_group(left_chassis1, left_chassis2);
-motor right_chassis1 = motor(PORT11, ratio6_1, true);
-motor right_chassis2 = motor(PORT12, ratio6_1, true);
-motor_group left_chassis = motor_group(right_chassis1, right_chassis2);
+motor left_chassis1 = motor(PORT11, ratio6_1, true);
+motor left_chassis2 = motor(PORT12, ratio6_1, true);
+motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
+motor right_chassis1 = motor(PORT13, ratio6_1, false);
+motor right_chassis2 = motor(PORT14, ratio6_1, false);
+motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 inertial inertial_sensor = inertial(PORT15);
+optical roller_optical = optical(PORT6);
 
 
 // Format is rotation(port, reversed)
@@ -32,8 +33,8 @@ rotation horizontal_tracker = rotation(PORT16, false);
 rotation vertical_tracker = rotation(PORT20, false);
 
 // game specific devices for high stakes
-motor rightroller = motor(PORT6, ratio18_1, true);
-motor leftroller= motor(PORT5, ratio18_1, false);  
+motor rightroller = motor(PORT5, ratio18_1, false);
+motor leftroller= motor(PORT3, ratio18_1, true);  
 motor_group roller = motor_group(rightroller,leftroller);
 
 motor leftlift = motor(PORT1, ratio36_1, false);
@@ -41,6 +42,8 @@ motor rightlift = motor(PORT2, ratio36_1, true);
 motor_group lift = motor_group(leftlift,rightlift);
 
 motor claw = motor(PORT4, ratio18_1, false);
+
+digital_out brakepiston = digital_out(Brain.ThreeWirePort.H);
 
 
 //distance front = distance(PORT4);
@@ -81,7 +84,7 @@ bool using_vertical_tracker = false;   // Set to true if a vertical tracking whe
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
 // These comments are in the perspective of a top down view of the robot when the robot is facing vertical
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
-double horizontal_tracker_dist_from_center = 4.75;
+double horizontal_tracker_dist_from_center = -4.75;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
 double vertical_tracker_dist_from_center = 0.2;
 double horizontal_tracker_diameter = 2.74; // Diameter of the horizontal tracker wheel (in inches)

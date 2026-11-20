@@ -2,11 +2,11 @@
 
 void exampleAuton();
 void exampleAuton2();
-void rightauto();
-void leftauto();
+void closeallianceauto();
+void closemidauto();
 void awpauto();
 void skillsauto();
 void testauto();
 void skills2();
-void rightrush();
-void leftrush();
+void farallianceauto();
+void farmidauto();

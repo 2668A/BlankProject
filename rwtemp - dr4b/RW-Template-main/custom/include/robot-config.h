@@ -25,6 +25,8 @@ extern motor leftlift;
 extern motor rightlift;
 extern motor_group lift;
 
+extern digital_out brakepiston;
+
 extern motor claw;
 
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)

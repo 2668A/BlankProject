@@ -763,7 +763,7 @@ void trackNoOdomWheel() {
     } else {
       // Calculate arc movement for each wheel
       double sin_multiplier = 2.0 * sin(delta_heading_rad / 2.0);
-      double delta_local_y_left_in = sin_multiplier * (delta_left_in / delta_heading_rad + distance_between_wheels / 2.0);
+      double delta_local_y_left_in = sin_multiplier * (delta_left_in / delta_heading_rad - distance_between_wheels / 2.0);
       double delta_local_y_right_in = sin_multiplier * (delta_right_in / delta_heading_rad + distance_between_wheels / 2.0);
       delta_local_y_in = (delta_local_y_left_in + delta_local_y_right_in) / 2.0;
     }

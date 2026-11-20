@@ -13,7 +13,7 @@
 // }
 
 // Modify autonomous, driver, or pre-auton code below
-int auton_selected = 1;
+int auton_selected = 2;
 
 void runPreAutonomous() {
     // Initializing Robot Configuration. DO NOT REMOVE!
@@ -41,29 +41,28 @@ void runPreAutonomous() {
   } else {
     thread odom = thread(trackNoOdomWheel);
   }
-  resetChassis();
-  resetOdom();
 }
 
 void runAutonomous() {
+  
   switch(auton_selected) {
     case 1:
       awpauto();
       break;
     case 2:
-      rightauto();
+      closeallianceauto();
       break;  
     case 3:
-      leftauto();
+      closemidauto();
       break;
     case 4:
-      skillsauto();
+      farallianceauto();
       break; 
     case 5:
-      rightrush();
+      farmidauto();
       break;
     case 6:
-      leftrush();
+      skillsauto();
       break;
     case 7:
       testauto();
@@ -104,19 +103,19 @@ void printautos(){
       controller_1.Screen.print("awp auto        ");
       break;
     case 2:
-      controller_1.Screen.print("right auto            ");
+      controller_1.Screen.print("close alliance auto            ");
       break;  
     case 3:
-      controller_1.Screen.print("left auto          ");
+      controller_1.Screen.print("close mid auto          ");
       break;
     case 4:
-      controller_1.Screen.print("skills auto             ");
+      controller_1.Screen.print("far alliance auto           ");
       break; 
     case 5:
-      controller_1.Screen.print("right rush             ");
+      controller_1.Screen.print("far mid auto             ");
       break;
     case 6:
-      controller_1.Screen.print("left rush               ");
+      controller_1.Screen.print("skills auto               ");
       break;
     case 7:
       controller_1.Screen.print("test auto                  ");
@@ -139,7 +138,18 @@ bool autonrunning = false;
 bool disabledriver = false;
 
 
+void brakeToggle(){
+  if(brakepiston.value() == false){
+    brakepiston.set(true);
+  }
+  else{
+    brakepiston.set(false);
+  }
+}
+
+
 void runDriver() {
+  runPreAutonomous();
   resetChassis();
   std::string xposstr;
   std::string yposstr;
@@ -155,8 +165,11 @@ void runDriver() {
   
   claw.setStopping(brake);
   lift.setStopping(brake);
+
+  
       
   while (true) {
+    
 
     if(left_chassis.temperature(celsius)>60){
       controller_1.rumble("-");
@@ -196,6 +209,8 @@ void runDriver() {
     button_left_arrow = controller_1.ButtonLeft.pressing();
     button_right_arrow = controller_1.ButtonRight.pressing();
 
+    controller_1.ButtonA.pressed(brakeToggle);
+
     xcompute = ch1*turnsens;
 
     if (disabledriver == false){
@@ -217,7 +232,6 @@ void runDriver() {
     }
 
     if(button_down_arrow && button_b){
-      runPreAutonomous();
       runAutonomous();
     }
 
